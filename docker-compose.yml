@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - PORT=${PORT}
+      - NODE_ENV=development
+    container_name: ${APP_NAME}-backend
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - ./backend:/app/backend
+    command: npm start
+    links:
+      - db
+    restart: always
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    environment:
+      - REACT_APP_PORT=${REACT_APP_PORT}
+      - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
+    container_name: ${APP_NAME}-client
+    ports:
+      - ${REACT_APP_PORT}:${REACT_APP_PORT}
+    volumes:
+      - ./client:/app/client
+    links:
+      - server
+    command: npm start
+    restart: always
+  db:
+    build: ./database
+    container_name: ${APP_NAME}-database
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+    restart: always
