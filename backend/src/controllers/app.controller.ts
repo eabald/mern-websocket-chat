@@ -8,7 +8,7 @@ class AppController {
   public middlewares: any[];
   public mongoUri: string;
 
-  constructor(controllers: Controller[], port, mongoUri, middlewares) {
+  constructor(controllers: Controller[], port: number, mongoUri: string, middlewares: any[]) {
     this.app = express();
     this.port = port;
     this.middlewares = middlewares;
@@ -19,18 +19,18 @@ class AppController {
     this.initializeControllers(controllers);
   }
 
-  private initializeMiddlewares() {
+  private initializeMiddlewares() : void {
     this.app.use(express.json());
     this.middlewares.forEach(middleware => this.app.use(middleware));
   }
 
-  private initializeControllers(controllers: Controller[]) {
+  private initializeControllers(controllers: Controller[]) : void {
     controllers.forEach((controller) => {
       this.app.use('/', controller.router);
     });
   }
 
-  private connectToTheDatabase() {
+  private connectToTheDatabase() : void {
     mongoose.connect(
       `mongodb://${this.mongoUri}`,
       {
@@ -40,7 +40,7 @@ class AppController {
     );
   }
 
-  public listen() {
+  public listen() : void {
     this.app.listen(this.port, () => console.log(`App listening on the port ${this.port}`));
   }
 }

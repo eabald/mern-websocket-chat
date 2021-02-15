@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt';
 import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
+import UserWithThatUsernameAlreadyExistsException from '../exceptions/UserWithThatUsernameAlreadyExistsException';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
 import Controller from '../interfaces/controller.interface';
 import validationMiddleware from '../middleware/validation.middleware';
@@ -39,12 +40,16 @@ class AuthenticationController implements Controller {
     };
   }
 
-  private registration = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private registration = async (request: express.Request, response: express.Response, next: express.NextFunction) : Promise<void> => {
     const userData: CreateUserDto = request.body;
     if (
       await this.user.findOne({ email: userData.email })
     ) {
       next(new UserWithThatEmailAlreadyExistsException(userData.email));
+    } else if (
+      await this.user.findOne({ username: userData.username })
+    ) {
+      next(new UserWithThatUsernameAlreadyExistsException(userData.username));
     } else {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
       const user = await this.user.create({
@@ -54,20 +59,21 @@ class AuthenticationController implements Controller {
       user.password = undefined;
       const tokenData = this.createToken(user);
       response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
-      response.send(user);
+      response.json(user);
     }
   }
 
-  private loggingIn = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private loggingIn = async (request: express.Request, response: express.Response, next: express.NextFunction) : Promise<void> => {
     const logInData: LogInDto = request.body;
     const user = await this.user.findOne({ email: logInData.email });
     if (user) {
-      const isPasswordMatching = await bcrypt.compare(logInData.password, user.password);
+      const isPasswordMatching =
+        await bcrypt.compare(logInData.password, user.get('password', null, { getters: false }),);
       if (isPasswordMatching) {
         user.password = undefined;
         const tokenData = this.createToken(user);
         response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
-        response.send(user);
+        response.json(user);
       } else {
         next(new WrongCredentialsException());
       }
@@ -76,12 +82,12 @@ class AuthenticationController implements Controller {
     }
   }
 
-  private loggingOut = (request: express.Request, response: express.Response) => {
+  private loggingOut = (request: express.Request, response: express.Response) : void => {
     response.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
-    response.send(200);
+    response.json({ ststus: 200 });
   }
 
-  private createCookie(tokenData: TokenData) {
+  private createCookie(tokenData: TokenData) : string {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
 }

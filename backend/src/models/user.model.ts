@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       get: (): undefined => undefined,
     },
+    rooms: [
+      {
+        ref: 'Room',
+        type: mongoose.Schema.Types.ObjectId,
+      }
+    ],
   },
   {
     toJSON: {
