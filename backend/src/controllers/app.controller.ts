@@ -1,15 +1,18 @@
 import express from 'express';
+import { createServer, Server } from 'http';
 import mongoose from 'mongoose';
 import Controller from '../interfaces/controller.interface';
 
 class AppController {
   public app: express.Application;
+  public server: Server;
   public port: number;
   public middlewares: any[];
   public mongoUri: string;
 
   constructor(controllers: Controller[], port: number, mongoUri: string, middlewares: any[]) {
     this.app = express();
+    this.server = createServer(this.app);
     this.port = port;
     this.middlewares = middlewares;
     this.mongoUri = mongoUri;
@@ -41,7 +44,7 @@ class AppController {
   }
 
   public listen() : void {
-    this.app.listen(this.port, () => console.log(`App listening on the port ${this.port}`));
+    this.server.listen(this.port, () => console.log(`App listening on the port ${this.port}`));
   }
 }
 

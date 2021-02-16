@@ -21,11 +21,15 @@ const {
   MONGO_URI,
 } = process.env;
 
+const authenticationController = new AuthenticationController();
+const roomController = new RoomController();
+const messageController = new MessageController();
+
 const app = new AppController(
   [
-    new AuthenticationController(),
-    new RoomController(),
-    new MessageController(),
+    authenticationController,
+    roomController,
+    messageController,
   ],
   Number(BACKEND_PORT),
   MONGO_URI,
@@ -33,3 +37,4 @@ const app = new AppController(
 );
 
 app.listen();
+messageController.initializeWebsocket(app.server);

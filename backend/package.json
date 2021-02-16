@@ -25,7 +25,7 @@
     "helmet": "^4.4.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.16",
-    "websocket": "^1.0.33"
+    "socket.io": "^3.1.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -35,8 +35,8 @@
     "@types/express": "^4.17.11",
     "@types/helmet": "^4.0.0",
     "@types/jsonwebtoken": "^8.5.0",
-    "@types/node": "^14.14.27",
-    "@types/websocket": "^1.0.1",
+    "@types/node": "^14.14.28",
+    "@types/socket.io": "^2.1.13",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
