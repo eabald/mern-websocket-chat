@@ -9,7 +9,7 @@ async function authMiddleware(request: RequestWithUser, response: Response, next
   const authService = new AuthenticationService();
   if (cookies && cookies.Authorization) {
     try {
-      const user = authService.findAndVerifyUser(cookies.Authorization);
+      const user = await authService.findAndVerifyUser(cookies.Authorization);
       if (user) {
         request.user = user;
         next();
