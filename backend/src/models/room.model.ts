@@ -9,6 +9,12 @@ const roomSchema = new mongoose.Schema(
         ref: 'User',
         type: mongoose.Schema.Types.ObjectId,
       }
+    ],
+    messages: [
+      {
+        ref: 'Message',
+        type: mongoose.Schema.Types.ObjectId,
+      }
     ]
   },
   {
