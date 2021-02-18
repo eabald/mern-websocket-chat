@@ -8,10 +8,11 @@ async function socketAuth(socket: SocketWithUser, next: (err?: Error) => void) :
   if (authToken) {
     try {
       const authService = new AuthenticationService;
-      const user = await authService.findAndVerifyUser(authToken);
+      let user = await authService.findAndVerifyUser(authToken);
       if (user) {
         socket.user = user;
         user.socketId = socket.id;
+        user = await user.save();
         next();
       } else {
         next(err);

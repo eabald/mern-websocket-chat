@@ -8,6 +8,7 @@ interface User {
   password: string;
   socketId: string;
   rooms: Room[];
+  save: any;
 }
 
 export default User;

@@ -1,4 +1,4 @@
-// externa;
+// external;
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
