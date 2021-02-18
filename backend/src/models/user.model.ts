@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
     firstName: String,
     lastName: String,
     socketId: String,
+    username: String,
     password: {
       type: String,
       get: (): undefined => undefined,
