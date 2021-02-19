@@ -29,7 +29,7 @@ class AppController {
 
   private initializeControllers(controllers: Controller[]) : void {
     controllers.forEach((controller) => {
-      this.app.use('/', controller.router);
+      this.app.use('/api', controller.router);
     });
   }
 
