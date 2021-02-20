@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema(
       {
         ref: 'Room',
         type: mongoose.Schema.Types.ObjectId,
-      }
+      },
     ],
   },
   {
@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
       virtuals: true,
       getters: true,
     },
-  },
+  }
 );
 
 userSchema.virtual('fullName').get(function () {

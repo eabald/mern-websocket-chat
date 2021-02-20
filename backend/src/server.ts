@@ -2,7 +2,7 @@
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import helmet from 'helmet'
+import helmet from 'helmet';
 // controllers
 import AppController from './controllers/app.controller';
 import AuthenticationController from './controllers/authentication.controller';
@@ -17,10 +17,7 @@ import EnvValidator from './validators/env.validator';
 
 dotenv.config({ path: '../.env' });
 EnvValidator(process.env);
-const {
-  BACKEND_PORT,
-  MONGO_URI,
-} = process.env;
+const { BACKEND_PORT, MONGO_URI } = process.env;
 
 const authenticationController = new AuthenticationController();
 const roomController = new RoomController();
@@ -28,12 +25,7 @@ const messageController = new MessageController();
 const userController = new UserController();
 
 const app = new AppController(
-  [
-    authenticationController,
-    roomController,
-    messageController,
-    userController,
-  ],
+  [authenticationController, roomController, messageController, userController],
   Number(BACKEND_PORT),
   MONGO_URI,
   [logger, cors(), cookieParser(), helmet(), errorMiddleware]

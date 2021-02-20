@@ -1,4 +1,3 @@
-
 import HttpException from './HttpException';
 
 class WrongCredentialsException extends HttpException {

@@ -11,10 +11,12 @@ const messageSchema = new mongoose.Schema({
   room: {
     ref: 'Room',
     type: mongoose.Schema.Types.ObjectId,
-  }
-
+  },
 });
 
-const messageModel = mongoose.model<Message & mongoose.Document>('Message', messageSchema);
+const messageModel = mongoose.model<Message & mongoose.Document>(
+  'Message',
+  messageSchema
+);
 
 export default messageModel;

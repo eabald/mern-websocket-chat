@@ -1,5 +1,5 @@
 import express from 'express';
-import path from 'path'
+import path from 'path';
 import { createServer, Server } from 'http';
 import mongoose from 'mongoose';
 import Controller from '../interfaces/controller.interface';
@@ -12,7 +12,12 @@ class AppController {
   public mongoUri: string;
   private static = path.join(__dirname, '../public');
 
-  constructor(controllers: Controller[], port: number, mongoUri: string, middlewares: any[]) {
+  constructor(
+    controllers: Controller[],
+    port: number,
+    mongoUri: string,
+    middlewares: any[]
+  ) {
     this.app = express();
     this.server = createServer(this.app);
     this.port = port;
@@ -25,35 +30,34 @@ class AppController {
     this.initializeStatic();
   }
 
-  private initializeMiddlewares() : void {
+  private initializeMiddlewares(): void {
     this.app.use(express.json());
-    this.middlewares.forEach(middleware => this.app.use(middleware));
+    this.middlewares.forEach((middleware) => this.app.use(middleware));
   }
 
-  private initializeControllers(controllers: Controller[]) : void {
+  private initializeControllers(controllers: Controller[]): void {
     controllers.forEach((controller) => {
       this.app.use('/api', controller.router);
     });
   }
 
-  private initializeStatic() : void {
+  private initializeStatic(): void {
     this.app.get('*', (request: express.Request, response: express.Response) =>
       response.sendFile('index.html', { root: this.static })
-    )
-  }
-
-  private connectToTheDatabase() : void {
-    mongoose.connect(
-      `mongodb://${this.mongoUri}`,
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-      }
     );
   }
 
-  public listen() : void {
-    this.server.listen(this.port, () => console.log(`App listening on the port ${this.port}`));
+  private connectToTheDatabase(): void {
+    mongoose.connect(`mongodb://${this.mongoUri}`, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  }
+
+  public listen(): void {
+    this.server.listen(this.port, () =>
+      console.log(`App listening on the port ${this.port}`)
+    );
   }
 }
 

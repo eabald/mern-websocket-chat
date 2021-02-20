@@ -15,12 +15,16 @@ class RoomController implements Controller {
     this.initializeRoutes();
   }
 
-  private initializeRoutes = () : void => {
+  private initializeRoutes = (): void => {
     this.router.get(`${this.path}/:id`, authMiddleware, this.getRoom);
     this.router.post(`${this.path}/create`, authMiddleware, this.createRoom);
-  }
+  };
 
-  private getRoom = async (request: express.Request, response: express.Response, next: express.NextFunction) : Promise<void> => {
+  private getRoom = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
     const id = request.params.id;
     if (mongoose.Types.ObjectId.isValid(id.toString())) {
       const room = await this.room.findById(id);
@@ -32,17 +36,20 @@ class RoomController implements Controller {
     } else {
       next(new RoomNotFoundException());
     }
+  };
 
-  }
-
-  private createRoom = async (request: express.Request, response: express.Response, next: express.NextFunction) : Promise<void> => {
+  private createRoom = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
     const roomData: RoomDto = request.body;
     let currentRoom = await this.room.findOne(roomData);
     if (!currentRoom) {
       currentRoom = await this.room.create(roomData);
     }
     response.json(currentRoom);
-  }
+  };
 }
 
-export default RoomController
+export default RoomController;

@@ -4,7 +4,11 @@ import WrongAuthenticationTokenException from '../exceptions/WrongAuthentication
 import RequestWithUser from '../interfaces/requestWithUser.interface';
 import AuthenticationService from '../services/authentication.service';
 
-async function authMiddleware(request: RequestWithUser, response: Response, next: NextFunction) : Promise<void> {
+async function authMiddleware(
+  request: RequestWithUser,
+  response: Response,
+  next: NextFunction
+): Promise<void> {
   const cookies = request.cookies;
   const authService = new AuthenticationService();
   if (cookies && cookies.Authorization) {

@@ -8,21 +8,21 @@ const roomSchema = new mongoose.Schema(
       {
         ref: 'User',
         type: mongoose.Schema.Types.ObjectId,
-      }
+      },
     ],
     messages: [
       {
         ref: 'Message',
         type: mongoose.Schema.Types.ObjectId,
-      }
-    ]
+      },
+    ],
   },
   {
     toJSON: {
       virtuals: true,
       getters: true,
     },
-  },
+  }
 );
 
 const roomModel = mongoose.model<Room & mongoose.Document>('Room', roomSchema);

@@ -23,8 +23,16 @@ class AuthenticationController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}/register`, validationMiddleware(CreateUserDto), this.registration);
-    this.router.post(`${this.path}/login`, validationMiddleware(LogInDto), this.loggingIn);
+    this.router.post(
+      `${this.path}/register`,
+      validationMiddleware(CreateUserDto),
+      this.registration
+    );
+    this.router.post(
+      `${this.path}/login`,
+      validationMiddleware(LogInDto),
+      this.loggingIn
+    );
     this.router.post(`${this.path}/logout`, this.loggingOut);
   }
 
@@ -40,15 +48,15 @@ class AuthenticationController implements Controller {
     };
   }
 
-  private registration = async (request: express.Request, response: express.Response, next: express.NextFunction) : Promise<void> => {
+  private registration = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
     const userData: CreateUserDto = request.body;
-    if (
-      await this.user.findOne({ email: userData.email })
-    ) {
+    if (await this.user.findOne({ email: userData.email })) {
       next(new UserWithThatEmailAlreadyExistsException(userData.email));
-    } else if (
-      await this.user.findOne({ username: userData.username })
-    ) {
+    } else if (await this.user.findOne({ username: userData.username })) {
       next(new UserWithThatUsernameAlreadyExistsException(userData.username));
     } else {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -61,14 +69,20 @@ class AuthenticationController implements Controller {
       response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
       response.json(user);
     }
-  }
+  };
 
-  private loggingIn = async (request: express.Request, response: express.Response, next: express.NextFunction) : Promise<void> => {
+  private loggingIn = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
     const logInData: LogInDto = request.body;
     const user = await this.user.findOne({ email: logInData.email });
     if (user) {
-      const isPasswordMatching =
-        await bcrypt.compare(logInData.password, user.get('password', null, { getters: false }),);
+      const isPasswordMatching = await bcrypt.compare(
+        logInData.password,
+        user.get('password', null, { getters: false })
+      );
       if (isPasswordMatching) {
         user.password = undefined;
         const tokenData = this.createToken(user);
@@ -80,14 +94,17 @@ class AuthenticationController implements Controller {
     } else {
       next(new WrongCredentialsException());
     }
-  }
+  };
 
-  private loggingOut = (request: express.Request, response: express.Response) : void => {
+  private loggingOut = (
+    request: express.Request,
+    response: express.Response
+  ): void => {
     response.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
     response.json({ status: 200 });
-  }
+  };
 
-  private createCookie(tokenData: TokenData) : string {
+  private createCookie(tokenData: TokenData): string {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
 }

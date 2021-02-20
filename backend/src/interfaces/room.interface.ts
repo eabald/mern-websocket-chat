@@ -1,5 +1,5 @@
 import User from './user.interface';
-import Message from './message.interface'
+import Message from './message.interface';
 
 interface Room {
   _id: string;
