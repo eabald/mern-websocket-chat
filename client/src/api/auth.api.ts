@@ -1,9 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 import { Credentials, SignUpCredentials } from '../redux/auth/auth.types';
+import { User } from '../redux/user/user.types';
 
 interface TokenResponse extends AxiosResponse {
   token: string;
-  user: any;
+  user: User;
 }
 
 export async function signInRequest(

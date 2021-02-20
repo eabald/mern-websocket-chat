@@ -18,7 +18,7 @@ const INITIAL_STATE: AuthState = {
 const authReducer: Reducer<AuthState, AuthAction> = (
   state = INITIAL_STATE,
   action: AuthAction
-): AuthState => {
+) : AuthState => {
   switch (action.type) {
     case SIGN_IN_SUCCESS:
       return {

@@ -21,12 +21,13 @@ import {
   signOutSuccess,
   signOutError,
 } from './auth.actions';
+import { getUserSuccess } from '../user/user.actions';
 
 export function* signIn({ payload }: SignInStartAction) {
   try {
     const { token, user } = yield signInRequest(payload);
-    console.log(user);
     yield put(signInSuccess(token));
+    yield put(getUserSuccess(user));
   } catch (error) {
     yield put(signInError(error));
   }
@@ -35,8 +36,8 @@ export function* signIn({ payload }: SignInStartAction) {
 export function* signUp({ payload }: SignUpStartAction) {
   try {
     const { token, user } = yield signUpRequest(payload);
-    console.log(user);
     yield put(signUpSuccess(token));
+    yield put(getUserSuccess(user));
   } catch (error) {
     yield put(signUpError(error));
   }

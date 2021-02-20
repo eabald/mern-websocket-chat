@@ -14,6 +14,7 @@ class UserController implements Controller {
 
   private initializeRoutes(): void {
     this.router.get(`${this.path}/get`, authMiddleware, this.getUsers);
+    this.router.get(`${this.path}/get/:id`, authMiddleware, this.getUser);
   }
 
   private getUsers = async (
@@ -22,6 +23,15 @@ class UserController implements Controller {
   ): Promise<void> => {
     const users = await this.user.find({});
     response.json(users);
+  };
+
+  private getUser = async (
+    request: express.Request,
+    response: express.Response
+  ): Promise<void> => {
+    const id = request.params.id;
+    const user = await this.user.findById(id);
+    response.json(user);
   };
 }
 
