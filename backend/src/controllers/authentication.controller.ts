@@ -67,7 +67,8 @@ class AuthenticationController implements Controller {
       user.password = undefined;
       const tokenData = this.createToken(user);
       response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
-      response.json(user);
+      const { token } = tokenData;
+      response.json({ token, user });
     }
   };
 

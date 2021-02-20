@@ -9,9 +9,11 @@ const Login: React.FC<LoginProps> = () => {
     email: '',
     password: '',
   });
-  const { email, password } = userCredencials
+  const { email, password } = userCredencials;
   const dispatch = useDispatch();
-  const submitHandler = async (event: FormEvent<HTMLFormElement>) : Promise<void> => {
+  const submitHandler = async (
+    event: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault();
     await dispatch(signInStart(userCredencials));
   };
@@ -24,7 +26,12 @@ const Login: React.FC<LoginProps> = () => {
   return (
     <form onSubmit={submitHandler}>
       <input type="email" onChange={changeHandler} name="email" value={email} />
-      <input type="password" onChange={changeHandler} name="password"  value={password} />
+      <input
+        type="password"
+        onChange={changeHandler}
+        name="password"
+        value={password}
+      />
       <input type="submit" value="Submit" />
     </form>
   );

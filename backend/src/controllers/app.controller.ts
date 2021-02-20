@@ -32,6 +32,7 @@ class AppController {
 
   private initializeMiddlewares(): void {
     this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: false }));
     this.middlewares.forEach((middleware) => this.app.use(middleware));
   }
 

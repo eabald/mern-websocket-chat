@@ -34,7 +34,8 @@ export function* signIn({ payload }: SignInStartAction) {
 
 export function* signUp({ payload }: SignUpStartAction) {
   try {
-    const { token } = yield signUpRequest(payload);
+    const { token, user } = yield signUpRequest(payload);
+    console.log(user);
     yield put(signUpSuccess(token));
   } catch (error) {
     yield put(signUpError(error));
