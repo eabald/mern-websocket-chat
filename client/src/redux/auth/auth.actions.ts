@@ -8,6 +8,9 @@ import {
   SIGN_UP_ERROR,
   SIGN_UP_START,
   SIGN_UP_SUCCESS,
+  SIGN_OUT_START,
+  SIGN_OUT_SUCCESS,
+  SIGN_OUT_ERROR,
 } from './auth.types';
 
 export const signInStart = (credentials: Credentials) => ({
@@ -37,5 +40,19 @@ export const signUpSuccess = (token: string) => ({
 
 export const signUpError = (error: AuthError) => ({
   type: SIGN_UP_ERROR,
+  payload: error,
+});
+
+export const signOutStart = () => ({
+  type: SIGN_OUT_START,
+});
+
+export const signOutSuccess = () => ({
+  type: SIGN_OUT_SUCCESS,
+  payload: null,
+});
+
+export const signOutError = (error: AuthError) => ({
+  type: SIGN_OUT_ERROR,
   payload: error,
 });

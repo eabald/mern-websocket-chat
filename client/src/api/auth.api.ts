@@ -1,14 +1,16 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Credentials, SignUpCredentials } from '../redux/auth/auth.types';
 
-interface TokenResponse {
+interface TokenResponse extends AxiosResponse {
   token: string;
+  user: any
 }
 
 export async function signInRequest(
   credentials: Credentials
 ): Promise<TokenResponse> {
-  return await axios.post('/api/auth/login', credentials);
+  const response: TokenResponse = await axios.post('/api/auth/login', credentials);
+  return response.data;
 }
 
 export async function signOutRequest(): Promise<void> {
