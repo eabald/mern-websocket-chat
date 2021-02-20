@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path'
 import { createServer, Server } from 'http';
 import mongoose from 'mongoose';
 import Controller from '../interfaces/controller.interface';
@@ -9,6 +10,7 @@ class AppController {
   public port: number;
   public middlewares: any[];
   public mongoUri: string;
+  private static = path.join(__dirname, '../public');
 
   constructor(controllers: Controller[], port: number, mongoUri: string, middlewares: any[]) {
     this.app = express();
@@ -20,6 +22,7 @@ class AppController {
     this.connectToTheDatabase();
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
+    this.initializeStatic();
   }
 
   private initializeMiddlewares() : void {
@@ -31,6 +34,12 @@ class AppController {
     controllers.forEach((controller) => {
       this.app.use('/api', controller.router);
     });
+  }
+
+  private initializeStatic() : void {
+    this.app.get('*', (request: express.Request, response: express.Response) =>
+      response.sendFile('index.html', { root: this.static })
+    )
   }
 
   private connectToTheDatabase() : void {
