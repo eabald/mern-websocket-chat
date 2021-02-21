@@ -8,7 +8,7 @@ export const HomeWrapper = styled.div`
   width: 100vw;
   display: grid;
   grid-template-columns: 15% 85%;
-  grid-template-rows: 5% 80% 15%;
+  grid-template-rows: 50px calc(85% - 50px ) 15%;
   grid-template-areas:
     'nav nav'
     'side main'
