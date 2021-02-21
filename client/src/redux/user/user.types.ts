@@ -46,7 +46,7 @@ export type UserAction =
 
 export interface UserState {
   user: User | null;
-  users: User[] | [];
+  users: User[];
   error: UserError | string | null;
 }
 

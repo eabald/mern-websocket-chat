@@ -16,8 +16,9 @@ class RoomController implements Controller {
   }
 
   private initializeRoutes = (): void => {
-    this.router.get(`${this.path}/:id`, authMiddleware, this.getRoom);
+    this.router.get(`${this.path}/get/:id`, authMiddleware, this.getRoom);
     this.router.post(`${this.path}/create`, authMiddleware, this.createRoom);
+    this.router.get(`${this.path}/get-by-user/:id`, authMiddleware, this.getUserRooms);
   };
 
   private getRoom = async (
@@ -50,6 +51,16 @@ class RoomController implements Controller {
     }
     response.json(currentRoom);
   };
+
+  private getUserRooms = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const id = request.params.id;
+    const rooms = await this.room.find({ users: { $elemMatch: {$eq: id} } });
+    response.json({rooms});
+  }
 }
 
 export default RoomController;

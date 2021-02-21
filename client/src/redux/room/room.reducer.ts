@@ -4,6 +4,8 @@ import {
   RoomState,
   CREATE_ROOM_SUCCESS,
   CREATE_ROOM_ERROR,
+  GET_ROOMS_SUCCESS,
+  GET_ROOMS_ERROR,
 } from './room.types';
 
 const INITIAL_STATE: RoomState = {
@@ -22,6 +24,16 @@ const roomReducer: Reducer<RoomState, RoomAction> = (
         rooms: [...state.rooms, action.payload],
       };
     case CREATE_ROOM_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case GET_ROOMS_SUCCESS:
+      return {
+        ...state,
+        rooms: [...state.rooms, ...action.payload],
+      };
+    case GET_ROOMS_ERROR:
       return {
         ...state,
         error: action.payload,

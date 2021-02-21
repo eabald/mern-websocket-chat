@@ -2,7 +2,6 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import Navbar from './components/navbar/navbar.component';
 import Spinner from './components/spinner/spinner.component';
 import Profile from './pages/profile/profile.component';
 import Home from './pages/home/home.component';
@@ -16,7 +15,6 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <Navbar />
       <Switch>
         <Suspense fallback={<Spinner />}>
           <Route path="/" exact>
