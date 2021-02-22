@@ -51,6 +51,7 @@ class MessageController implements Controller {
   ): Promise<void> {
     const newMessage = await this.message.create(message);
     const room = await this.room.findById(message.room._id);
+    room.messages.push(newMessage);
     const usersInRoom = await this.user.find({ _id: { $in: room.users } });
     usersInRoom.forEach((user) => {
       const userSocket: socketio.Socket = websocket.sockets.sockets.get(

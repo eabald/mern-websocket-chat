@@ -4,12 +4,15 @@ import Controller from '../interfaces/controller.interface';
 import authMiddleware from '../middleware/auth.middleware';
 import RoomDto from '../dto/room.dto';
 import roomModel from '../models/room.model';
+import userModel from '../models/user.model'
 import RoomNotFoundException from '../exceptions/RoomNotFoundException';
+import User from '../interfaces/user.interface';
 
 class RoomController implements Controller {
   public path = '/room';
   public router = express.Router();
   private room = roomModel;
+  private user = userModel;
 
   constructor() {
     this.initializeRoutes();
@@ -48,6 +51,12 @@ class RoomController implements Controller {
     let currentRoom = await this.room.findOne(roomData);
     if (!currentRoom) {
       currentRoom = await this.room.create(roomData);
+      const users = currentRoom.users
+      users.forEach( async (user: User) => {
+        const currentUser = await this.user.findById(user._id);
+        currentUser.rooms = [...new Set([...currentUser.rooms, currentRoom])];
+        await currentUser.save();
+      })
     }
     response.json(currentRoom);
   };
