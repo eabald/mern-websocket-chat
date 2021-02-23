@@ -28,7 +28,7 @@ const app = new AppController(
   [authenticationController, roomController, messageController, userController],
   Number(BACKEND_PORT),
   MONGO_URI,
-  [logger, cors(), cookieParser(), helmet(), errorMiddleware]
+  [logger, cookieParser(), helmet(), errorMiddleware]
 );
 
 app.listen();

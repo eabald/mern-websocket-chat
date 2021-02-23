@@ -37,7 +37,7 @@ class AuthenticationController implements Controller {
   }
 
   private createToken(user: User): TokenData {
-    const expiresIn = 60 * 60;
+    const expiresIn = 3600000;
     const secret = process.env.JWT_SECRET;
     const dataStoredInToken: DataStoredInToken = {
       _id: user._id,
@@ -65,9 +65,10 @@ class AuthenticationController implements Controller {
         password: hashedPassword,
       });
       user.password = undefined;
-      const tokenData = this.createToken(user);
-      response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
-      const { token } = tokenData;
+      const { token, expiresIn } = this.createToken(user);
+      response.cookie('Authorization', token, {
+        maxAge: expiresIn,
+      })
       response.json({ token, user });
     }
   };
@@ -86,9 +87,10 @@ class AuthenticationController implements Controller {
       );
       if (isPasswordMatching) {
         user.password = undefined;
-        const tokenData = this.createToken(user);
-        const { token } = tokenData;
-        response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
+        const { token, expiresIn } = this.createToken(user);
+        response.cookie('Authorization', token, {
+          maxAge: expiresIn,
+        })
         response.json({ token, user });
       } else {
         next(new WrongCredentialsException());
@@ -102,13 +104,9 @@ class AuthenticationController implements Controller {
     request: express.Request,
     response: express.Response
   ): void => {
-    response.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
+    response.clearCookie('Authorization');
     response.json({ status: 200 });
   };
-
-  private createCookie(tokenData: TokenData): string {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
-  }
 }
 
 export default AuthenticationController;
