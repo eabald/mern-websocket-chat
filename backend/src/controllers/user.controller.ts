@@ -13,7 +13,7 @@ class UserController implements Controller {
   }
 
   private initializeRoutes(): void {
-    this.router.get(`${this.path}/get`, authMiddleware, this.getUsers);
+    this.router.get(`${this.path}/get-all`, authMiddleware, this.getUsers);
     this.router.get(`${this.path}/get/:id`, authMiddleware, this.getUser);
   }
 

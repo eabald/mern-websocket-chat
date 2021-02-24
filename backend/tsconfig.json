@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "commonjs",
     "rootDir": "./src",
-    "outDir": "../build",
+    "outDir": "./build",
     "esModuleInterop": true,
     "noImplicitAny": false,
     "experimentalDecorators": true

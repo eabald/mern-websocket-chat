@@ -31,7 +31,7 @@ const roomReducer: Reducer<RoomState, RoomAction> = (
     case GET_ROOMS_SUCCESS:
       return {
         ...state,
-        rooms: [...state.rooms, ...action.payload],
+        rooms: action.payload,
       };
     case GET_ROOMS_ERROR:
       return {

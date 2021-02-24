@@ -10,19 +10,21 @@ class AppController {
   public port: number;
   public middlewares: any[];
   public mongoUri: string;
-  private static = path.join(__dirname, '../public');
+  private static: string;
 
   constructor(
     controllers: Controller[],
     port: number,
     mongoUri: string,
-    middlewares: any[]
+    staticPath: string,
+    middlewares: any[],
   ) {
     this.app = express();
     this.server = createServer(this.app);
     this.port = port;
     this.middlewares = middlewares;
     this.mongoUri = mongoUri;
+    this.static = staticPath;
 
     this.connectToTheDatabase();
     this.initializeMiddlewares();
