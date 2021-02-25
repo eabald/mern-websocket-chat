@@ -1,4 +1,5 @@
 import { Reducer } from 'redux';
+import { RESET } from '../root-types';
 import {
   AuthState,
   AuthAction,
@@ -56,6 +57,8 @@ const authReducer: Reducer<AuthState, AuthAction> = (
         token: null,
         error: action.payload,
       };
+    case RESET:
+      return INITIAL_STATE;
     default:
       return state;
   }

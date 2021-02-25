@@ -31,7 +31,7 @@ const app = new AppController(
   Number(BACKEND_PORT),
   MONGO_URI,
   ROOT_PATH,
-  [logger, cookieParser(), helmet(), errorMiddleware]
+  [logger, cookieParser(), helmet()]
 );
 
 app.listen();

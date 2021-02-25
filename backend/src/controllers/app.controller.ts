@@ -1,5 +1,5 @@
 import express from 'express';
-import path from 'path';
+import errorMiddleware from '../middleware/error.middleware';
 import { createServer, Server } from 'http';
 import mongoose from 'mongoose';
 import Controller from '../interfaces/controller.interface';
@@ -17,7 +17,7 @@ class AppController {
     port: number,
     mongoUri: string,
     staticPath: string,
-    middlewares: any[],
+    middlewares: any[]
   ) {
     this.app = express();
     this.server = createServer(this.app);
@@ -30,12 +30,17 @@ class AppController {
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
     this.initializeStatic();
+    this.initializeErrorMiddleware();
   }
 
   private initializeMiddlewares(): void {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
     this.middlewares.forEach((middleware) => this.app.use(middleware));
+  }
+
+  private initializeErrorMiddleware(): void {
+    this.app.use(errorMiddleware);
   }
 
   private initializeControllers(controllers: Controller[]): void {

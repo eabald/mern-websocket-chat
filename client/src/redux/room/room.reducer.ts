@@ -1,4 +1,5 @@
 import { Reducer } from 'redux';
+import { RESET } from '../root-types';
 import {
   RoomAction,
   RoomState,
@@ -38,6 +39,8 @@ const roomReducer: Reducer<RoomState, RoomAction> = (
         ...state,
         error: action.payload,
       };
+    case RESET:
+      return INITIAL_STATE;
     default:
       return state;
   }

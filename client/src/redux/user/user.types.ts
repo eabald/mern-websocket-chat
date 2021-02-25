@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { ResetAction } from '../root-types';
 
 export const GET_USER_START = 'GET_USER_START';
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
@@ -42,7 +43,8 @@ export type UserAction =
   | GetUserErrorAction
   | GetUsersStartAction
   | GetUsersSuccessAction
-  | GetUsersErrorAction;
+  | GetUsersErrorAction
+  | ResetAction;
 
 export interface UserState {
   user: User | null;

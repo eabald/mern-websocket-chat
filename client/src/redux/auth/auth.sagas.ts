@@ -22,6 +22,7 @@ import {
   signOutError,
 } from './auth.actions';
 import { getUserSuccess } from '../user/user.actions';
+import { reset } from '../root-actions'
 
 export function* signIn({ payload }: SignInStartAction) {
   try {
@@ -29,7 +30,7 @@ export function* signIn({ payload }: SignInStartAction) {
     yield put(signInSuccess(token));
     yield put(getUserSuccess(user));
   } catch (error) {
-    yield put(signInError(error));
+    yield put(signInError(error.response.data));
   }
 }
 
@@ -39,7 +40,7 @@ export function* signUp({ payload }: SignUpStartAction) {
     yield put(signUpSuccess(token));
     yield put(getUserSuccess(user));
   } catch (error) {
-    yield put(signUpError(error));
+    yield put(signUpError(error.response.data));
   }
 }
 
@@ -47,8 +48,9 @@ export function* signOut() {
   try {
     yield signOutRequest();
     yield put(signOutSuccess());
+    yield put(reset());
   } catch (error) {
-    yield put(signOutError(error));
+    yield put(signOutError(error.response.data));
   }
 }
 

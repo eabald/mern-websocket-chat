@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { ResetAction } from '../root-types';
 import { User } from '../user/user.types';
 
 export const CREATE_ROOM_START = 'CREATE_ROOM_START';
@@ -45,7 +46,8 @@ export type RoomAction =
   | CreateRoomError
   | GetRoomsStart
   | GetRoomsSuccess
-  | GetRoomsError;
+  | GetRoomsError
+  | ResetAction;
 
 export interface RoomState {
   rooms: Room[];

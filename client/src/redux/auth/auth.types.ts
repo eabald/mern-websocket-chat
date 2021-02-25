@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { ResetAction } from '../root-types';
 
 export const SIGN_IN_START = 'SIGN_IN_START';
 export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';
@@ -64,7 +65,8 @@ export type AuthAction =
   | SignUpErrorAction
   | SignOutStartAction
   | SignOutSuccessAction
-  | SignOutErrorAction;
+  | SignOutErrorAction
+  | ResetAction;
 
 export interface Credentials {
   email: string;
