@@ -14,6 +14,7 @@
     "@types/redux-logger": "^3.0.8",
     "@types/styled-components": "^5.1.7",
     "axios": "^0.21.1",
+    "formik": "^2.2.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
@@ -25,7 +26,6 @@
     "redux-saga": "^1.1.3",
     "socket.io-client": "^3.1.1",
     "styled-components": "^5.2.1",
-    "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
@@ -52,5 +52,10 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8000"
+  "proxy": "http://localhost:8000",
+  "devDependencies": {
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.2.2"
+  }
 }
