@@ -8,6 +8,7 @@ import Home from './pages/home/home.component';
 import Login from './pages/login/login.component';
 import Logout from './pages/logout/logout.component';
 import Register from './pages/register/register.component';
+import ErrorsOutlet from './components/errorsOutlet/errorsOutlet.component';
 import { RootState } from './redux/root-reducer';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor } from './redux/store';
@@ -20,6 +21,7 @@ const App: React.FC = () => {
   return (
     <PersistGate loading={<Spinner />} persistor={persistor}>
       <ThemeProvider theme={MainTheme}>
+        <ErrorsOutlet />
         <BrowserRouter>
           <Switch>
             <Suspense fallback={<Spinner />}>
@@ -36,6 +38,7 @@ const App: React.FC = () => {
                 {isLoggedIn ? <Redirect to='/' /> : <Register />}
               </Route>
               <Route path='/logout' component={Logout} />
+              <Route><Redirect to='/' /></Route>
             </Suspense>
           </Switch>
         </BrowserRouter>

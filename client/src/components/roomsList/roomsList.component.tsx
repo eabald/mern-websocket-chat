@@ -11,7 +11,9 @@ const RoomsList: React.FC<RoomsListProps> = () => {
   const userId = useSelector((state: RootState) => state.user.user?.id);
   const rooms = useSelector((state: RootState) => state.room.rooms);
   useEffect(() => {
-    dispatch(getRoomsStart(userId ?? ''));
+    if (userId) {
+      dispatch(getRoomsStart(userId));
+    }
   }, [dispatch, userId]);
 
   return (

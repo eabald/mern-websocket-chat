@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { signUpStart } from '../../redux/auth/auth.actions';
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
-
+import InlineLink from '../../components/inlineLink/inlineLink.component';
 import { RegisterWrapper } from './register.styles';
 import SmallHeader from '../../components/smallHeader/smallHeader.component';
 import SubmitButton from '../../components/form/submitButton/submitButton.component';
@@ -12,6 +12,7 @@ import Label from '../../components/form/label/label.component';
 import FormField from '../../components/form/formField/formField.component';
 import ValidationError from '../../components/form/validationError/validationError.component';
 import RegisterFormValidationSchema from '../../validators/registerForm.validator';
+import Checkbox from '../../components/form/checkbox/checkbox.component';
 
 type RegisterProps = {};
 interface RegisterValues {
@@ -20,6 +21,7 @@ interface RegisterValues {
   username: string;
   firstName: string;
   lastName: string;
+  terms: boolean;
 }
 
 const Register: React.FC<RegisterProps> = () => {
@@ -39,6 +41,7 @@ const Register: React.FC<RegisterProps> = () => {
             username: '',
             firstName: '',
             lastName: '',
+            terms: false,
           }}
           validationSchema={RegisterFormValidationSchema}
           onSubmit={(
@@ -46,9 +49,10 @@ const Register: React.FC<RegisterProps> = () => {
             actions: FormikHelpers<RegisterValues>
           ) => {
             submitHandler(values);
+            setTimeout(() => actions.setSubmitting(false), 500);
           }}
         >
-          {({touched, errors, isValid, isSubmitting}) => (
+          {({touched, errors, isValid, isSubmitting, values}) => (
             <Form>
               <FormGroup>
                 <Label htmlFor='email'>Email</Label>
@@ -75,8 +79,15 @@ const Register: React.FC<RegisterProps> = () => {
                 <FormField id='password' name='password' type='password' error={touched.password && errors.password}/>
                 <ErrorMessage name='password' render={error => <ValidationError>{error}</ValidationError>} />
               </FormGroup>
+              <Checkbox
+                name='terms'
+                error={touched.terms && errors.terms}
+                errorInfo={<ErrorMessage name='terms' render={error => <ValidationError>{error}</ValidationError>} />}
+              >
+                Accept <InlineLink to='/terms-and-conditions'>terms and conditions</InlineLink>
+              </Checkbox>
               <FormGroup>
-                <SubmitButton disabled={!isValid || isSubmitting} />
+                <SubmitButton disabled={!isValid || isSubmitting || !values.terms}  loading={isSubmitting}/>
               </FormGroup>
             </Form>
           )}

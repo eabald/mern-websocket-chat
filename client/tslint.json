@@ -9,5 +9,8 @@
       "single"
     ],
     "no-console": false
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -13,6 +13,8 @@ export const SIGN_OUT_START = 'SIGN_OUT_START';
 export const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS';
 export const SIGN_OUT_ERROR = 'SIGN_OUT_ERROR';
 
+export const CLEAR_AUTH_ERROR = 'CLEAR_AUTH_ERROR';
+
 export interface SignInStartAction extends Action {
   type: typeof SIGN_IN_START;
   payload: Credentials;
@@ -56,6 +58,10 @@ export interface SignOutErrorAction extends Action {
   payload: AuthError;
 }
 
+export interface ClearAuthErrorAction extends Action {
+  type: typeof CLEAR_AUTH_ERROR;
+}
+
 export type AuthAction =
   | SignInStartAction
   | SignInSuccessAction
@@ -66,6 +72,7 @@ export type AuthAction =
   | SignOutStartAction
   | SignOutSuccessAction
   | SignOutErrorAction
+  | ClearAuthErrorAction
   | ResetAction;
 
 export interface Credentials {
@@ -81,7 +88,7 @@ export interface SignUpCredentials extends Credentials {
 
 export interface AuthState {
   token: string | null;
-  error: AuthError | string | null;
+  error: AuthError | null;
 }
 
 export interface AuthError {

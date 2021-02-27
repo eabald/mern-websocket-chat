@@ -20,15 +20,17 @@ import {
   signUpError,
   signOutSuccess,
   signOutError,
+  clearAuthError,
 } from './auth.actions';
 import { getUserSuccess } from '../user/user.actions';
-import { reset } from '../root-actions'
+import { reset } from '../root-actions';
 
 export function* signIn({ payload }: SignInStartAction) {
   try {
     const { token, user } = yield signInRequest(payload);
     yield put(signInSuccess(token));
     yield put(getUserSuccess(user));
+    yield put(clearAuthError());
   } catch (error) {
     yield put(signInError(error.response.data));
   }
@@ -39,6 +41,7 @@ export function* signUp({ payload }: SignUpStartAction) {
     const { token, user } = yield signUpRequest(payload);
     yield put(signUpSuccess(token));
     yield put(getUserSuccess(user));
+    yield put(clearAuthError());
   } catch (error) {
     yield put(signUpError(error.response.data));
   }

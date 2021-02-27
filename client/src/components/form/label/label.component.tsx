@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { LabelWrapper } from './label.styles';
 
 type LabelProps = {
-  children: string;
+  children: string | ReactNode;
   htmlFor: string;
 };
 

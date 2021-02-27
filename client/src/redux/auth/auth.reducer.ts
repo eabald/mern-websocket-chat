@@ -9,6 +9,7 @@ import {
   SIGN_UP_ERROR,
   SIGN_OUT_SUCCESS,
   SIGN_OUT_ERROR,
+  CLEAR_AUTH_ERROR,
 } from './auth.types';
 
 const INITIAL_STATE: AuthState = {
@@ -56,6 +57,11 @@ const authReducer: Reducer<AuthState, AuthAction> = (
         ...state,
         token: null,
         error: action.payload,
+      };
+    case CLEAR_AUTH_ERROR:
+      return {
+        ...state,
+        error: null,
       };
     case RESET:
       return INITIAL_STATE;

@@ -11,6 +11,7 @@ import {
   SIGN_OUT_START,
   SIGN_OUT_SUCCESS,
   SIGN_OUT_ERROR,
+  CLEAR_AUTH_ERROR,
 } from './auth.types';
 
 export const signInStart = (credentials: Credentials) => ({
@@ -56,3 +57,7 @@ export const signOutError = (error: AuthError) => ({
   type: SIGN_OUT_ERROR,
   payload: error,
 });
+
+export const clearAuthError = () => ({
+  type: CLEAR_AUTH_ERROR,
+})

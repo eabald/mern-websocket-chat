@@ -9,10 +9,10 @@ const Navbar: React.FC<NavbarProps> = () => {
   return (
     <NavbarContainer>
       <NavbarLinksWrapper>
-        <NavbarLink to="/profile">
+        <NavbarLink to='/profile'>
           <FontAwesomeIcon icon={faUser} />
         </NavbarLink>
-        <NavbarLink to="/logout">
+        <NavbarLink to='/logout'>
           <FontAwesomeIcon icon={faPowerOff} />
         </NavbarLink>
       </NavbarLinksWrapper>

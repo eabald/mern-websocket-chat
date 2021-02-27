@@ -21,7 +21,7 @@ export const SubmitButtonElement = styled.button`
   }
   &:disabled {
     cursor: not-allowed;
-    background: #5a5a5a;
+    background: #788ce4;
     color: #b6b6b6;
     text-decoration: none;
   }

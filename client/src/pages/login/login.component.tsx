@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { signInStart } from '../../redux/auth/auth.actions';
-
 import AuthLayout from '../../layout/auth/auth.layout';
 import SubmitButton from '../../components/form/submitButton/submitButton.component';
 import FormGroup from '../../components/form/formGroup/formGroup.component';
@@ -12,6 +11,8 @@ import { LoginWrapper } from './login.styles';
 import SmallHeader from '../../components/smallHeader/smallHeader.component';
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
 import LoginFormValidationSchema from '../../validators/loginForm.validator';
+import TextBlock from '../../components/textBlock/textBlock.component';
+import InlineLink from '../../components/inlineLink/inlineLink.component';
 
 type LoginProps = {};
 interface FormValues {
@@ -37,6 +38,7 @@ const Login: React.FC<LoginProps> = () => {
             actions: FormikHelpers<FormValues>
           ) => {
             submitHandler(values);
+            setTimeout(() => actions.setSubmitting(false), 500);
           }}
         >
           {({touched, errors, isValid, isSubmitting}) => (
@@ -58,11 +60,12 @@ const Login: React.FC<LoginProps> = () => {
                 <ErrorMessage name='password' render={error => <ValidationError>{error}</ValidationError>} />
               </FormGroup>
               <FormGroup>
-                <SubmitButton disabled={!isValid || isSubmitting} />
+                <SubmitButton disabled={!isValid || isSubmitting} loading={isSubmitting}/>
               </FormGroup>
             </Form>
           )}
         </Formik>
+        <TextBlock>If you don't have an account, You can register <InlineLink to='/register'>here</InlineLink></TextBlock>
       </LoginWrapper>
     </AuthLayout>
   );

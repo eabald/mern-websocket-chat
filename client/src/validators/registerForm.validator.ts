@@ -6,6 +6,7 @@ const RegisterFormValidationSchema = Yup.object().shape({
   lastName: Yup.string().min(2, 'Too Short!').max(70, 'Too Long!').required('Required'),
   username: Yup.string().min(2, 'Too Short!').max(70, 'Too Long!').required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
+  terms: Yup.boolean().oneOf([true], 'Must Accept Terms and Conditions'),
 });
 
 export default RegisterFormValidationSchema;
