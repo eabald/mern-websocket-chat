@@ -6,6 +6,7 @@ type FormFieldProps = {
   name: string;
   placeholder?: string;
   type: string;
+  error?: boolean | string;
 };
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -13,7 +14,8 @@ const FormField: React.FC<FormFieldProps> = ({
   name,
   placeholder,
   type,
+  error
 }) => (
-  <FormFieldElement id={id} name={name} placeholder={placeholder} type={type} />
+  <FormFieldElement id={id} name={name} placeholder={placeholder} type={type} error={error} />
 );
 export default FormField;

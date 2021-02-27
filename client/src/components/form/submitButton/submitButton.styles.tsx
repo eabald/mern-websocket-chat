@@ -19,4 +19,10 @@ export const SubmitButtonElement = styled.button`
     color: #ffffff;
     text-decoration: underline;
   }
+  &:disabled {
+    cursor: not-allowed;
+    background: #5a5a5a;
+    color: #b6b6b6;
+    text-decoration: none;
+  }
 `
