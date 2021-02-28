@@ -15,6 +15,7 @@ import {
 const INITIAL_STATE: AuthState = {
   token: null,
   error: null,
+  refreshToken: null,
 };
 
 const authReducer: Reducer<AuthState, AuthAction> = (
@@ -25,37 +26,43 @@ const authReducer: Reducer<AuthState, AuthAction> = (
     case SIGN_IN_SUCCESS:
       return {
         ...state,
-        token: action.payload,
+        token: action.payload.token,
+        refreshToken: action.payload.refreshToken,
         error: null,
       };
     case SIGN_IN_ERROR:
       return {
         ...state,
         token: null,
+        refreshToken: null,
         error: action.payload,
       };
     case SIGN_UP_SUCCESS:
       return {
         ...state,
-        token: action.payload,
+        token: action.payload.token,
+        refreshToken: action.payload.refreshToken,
         error: null,
       };
     case SIGN_UP_ERROR:
       return {
         ...state,
         token: null,
+        refreshToken: null,
         error: action.payload,
       };
     case SIGN_OUT_SUCCESS:
       return {
         ...state,
         token: null,
+        refreshToken: null,
         error: null,
       };
     case SIGN_OUT_ERROR:
       return {
         ...state,
         token: null,
+        refreshToken: null,
         error: action.payload,
       };
     case CLEAR_AUTH_ERROR:

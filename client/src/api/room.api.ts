@@ -19,7 +19,6 @@ export async function createRoomRequest(room: Room): Promise<RoomResponse> {
 export async function getRoomsRequest(id: string): Promise<RoomsResponse> {
   const response = await axios.get(`/api/room/get-by-user/${id}`, {
     withCredentials: true,
-    headers: { crossDomain: true, 'Content-Type': 'application/json' },
   });
   return response.data;
 }

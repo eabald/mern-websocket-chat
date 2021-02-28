@@ -7,7 +7,6 @@ interface ErrorJson {
 }
 
 export function* checkForUnauthorized(error: ErrorJson) {
-  console.log(error);
   if (error.status === 401) {
     yield put(signOutStart());
   }

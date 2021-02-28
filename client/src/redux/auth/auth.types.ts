@@ -22,7 +22,7 @@ export interface SignInStartAction extends Action {
 
 export interface SignInSuccessAction extends Action {
   type: typeof SIGN_IN_SUCCESS;
-  payload: string;
+  payload: {token: string, refreshToken: string};
 }
 
 export interface SignInErrorAction extends Action {
@@ -37,7 +37,7 @@ export interface SignUpStartAction extends Action {
 
 export interface SignUpSuccessAction extends Action {
   type: typeof SIGN_UP_SUCCESS;
-  payload: string;
+  payload: {token: string, refreshToken: string};
 }
 
 export interface SignUpErrorAction extends Action {
@@ -89,6 +89,7 @@ export interface SignUpCredentials extends Credentials {
 export interface AuthState {
   token: string | null;
   error: AuthError | null;
+  refreshToken: string | null;
 }
 
 export interface AuthError {

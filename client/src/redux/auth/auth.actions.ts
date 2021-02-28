@@ -19,9 +19,9 @@ export const signInStart = (credentials: Credentials) => ({
   payload: credentials,
 });
 
-export const signInSuccess = (token: string) => ({
+export const signInSuccess = (tokens: {token: string, refreshToken: string}) => ({
   type: SIGN_IN_SUCCESS,
-  payload: token,
+  payload: tokens,
 });
 
 export const signInError = (error: AuthError) => ({
@@ -34,9 +34,9 @@ export const signUpStart = (signUpCredentials: SignUpCredentials) => ({
   payload: signUpCredentials,
 });
 
-export const signUpSuccess = (token: string) => ({
+export const signUpSuccess = (tokens: {token: string, refreshToken: string}) => ({
   type: SIGN_UP_SUCCESS,
-  payload: token,
+  payload: tokens,
 });
 
 export const signUpError = (error: AuthError) => ({

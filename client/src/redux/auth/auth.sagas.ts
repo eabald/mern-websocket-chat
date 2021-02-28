@@ -27,8 +27,8 @@ import { reset } from '../root-actions';
 
 export function* signIn({ payload }: SignInStartAction) {
   try {
-    const { token, user } = yield signInRequest(payload);
-    yield put(signInSuccess(token));
+    const { token, refreshToken, user } = yield signInRequest(payload);
+    yield put(signInSuccess({token, refreshToken}));
     yield put(getUserSuccess(user));
     yield put(clearAuthError());
   } catch (error) {
@@ -38,8 +38,8 @@ export function* signIn({ payload }: SignInStartAction) {
 
 export function* signUp({ payload }: SignUpStartAction) {
   try {
-    const { token, user } = yield signUpRequest(payload);
-    yield put(signUpSuccess(token));
+    const { token, refreshToken, user } = yield signUpRequest(payload);
+    yield put(signUpSuccess({token, refreshToken}));
     yield put(getUserSuccess(user));
     yield put(clearAuthError());
   } catch (error) {

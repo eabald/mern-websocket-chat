@@ -1,5 +1,6 @@
 import { NextFunction, Response } from 'express';
 import AuthenticationTokenMissingException from '../exceptions/AuthenticationTokenMissingException';
+import AuthenticationTokenExpiredException from '../exceptions/AuthenticationTokenExpiredException';
 import WrongAuthenticationTokenException from '../exceptions/WrongAuthenticationTokenException';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
 import AuthenticationService from '../services/authentication.service';
@@ -21,7 +22,11 @@ async function authMiddleware(
         next(new WrongAuthenticationTokenException());
       }
     } catch (error) {
-      next(new WrongAuthenticationTokenException());
+      if (error.name === 'TokenExpiredError') {
+        next(new AuthenticationTokenExpiredException());
+      } else {
+        next(new WrongAuthenticationTokenException());
+      }
     }
   } else {
     next(new AuthenticationTokenMissingException());
