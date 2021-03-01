@@ -18,12 +18,14 @@ import WrongAuthenticationTokenException from '../exceptions/WrongAuthentication
 import AuthenticationService from '../services/authentication.service';
 import InternalServerErrorException from '../exceptions/InternalServerErrorException';
 import RefreshTokenDto from '../dto/refreshToken.dto';
+import roomModel from '../models/room.model';
 
 class AuthenticationController implements Controller {
   public path = '/auth';
   public router = express.Router();
   private user = userModel;
   private refreshToken = refreshTokenModel;
+  private room = roomModel;
   private authService: AuthenticationService;
 
   constructor() {
@@ -89,15 +91,21 @@ class AuthenticationController implements Controller {
       next(new UserWithThatUsernameAlreadyExistsException(userData.username));
     } else {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
+      const defaultRooms = await this.room.find({ $or: [{ name: 'general' }, { name: 'random' }]})
       const user = await this.user.create({
         ...userData,
         password: hashedPassword,
+        rooms: defaultRooms,
       });
+      defaultRooms.forEach(async (room) => {
+        room.users.push(user);
+        await room.save();
+      })
       user.password = undefined;
       const { token, expiresIn } = this.createToken(user);
       const refreshToken = await this.createRefreshToken(user);
       response.cookie('Authorization', token, {
-        maxAge: expiresIn * 24,
+        maxAge: expiresIn,
         httpOnly: true,
       });
       response.json({ token, user, refreshToken: refreshToken.token });

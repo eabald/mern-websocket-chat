@@ -16,6 +16,17 @@ class RoomController implements Controller {
 
   constructor() {
     this.initializeRoutes();
+    this.createInitialRooms();
+  }
+
+  private  createInitialRooms = async (): Promise<void> => {
+    const defaultRooms = ['general', 'random'];
+    defaultRooms.forEach(async (room) => {
+      const currentRoom = await this.room.findOne({ name: room });
+      if (!currentRoom) {
+        await this.room.create({ name: room, users: [], messages: [] })
+      }
+    })
   }
 
   private initializeRoutes = (): void => {
@@ -30,13 +41,9 @@ class RoomController implements Controller {
     next: express.NextFunction
   ): Promise<void> => {
     const id = request.params.id;
-    if (mongoose.Types.ObjectId.isValid(id.toString())) {
-      const room = await this.room.findById(id);
-      if (room) {
-        response.json(room);
-      } else {
-        next(new RoomNotFoundException());
-      }
+    const room = await this.room.findById(id);
+    if (room) {
+      response.json({ room });
     } else {
       next(new RoomNotFoundException());
     }

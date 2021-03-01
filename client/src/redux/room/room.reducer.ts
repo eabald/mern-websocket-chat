@@ -7,10 +7,13 @@ import {
   CREATE_ROOM_ERROR,
   GET_ROOMS_SUCCESS,
   GET_ROOMS_ERROR,
+  SET_CURRENT_ROOM_SUCCESS,
+  SET_CURRENT_ROOM_ERROR,
 } from './room.types';
 
 const INITIAL_STATE: RoomState = {
   rooms: [],
+  currentRoom: null,
   error: null,
 };
 
@@ -39,6 +42,16 @@ const roomReducer: Reducer<RoomState, RoomAction> = (
         ...state,
         error: action.payload,
       };
+    case SET_CURRENT_ROOM_SUCCESS:
+      return {
+        ...state,
+        currentRoom: action.payload,
+      }
+    case SET_CURRENT_ROOM_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      }
     case RESET:
       return INITIAL_STATE;
     default:

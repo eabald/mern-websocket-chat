@@ -13,7 +13,7 @@ const roomSchema = new mongoose.Schema(
     messages: [
       {
         ref: 'Message',
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.Mixed,
       },
     ],
   },

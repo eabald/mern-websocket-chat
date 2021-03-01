@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import errorMiddleware from '../middleware/error.middleware';
 import { createServer, Server } from 'http';
 import mongoose from 'mongoose';
@@ -8,7 +8,7 @@ class AppController {
   public app: express.Application;
   public server: Server;
   public port: number;
-  public middlewares: any[];
+  public middlewares: RequestHandler[];
   public mongoUri: string;
   private static: string;
 
@@ -17,7 +17,7 @@ class AppController {
     port: number,
     mongoUri: string,
     staticPath: string,
-    middlewares: any[]
+    middlewares: RequestHandler[]
   ) {
     this.app = express();
     this.server = createServer(this.app);

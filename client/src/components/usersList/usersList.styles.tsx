@@ -1,6 +1,6 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
-export const RoomsListWrapper = styled.ul`
+export const UsersListWrapper = styled.ul`
   display: block;
   list-style: none;
   margin: 0;
@@ -12,34 +12,21 @@ export const RoomsListWrapper = styled.ul`
 `;
 
 interface LiProps {
-  active: boolean | null,
-}
+  active: boolean,
+};
 
-const li = css<LiProps>`
+export const UsersListItem = styled.li<LiProps>`
   padding: 5px;
   padding-left: 10px;
   cursor: pointer;
   text-decoration: ${props => props.active ? 'underline' : 'none'};
   &:before {
+    content: '#';
     padding-right: 10px;
     text-decoration: none;
     display:inline-block;
   }
   &:hover {
     box-shadow: inset 0px 0px 10px 1px #ced7ff;
-  }
-`;
-
-export const RoomsListItem = styled.li`
-  ${li}
-  &:before {
-    content: '#';
-  }
-`;
-
-export const RoomsListItemAdd = styled.li`
-  ${li}
-  &:before {
-    content: '+';
   }
 `;

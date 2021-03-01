@@ -60,6 +60,7 @@ export interface UserError {
 export interface User {
   _id: string;
   id: string;
+  username: string;
   firstName: string;
   lastName: string;
   email: string;

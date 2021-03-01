@@ -22,3 +22,10 @@ export async function getRoomsRequest(id: string): Promise<RoomsResponse> {
   });
   return response.data;
 }
+
+export async function getRoomRequest(id: string): Promise<RoomResponse> {
+  const response = await axios.get(`/api/room/get/${id}`, {
+    withCredentials: true,
+  });
+  return response.data;
+}

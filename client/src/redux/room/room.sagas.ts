@@ -1,16 +1,24 @@
 import { takeLatest, put, all, call } from 'redux-saga/effects';
-import { createRoomRequest, getRoomsRequest } from '../../api/room.api';
+import {
+  createRoomRequest,
+  getRoomRequest,
+  getRoomsRequest,
+} from '../../api/room.api';
 import {
   createRoomSuccess,
   createRoomError,
   getRoomsSuccess,
   getRoomsError,
+  setCurrentRoomSuccess,
+  setCurrentRoomError,
 } from './room.actions';
 import {
   CreateRoomStart,
   CREATE_ROOM_START,
   GetRoomsStart,
   GET_ROOMS_START,
+  SetCurrentRoomStart,
+  SET_CURRENT_ROOM_START,
 } from './room.types';
 import { checkForUnauthorized } from '../sagas.utils';
 
@@ -34,6 +42,16 @@ export function* getRooms({ payload }: GetRoomsStart) {
   }
 }
 
+export function* setCurrentRoom({ payload }: SetCurrentRoomStart) {
+  try {
+    const { room } = yield getRoomRequest(payload._id ?? '');
+    yield put(setCurrentRoomSuccess(room));
+  } catch (error) {
+    yield checkForUnauthorized(error.response.data);
+    yield put(setCurrentRoomError(error.response.data));
+  }
+}
+
 export function* onCreateRoomStart() {
   yield takeLatest(CREATE_ROOM_START, createRoom);
 }
@@ -42,8 +60,16 @@ export function* onGetRoomsStart() {
   yield takeLatest(GET_ROOMS_START, getRooms);
 }
 
+export function* onSetCurrentRoomStart() {
+  yield takeLatest(SET_CURRENT_ROOM_START, setCurrentRoom);
+}
+
 export function* roomSagas() {
-  yield all([call(onCreateRoomStart), call(onGetRoomsStart)]);
+  yield all([
+    call(onCreateRoomStart),
+    call(onGetRoomsStart),
+    call(onSetCurrentRoomStart),
+  ]);
 }
 
 export default roomSagas;

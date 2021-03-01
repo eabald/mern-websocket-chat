@@ -38,7 +38,7 @@ const App: React.FC = () => {
                 {isLoggedIn ? <Redirect to='/' /> : <Register />}
               </Route>
               <Route path='/logout' component={Logout} />
-              <Route><Redirect to='/' /></Route>
+              {/* <Route><Redirect to='/' /></Route> */}
             </Suspense>
           </Switch>
         </BrowserRouter>

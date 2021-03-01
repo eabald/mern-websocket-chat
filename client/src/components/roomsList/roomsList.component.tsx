@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getRoomsStart } from '../../redux/room/room.actions';
+import { getRoomsStart, setCurrentRoomStart } from '../../redux/room/room.actions';
 import { Room } from '../../redux/room/room.types';
 import { RootState } from '../../redux/root-reducer';
+import { RoomsListWrapper, RoomsListItem, RoomsListItemAdd } from './roomsList.styles';
+import SectionHeader from '../sectionHeader/sectionHeader.component';
 
 type RoomsListProps = {};
 
@@ -10,6 +12,8 @@ const RoomsList: React.FC<RoomsListProps> = () => {
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.user.user?.id);
   const rooms = useSelector((state: RootState) => state.room.rooms);
+  const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
+  const setRoom = (room: Room) => dispatch(setCurrentRoomStart(room));
   useEffect(() => {
     if (userId) {
       dispatch(getRoomsStart(userId));
@@ -17,11 +21,15 @@ const RoomsList: React.FC<RoomsListProps> = () => {
   }, [dispatch, userId]);
 
   return (
-    <ul>
-      {rooms.map((room: Room) => (
-        <li key={room._id}>{room.name}</li>
-      ))}
-    </ul>
+    <>
+      <SectionHeader>Rooms</SectionHeader>
+      <RoomsListWrapper>
+        {rooms.map((room: Room) => (
+          <RoomsListItem onClick={() => setRoom(room)} active={currentRoom && currentRoom._id === room._id } key={room._id}>{room.name}</RoomsListItem>
+        ))}
+        <RoomsListItemAdd active={false}>Add new room</RoomsListItemAdd>
+      </RoomsListWrapper>
+    </>
   );
 };
 export default RoomsList;

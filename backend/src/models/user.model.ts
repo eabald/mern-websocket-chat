@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     lastName: String,
     socketId: String,
     username: String,
+    terms: Boolean,
     password: {
       type: String,
       get: (): undefined => undefined,

@@ -21,8 +21,8 @@ class UserController implements Controller {
     request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    const users = await this.user.find({});
-    response.json(users);
+    const users = await this.user.find();
+    response.json({users});
   };
 
   private getUser = async (
@@ -31,7 +31,7 @@ class UserController implements Controller {
   ): Promise<void> => {
     const id = request.params.id;
     const user = await this.user.findById(id);
-    response.json(user);
+    response.json({user});
   };
 }
 
