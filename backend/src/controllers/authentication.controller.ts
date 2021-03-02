@@ -98,7 +98,7 @@ class AuthenticationController implements Controller {
         rooms: defaultRooms,
       });
       defaultRooms.forEach(async (room) => {
-        room.users.push(user);
+        room.users.push(user._id);
         await room.save();
       })
       user.password = undefined;

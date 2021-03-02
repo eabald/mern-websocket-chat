@@ -63,7 +63,8 @@ class MessageController implements Controller {
         userSocket.join(message.room._id);
       }
     });
-    socket.to(message.room._id).emit('messageReceived', newMessage);
+    socket.broadcast.to(message.room._id).emit('messageReceived', newMessage);
+    socket.nsp.to(message.room._id).emit('messageReceived', newMessage);
   }
 }
 

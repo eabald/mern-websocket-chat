@@ -6,7 +6,7 @@ const messageSchema = new mongoose.Schema({
   timestamp: Date,
   user: {
     ref: 'User',
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.Mixed,
   },
   room: {
     ref: 'Room',

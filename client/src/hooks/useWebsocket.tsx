@@ -12,7 +12,7 @@ interface Msg {
   _id?: string,
   content: string,
   user: User,
-  room: Room,
+  room: Room | string,
   timestamp: Date,
 }
 
@@ -24,13 +24,10 @@ const useWebsocket = () => {
 
   useEffect(() => {
     socketRef.current = io(SOCKET_SERVER_URL, {
-      reconnectionAttempts: 5,
-      reconnectionDelay: 5000,
       auth: { token },
     });
     socketRef.current.on('messageReceived', (message: Msg) => {
-      console.log(message);
-      if (currentRoom && currentRoom._id === message._id) {
+      if (currentRoom && currentRoom._id === message.room) {
         dispatch(setCurrentRoomSuccess({...currentRoom, messages: [...currentRoom.messages, message]}));
       } else {
         //
