@@ -1,9 +1,12 @@
+// External
 import { takeLatest, put, all, call } from 'redux-saga/effects';
+// Api
 import {
   createRoomRequest,
   getRoomRequest,
   getRoomsRequest,
 } from '../../api/room.api';
+// Actions
 import {
   createRoomSuccess,
   createRoomError,
@@ -12,6 +15,7 @@ import {
   setCurrentRoomSuccess,
   setCurrentRoomError,
 } from './room.actions';
+// Types
 import {
   CreateRoomStart,
   CREATE_ROOM_START,
@@ -20,6 +24,7 @@ import {
   SetCurrentRoomStart,
   SET_CURRENT_ROOM_START,
 } from './room.types';
+// Utils
 import { checkForUnauthorized } from '../sagas.utils';
 
 export function* createRoom({ payload }: CreateRoomStart) {

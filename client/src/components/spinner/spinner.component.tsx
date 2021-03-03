@@ -1,8 +1,7 @@
+// React
 import React from 'react';
 
-type SpinnerProps = {
-
-};
+type SpinnerProps = {};
 
 const Spinner:React.FC<SpinnerProps> = () => {
 

@@ -1,4 +1,6 @@
+// External
 import { Reducer } from 'redux';
+// Types
 import { RESET } from '../root-types';
 import {
   RoomAction,

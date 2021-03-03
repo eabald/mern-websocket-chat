@@ -1,5 +1,8 @@
+// External
 import axios from 'axios';
+// Redux
 import { Store } from 'redux';
+// Actions
 import { signUpError, signUpSuccess } from '../redux/auth/auth.actions';
 
 const interceptors = async (store: Store) => {

@@ -1,5 +1,8 @@
+// External
 import { takeLatest, put, all, call } from 'redux-saga/effects';
+// Api
 import { getUserRequest, getUsersRequest } from '../../api/user.api';
+// Types
 import {
   getUserError,
   getUsersError,
@@ -11,6 +14,7 @@ import {
   GET_USERS_START,
   GET_USER_START,
 } from './user.types';
+// Utils
 import { checkForUnauthorized } from '../sagas.utils';
 
 export function* getUser({ payload }: GetUserStartAction) {

@@ -1,12 +1,15 @@
+// React
 import { useEffect, useRef } from 'react';
+// Socket.io
 import { io, Socket } from 'socket.io-client';
+// Redux
 import { RootState } from '../redux/root-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { User } from '../redux/user/user.types';
 import { Room } from '../redux/room/room.types';
 import { setCurrentRoomSuccess } from '../redux/room/room.actions';
 
-const SOCKET_SERVER_URL = 'http://localhost:8000';
+const SOCKET_SERVER_URL = '/';
 
 interface Msg {
   _id?: string,

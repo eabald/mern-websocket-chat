@@ -1,5 +1,6 @@
+// React
 import React from 'react';
-import Navbar from '../../components/navbar/navbar.component';
+// Styled
 import {
   HomeWrapper,
   HomeNavArea,
@@ -7,6 +8,8 @@ import {
   HomeMainArea,
   HomeInputArea,
 } from './home.styles';
+// Components
+import Navbar from '../../components/navbar/navbar.component';
 import RoomsList from '../../components/roomsList/roomsList.component';
 import UsersList from '../../components/usersList/usersList.component';
 import MessageForm from '../../components/messageForm/messageForm.component';

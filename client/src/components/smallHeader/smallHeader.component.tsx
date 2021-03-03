@@ -1,4 +1,6 @@
+// React
 import React, { ReactNode } from 'react';
+// Styled
 import { SmallHeaderH1 } from './smallHeader.styles';
 
 type SmallHeaderProps = {

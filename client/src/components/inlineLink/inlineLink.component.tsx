@@ -1,4 +1,6 @@
+// React
 import React from 'react';
+// Styled
 import { InlineLinkElement } from './inlineLink.styles';
 
 type InlineLinkProps = {

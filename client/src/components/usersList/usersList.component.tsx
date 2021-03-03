@@ -1,10 +1,14 @@
+// React
 import React, { useEffect } from 'react';
-import SectionHeader from '../sectionHeader/sectionHeader.component';
-import { UsersListWrapper, UsersListItem } from './usersList.styles';
+// Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
 import { getUsersStart } from '../../redux/user/user.actions';
 import { User } from '../../redux/user/user.types';
+// Styled
+import { UsersListWrapper, UsersListItem } from './usersList.styles';
+// Components
+import SectionHeader from '../sectionHeader/sectionHeader.component';
 
 type UsersListProps = {};
 

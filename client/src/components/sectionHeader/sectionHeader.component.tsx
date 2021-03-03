@@ -1,4 +1,6 @@
+// React
 import React, { ReactNode } from 'react';
+// Styled
 import { SectionHeaderH3 } from './sectionHeader.styles';
 
 type SectionHeaderProps = {

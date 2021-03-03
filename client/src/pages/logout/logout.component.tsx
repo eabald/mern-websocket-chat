@@ -1,11 +1,11 @@
+// React
 import React, { useEffect } from 'react';
+// Redux
 import { useDispatch } from 'react-redux';
 import { signOutStart } from '../../redux/auth/auth.actions';
-
+// Layout
 import AuthLayout from '../../layout/auth/auth.layout';
-import FreepikInfo from '../../components/freepikInfo/freepikInfo.component';
-import LinkButton from '../../components/linkButton/linkButton.component';
-import SmallHeader from '../../components/smallHeader/smallHeader.component';
+// Styled
 import {
   LogoutWrapper,
   LogoutImageWrapper,
@@ -13,6 +13,10 @@ import {
   LogoutLinkWrapper,
   LogoutImage,
 } from './logout.styles';
+// Components
+import FreepikInfo from '../../components/freepikInfo/freepikInfo.component';
+import LinkButton from '../../components/linkButton/linkButton.component';
+import SmallHeader from '../../components/smallHeader/smallHeader.component';
 
 type LogoutProps = {};
 

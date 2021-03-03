@@ -1,3 +1,4 @@
+// Types
 import {
   GET_USER_ERROR,
   GET_USER_START,

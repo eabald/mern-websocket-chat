@@ -1,4 +1,6 @@
+// External
 import axios, { AxiosResponse } from 'axios';
+// Types
 import { User } from '../redux/user/user.types';
 
 interface UserResponse extends AxiosResponse {

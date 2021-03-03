@@ -1,4 +1,6 @@
+// React
 import React, { ReactNode } from 'react';
+// Styled
 import { LabelWrapper } from './label.styles';
 
 type LabelProps = {

@@ -1,3 +1,4 @@
+// external
 import * as Yup from 'yup';
 
 const MessageFormValidationSchema = Yup.object().shape({

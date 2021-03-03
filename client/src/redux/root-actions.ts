@@ -1,3 +1,4 @@
+// Types
 import { RESET } from './root-types';
 
 export const reset = () => ({

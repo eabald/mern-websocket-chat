@@ -1,9 +1,13 @@
+// React
 import React from 'react';
-import { ErrorsOutletWrapper } from './errorsOutlet.styles';
+// Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
-import ErrorLayerMessage from '../errorLayerMessage/errorLayerMessage.component';
 import { clearAuthError } from '../../redux/auth/auth.actions';
+// Styled
+import { ErrorsOutletWrapper } from './errorsOutlet.styles';
+// Components
+import ErrorLayerMessage from '../errorLayerMessage/errorLayerMessage.component';
 
 type ErrorsOutletProps = {};
 

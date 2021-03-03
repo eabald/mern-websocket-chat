@@ -1,15 +1,22 @@
+// React
 import React from 'react';
+// Ecternal
 import { Formik, FormikHelpers, Form } from 'formik';
+// Utils
 import checkText from '../../utils/smile2emoji';
+// Redux
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/root-reducer';
+// Hooks
 import useWebsocket from '../../hooks/useWebsocket';
+// Validators
 import MessageFormValidationSchema from '../../validators/messageForm.validator';
+// Styled
 import {
   MessageFormWrapper,
   MessageFormTextArea,
   MessageFormSubmit,
 } from './messageForm.styles';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/root-reducer';
 
 type MessageFormProps = {};
 interface FormValues {

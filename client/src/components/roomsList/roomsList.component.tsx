@@ -1,9 +1,13 @@
+// React
 import React, { useEffect } from 'react';
+// Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoomsStart, setCurrentRoomStart } from '../../redux/room/room.actions';
 import { Room } from '../../redux/room/room.types';
 import { RootState } from '../../redux/root-reducer';
+// Styled
 import { RoomsListWrapper, RoomsListItem, RoomsListItemAdd } from './roomsList.styles';
+// Components
 import SectionHeader from '../sectionHeader/sectionHeader.component';
 
 type RoomsListProps = {};

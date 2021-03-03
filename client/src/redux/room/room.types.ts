@@ -1,4 +1,6 @@
+// External
 import { Action } from 'redux';
+// Types
 import { ResetAction } from '../root-types';
 import { User } from '../user/user.types';
 

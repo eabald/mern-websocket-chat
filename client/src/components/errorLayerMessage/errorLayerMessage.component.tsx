@@ -1,8 +1,11 @@
+// React
 import React from 'react';
+// Styled
 import {
   ErrorLayerMessageContainer,
   ErrorLayerMessageText,
 } from './errorLayerMessage.styles';
+// Components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBomb } from '@fortawesome/free-solid-svg-icons';
 

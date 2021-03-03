@@ -1,7 +1,15 @@
+// React
 import React, { Suspense } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+// Redux
 import { useSelector } from 'react-redux';
-
+import { RootState } from './redux/root-reducer';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor } from './redux/store';
+// Styled Components
+import { ThemeProvider } from 'styled-components';
+import { MainTheme } from './themes/main.theme';
+// Components
 import Spinner from './components/spinner/spinner.component';
 import Profile from './pages/profile/profile.component';
 import Home from './pages/home/home.component';
@@ -9,11 +17,6 @@ import Login from './pages/login/login.component';
 import Logout from './pages/logout/logout.component';
 import Register from './pages/register/register.component';
 import ErrorsOutlet from './components/errorsOutlet/errorsOutlet.component';
-import { RootState } from './redux/root-reducer';
-import { PersistGate } from 'redux-persist/integration/react';
-import { persistor } from './redux/store';
-import { ThemeProvider } from 'styled-components';
-import { MainTheme } from './themes/main.theme';
 
 const App: React.FC = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.token);

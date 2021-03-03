@@ -1,4 +1,6 @@
+// React
 import React, { FC, ReactNode } from 'react';
+// Styled
 import { AuthLayoutWrapper, AuthLayoutBox } from './auth.styles.layout';
 
 type AuthLayoutProps = {

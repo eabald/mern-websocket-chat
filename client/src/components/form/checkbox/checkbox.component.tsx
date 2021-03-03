@@ -1,5 +1,8 @@
+// React
 import React, { ReactNode } from 'react';
+// Styled
 import { CheckboxField, CheckboxLabel } from './checkbox.styles';
+// Components
 import FormGroup from '../formGroup/formGroup.component';
 
 type CheckboxProps = {

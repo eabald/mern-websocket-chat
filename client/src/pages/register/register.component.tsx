@@ -1,17 +1,24 @@
+// React
 import React from 'react';
+// Redux
 import { useDispatch } from 'react-redux';
 import { signUpStart } from '../../redux/auth/auth.actions';
+// External
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
-import InlineLink from '../../components/inlineLink/inlineLink.component';
+// Validators
+import RegisterFormValidationSchema from '../../validators/registerForm.validator';
+// Layout
+import AuthLayout from '../../layout/auth/auth.layout';
+// Styled
 import { RegisterWrapper } from './register.styles';
+// Components
+import InlineLink from '../../components/inlineLink/inlineLink.component';
 import SmallHeader from '../../components/smallHeader/smallHeader.component';
 import SubmitButton from '../../components/form/submitButton/submitButton.component';
 import FormGroup from '../../components/form/formGroup/formGroup.component';
-import AuthLayout from '../../layout/auth/auth.layout';
 import Label from '../../components/form/label/label.component';
 import FormField from '../../components/form/formField/formField.component';
 import ValidationError from '../../components/form/validationError/validationError.component';
-import RegisterFormValidationSchema from '../../validators/registerForm.validator';
 import Checkbox from '../../components/form/checkbox/checkbox.component';
 
 type RegisterProps = {};

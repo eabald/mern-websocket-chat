@@ -1,4 +1,6 @@
+// React
 import React from 'react';
+// Styled
 import { ButtonLoaderWrapper, ButtonLoaderDot } from './buttonLoader.styles';
 
 type ButtonLoaderProps = {};

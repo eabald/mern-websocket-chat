@@ -1,4 +1,6 @@
+// External
 import { Action } from 'redux';
+// Types
 import { AuthAction } from './auth/auth.types'
 import { RoomAction } from './room/room.types';
 import { UserAction } from './user/user.types'

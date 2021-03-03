@@ -1,10 +1,12 @@
+// External
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-
+// Reducers
 import authReducer from './auth/auth.reducer';
 import userReducer from './user/user.reducer';
 import roomReducer from './room/room.reducer'
+// Types
 import { RootAction } from './root-types';
 
 const persistConfig = {

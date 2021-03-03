@@ -1,4 +1,9 @@
+// React
 import React from 'react';
+// Redux
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/root-reducer';
+// Styled
 import {
   NavbarContainer,
   NavbarLinksWrapper,
@@ -6,10 +11,9 @@ import {
   NavbarGreetings,
   NavbarCurrentRoom,
 } from './navbar.styles';
+// Components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPowerOff, faUser } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/root-reducer';
 
 type NavbarProps = {};
 

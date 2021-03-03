@@ -1,4 +1,6 @@
+// External
 import axios, { AxiosResponse } from 'axios';
+// Types
 import { Room } from '../redux/room/room.types';
 
 interface RoomResponse extends AxiosResponse {

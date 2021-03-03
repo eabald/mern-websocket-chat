@@ -1,7 +1,11 @@
+// React
 import React from 'react';
+// Redux
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
+// Styled
 import { MessagesOutletWrapper } from './messagesOutlet.styles';
+// Components
 import MessageItem from '../messageItem/messageItem.component';
 
 type MessagesOutletProps = {};

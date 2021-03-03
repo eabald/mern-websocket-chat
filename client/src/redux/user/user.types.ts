@@ -1,4 +1,6 @@
+// External
 import { Action } from 'redux';
+// Root types
 import { ResetAction } from '../root-types';
 
 export const GET_USER_START = 'GET_USER_START';

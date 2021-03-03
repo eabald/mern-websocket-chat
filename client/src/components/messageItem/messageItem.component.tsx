@@ -1,11 +1,14 @@
+// React
 import React, { useEffect, useRef } from 'react';
+// Types
+import { User } from '../../redux/user/user.types';
+// Styled
 import {
   MessageItemWrapper,
   MessageItemUser,
   MessageItemTimestamp,
   MessageItemContent,
 } from './messageItem.styles';
-import { User } from '../../redux/user/user.types';
 
 type MessageItemProps = {
   key: string;

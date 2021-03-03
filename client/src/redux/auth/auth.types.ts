@@ -1,4 +1,6 @@
+// External
 import { Action } from 'redux';
+// Types
 import { ResetAction } from '../root-types';
 
 export const SIGN_IN_START = 'SIGN_IN_START';

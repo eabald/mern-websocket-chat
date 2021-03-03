@@ -1,4 +1,6 @@
+// External
 import axios, { AxiosResponse } from 'axios';
+// Types
 import { Credentials, SignUpCredentials } from '../redux/auth/auth.types';
 import { User } from '../redux/user/user.types';
 

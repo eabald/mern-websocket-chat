@@ -1,4 +1,6 @@
+// React
 import React from 'react';
+// Styled
 import { FreepikInfoWrapper, FreepikInfoLink } from './freepikInfo.styles';
 
 type FreepikInfoProps = {};

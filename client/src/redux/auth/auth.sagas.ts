@@ -1,3 +1,6 @@
+// External
+import { takeLatest, put, all, call } from 'redux-saga/effects';
+// Types
 import {
   SIGN_IN_START,
   SIGN_UP_START,
@@ -6,13 +9,13 @@ import {
   SignUpStartAction,
   SignOutStartAction,
 } from './auth.types';
-
-import { takeLatest, put, all, call } from 'redux-saga/effects';
+// Api
 import {
   signInRequest,
   signUpRequest,
   signOutRequest,
 } from '../../api/auth.api';
+// Actions
 import {
   signInError,
   signInSuccess,

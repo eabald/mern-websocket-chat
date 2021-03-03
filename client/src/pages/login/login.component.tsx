@@ -1,16 +1,23 @@
+// React
 import React from 'react';
+// Redux
 import { useDispatch } from 'react-redux';
 import { signInStart } from '../../redux/auth/auth.actions';
+// External
+import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
+// Validators
+import LoginFormValidationSchema from '../../validators/loginForm.validator';
+// Styled
+import { LoginWrapper } from './login.styles';
+// Layout
 import AuthLayout from '../../layout/auth/auth.layout';
+// Components
 import SubmitButton from '../../components/form/submitButton/submitButton.component';
 import FormGroup from '../../components/form/formGroup/formGroup.component';
 import ValidationError from '../../components/form/validationError/validationError.component';
 import Label from '../../components/form/label/label.component';
 import FormField from '../../components/form/formField/formField.component';
-import { LoginWrapper } from './login.styles';
 import SmallHeader from '../../components/smallHeader/smallHeader.component';
-import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
-import LoginFormValidationSchema from '../../validators/loginForm.validator';
 import TextBlock from '../../components/textBlock/textBlock.component';
 import InlineLink from '../../components/inlineLink/inlineLink.component';
 

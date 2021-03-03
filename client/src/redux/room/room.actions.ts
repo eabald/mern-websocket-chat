@@ -1,3 +1,4 @@
+// Types
 import {
   CREATE_ROOM_ERROR,
   CREATE_ROOM_START,

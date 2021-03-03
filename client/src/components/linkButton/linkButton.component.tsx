@@ -1,4 +1,6 @@
+// React
 import React from 'react';
+// Styled
 import { LinkButtonWrapper } from './linkButton.styles';
 
 type LinkButtonProps = {

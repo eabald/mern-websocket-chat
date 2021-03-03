@@ -1,4 +1,6 @@
+// External
 import { Reducer } from 'redux';
+// Types
 import { RESET } from '../root-types';
 import { UserState, UserAction, GET_USER_SUCCESS, GET_USER_ERROR, GET_USERS_SUCCESS, GET_USERS_ERROR } from './user.types';
 
