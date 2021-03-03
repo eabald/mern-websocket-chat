@@ -58,9 +58,11 @@ class MessageController implements Controller {
       const userSocket: socketio.Socket = websocket.sockets.sockets.get(
         user.socketId
       );
-      const isUserInRoom = userSocket.rooms.has(message.room._id);
-      if (!isUserInRoom) {
-        userSocket.join(message.room._id);
+      if (userSocket) {
+        const isUserInRoom = userSocket.rooms.has(message.room._id);
+        if (!isUserInRoom) {
+          userSocket.join(message.room._id);
+        }
       }
     });
     socket.broadcast.to(message.room._id).emit('messageReceived', newMessage);

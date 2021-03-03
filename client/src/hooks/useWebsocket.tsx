@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { RootState } from '../redux/root-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { User } from '../redux/user/user.types';
@@ -17,7 +17,7 @@ interface Msg {
 }
 
 const useWebsocket = () => {
-  const socketRef = useRef<any>();
+  const socketRef = useRef<Socket>();
   const token = useSelector((state: RootState) => state.auth.token);
   const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
   const dispatch = useDispatch();
@@ -34,12 +34,12 @@ const useWebsocket = () => {
       }
     });
     return () => {
-      socketRef.current.disconnect();
+      socketRef.current?.disconnect();
     };
   }, [token, currentRoom, dispatch]);
 
   const sendMessage = (msg: Msg) => {
-    socketRef.current.emit('messageSent', msg);
+    socketRef.current?.emit('messageSent', msg);
   };
 
   return { sendMessage };
