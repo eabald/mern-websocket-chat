@@ -1,17 +1,44 @@
 # MERN-WEBSOCKET-CHAT
 
-## 1. Client
+## Development
 
-REACT
+### Perquisites
 
-## 2. Backend
+* Docker installed.
+* Node and npm installed.
 
-EXPRESS
+### Start in development mode
 
-## 3. Database
+Run:
 
-MONGO DB
+```bash
+ ./start_db.sh
+```
 
-## 4. Webserver
+Install all dependencies:
 
-NGINX
+```bash
+cd backend && npm i
+```
+
+and
+
+```bash
+cd client && npm i
+```
+
+In separate terminals start development servers:
+
+```bash
+cd backend && npm start
+```
+
+and
+
+```bash
+cd client && npm start
+```
+
+## Production
+
+TODO.
