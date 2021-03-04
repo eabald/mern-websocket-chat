@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { signOutStart } from '../../redux/auth/auth.actions';
 // Layout
-import AuthLayout from '../../layout/auth/auth.layout';
+import MainLayout from '../../layout/main/main.layout';
 // Styled
 import {
   LogoutWrapper,
@@ -28,7 +28,7 @@ const Logout: React.FC<LogoutProps> = () => {
   }, [dispatch]);
 
   return (
-    <AuthLayout>
+    <MainLayout>
       <LogoutWrapper>
         <LogoutImageWrapper>
           <LogoutImage />
@@ -41,7 +41,7 @@ const Logout: React.FC<LogoutProps> = () => {
         </LogoutLinkWrapper>
       </LogoutWrapper>
       <FreepikInfo />
-    </AuthLayout>
+    </MainLayout>
   );
 };
 export default Logout;

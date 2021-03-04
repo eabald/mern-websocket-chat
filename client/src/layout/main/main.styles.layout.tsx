@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const AuthLayoutWrapper = styled.div`
+export const MainLayoutWrapper = styled.div`
   position: fixed;
   top: 0;
   right: 0;
@@ -22,7 +22,7 @@ export const AuthLayoutWrapper = styled.div`
   }
 `;
 
-export const AuthLayoutBox = styled.div`
+export const MainLayoutBox = styled.div`
   z-index: 1;
   min-width: 33%;
 `;

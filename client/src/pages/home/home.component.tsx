@@ -8,6 +8,7 @@ import {
   HomeMainArea,
   HomeInputArea,
 } from './home.styles';
+import { MainLayoutWrapper } from '../../layout/main/main.styles.layout';
 // Components
 import Navbar from '../../components/navbar/navbar.component';
 import RoomsList from '../../components/roomsList/roomsList.component';
@@ -18,20 +19,23 @@ import MessagesOutlet from '../../components/messagesOutlet/messagesOutlet.compo
 type HomeProps = {};
 
 const Home: React.FC<HomeProps> = () => (
-  <HomeWrapper>
-    <HomeSideArea>
-      <RoomsList />
-      <UsersList />
-    </HomeSideArea>
-    <HomeMainArea>
-      <MessagesOutlet />
-    </HomeMainArea>
-    <HomeInputArea>
-      <MessageForm />
-    </HomeInputArea>
-    <HomeNavArea>
-      <Navbar />
-    </HomeNavArea>
-  </HomeWrapper>
+  <>
+    <MainLayoutWrapper />
+    <HomeWrapper>
+      <HomeSideArea>
+        <RoomsList />
+        <UsersList />
+      </HomeSideArea>
+      <HomeMainArea>
+        <MessagesOutlet />
+      </HomeMainArea>
+      <HomeInputArea>
+        <MessageForm />
+      </HomeInputArea>
+      <HomeNavArea>
+        <Navbar />
+      </HomeNavArea>
+    </HomeWrapper>
+  </>
 );
 export default Home;

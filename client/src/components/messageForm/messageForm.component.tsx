@@ -1,6 +1,6 @@
 // React
 import React from 'react';
-// Ecternal
+// External
 import { Formik, FormikHelpers, Form } from 'formik';
 // Utils
 import checkText from '../../utils/smile2emoji';
@@ -26,7 +26,7 @@ interface FormValues {
 const MessageForm: React.FC<MessageFormProps> = () => {
   const { sendMessage } = useWebsocket();
   const submitHandler = async ({ msg }: FormValues): Promise<void> => {
-    if (user && room) {
+    if (user && room && msg.trim().length) {
       const newMsg = {
         content: msg,
         user,

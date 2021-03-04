@@ -8,7 +8,7 @@ import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
 // Validators
 import RegisterFormValidationSchema from '../../validators/registerForm.validator';
 // Layout
-import AuthLayout from '../../layout/auth/auth.layout';
+import MainLayout from '../../layout/main/main.layout';
 // Styled
 import { RegisterWrapper } from './register.styles';
 // Components
@@ -38,7 +38,7 @@ const Register: React.FC<RegisterProps> = () => {
   };
 
   return (
-    <AuthLayout>
+    <MainLayout>
       <RegisterWrapper>
         <SmallHeader>Register</SmallHeader>
         <Formik
@@ -100,7 +100,7 @@ const Register: React.FC<RegisterProps> = () => {
           )}
         </Formik>
       </RegisterWrapper>
-    </AuthLayout>
+    </MainLayout>
   );
 };
 export default Register;

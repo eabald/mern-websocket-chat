@@ -10,7 +10,7 @@ import LoginFormValidationSchema from '../../validators/loginForm.validator';
 // Styled
 import { LoginWrapper } from './login.styles';
 // Layout
-import AuthLayout from '../../layout/auth/auth.layout';
+import MainLayout from '../../layout/main/main.layout';
 // Components
 import SubmitButton from '../../components/form/submitButton/submitButton.component';
 import FormGroup from '../../components/form/formGroup/formGroup.component';
@@ -34,7 +34,7 @@ const Login: React.FC<LoginProps> = () => {
   };
 
   return (
-    <AuthLayout>
+    <MainLayout>
       <LoginWrapper>
         <SmallHeader>Login</SmallHeader>
         <Formik
@@ -74,7 +74,7 @@ const Login: React.FC<LoginProps> = () => {
         </Formik>
         <TextBlock>If you don't have an account, You can register <InlineLink to='/register'>here</InlineLink></TextBlock>
       </LoginWrapper>
-    </AuthLayout>
+    </MainLayout>
   );
 };
 export default Login;

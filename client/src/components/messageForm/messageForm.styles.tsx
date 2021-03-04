@@ -32,7 +32,7 @@ export const MessageFormSubmit = styled.button`
   width: calc(5% - 10px);
   font-family: ${props => props.theme.font};
   text-transform: uppercase;
-  background: #4759a8;
+  background: #7487da;
   color: #ced7ff;
   text-decoration: none;
   text-align: center;
@@ -41,4 +41,9 @@ export const MessageFormSubmit = styled.button`
   border: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  &:hover {
+    background: #5a6fca;
+    color: #ffffff;
+    text-decoration: underline;
+  }
 `;

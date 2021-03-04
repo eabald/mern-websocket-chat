@@ -20,17 +20,13 @@ export const HomeNavArea = styled.div`
 `
 export const HomeSideArea = styled.div`
   grid-area: side;
-  background: #2f3131;
   border-right: solid 1px #000;
-  /* margin-top: 1px; */
 `
 export const HomeMainArea = styled.div`
   grid-area: main;
-  background: #5a5a5a;
 `
 export const HomeInputArea = styled.div`
   grid-area: input;
-  background: #2f3131;
   border-top: solid 1px #000;
   height: 100%;
 `

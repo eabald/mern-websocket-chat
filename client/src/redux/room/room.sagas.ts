@@ -1,5 +1,5 @@
 // External
-import { takeLatest, put, all, call } from 'redux-saga/effects';
+import { takeLatest, put, all, call, select } from 'redux-saga/effects';
 // Api
 import {
   createRoomRequest,
@@ -21,11 +21,15 @@ import {
   CREATE_ROOM_START,
   GetRoomsStart,
   GET_ROOMS_START,
+  Room,
   SetCurrentRoomStart,
   SET_CURRENT_ROOM_START,
 } from './room.types';
 // Utils
 import { checkForUnauthorized } from '../sagas.utils';
+import { RootState } from '../root-reducer';
+
+export const selectCurrentRoom = (state: RootState): Room | null => state.room.currentRoom;
 
 export function* createRoom({ payload }: CreateRoomStart) {
   try {
@@ -41,6 +45,11 @@ export function* getRooms({ payload }: GetRoomsStart) {
   try {
     const { rooms } = yield getRoomsRequest(payload);
     yield put(getRoomsSuccess(rooms));
+    const currentRoom: Room | null = yield select(selectCurrentRoom);
+    if (!currentRoom) {
+      yield put(setCurrentRoomSuccess(rooms[0]));
+    }
+
   } catch (error) {
     yield checkForUnauthorized(error.response.data);
     yield put(getRoomsError(error.response.data));
