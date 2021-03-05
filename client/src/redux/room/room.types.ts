@@ -15,6 +15,9 @@ export const GET_ROOMS_ERROR = 'GET_ROOMS_ERROR';
 export const SET_CURRENT_ROOM_START = 'SET_CURRENT_ROOM_START';
 export const SET_CURRENT_ROOM_SUCCESS = 'SET_CURRENT_ROOM_SUCCESS';
 export const SET_CURRENT_ROOM_ERROR = 'SET_CURRENT_ROOM_ERROR';
+
+export const SET_UNREAD_MESSAGES = 'SET_UNREAD_MESSAGES';
+
 export interface CreateRoomStart extends Action {
   type: typeof CREATE_ROOM_START;
   payload: Room;
@@ -60,6 +63,11 @@ export interface SetCurrentRoomError extends Action {
   payload: RoomError,
 }
 
+export interface SetUnreadMessages extends Action {
+  type: typeof SET_UNREAD_MESSAGES,
+  payload: Room[],
+}
+
 export type RoomAction =
   | CreateRoomStart
   | CreateRoomSuccess
@@ -70,6 +78,7 @@ export type RoomAction =
   | SetCurrentRoomStart
   | SetCurrentRoomSuccess
   | SetCurrentRoomError
+  | SetUnreadMessages
   | ResetAction;
 
 export interface RoomState {
@@ -88,4 +97,5 @@ export interface Room {
   name: string;
   users: User[];
   messages: any[];
+  hasUnreadMessages?: boolean,
 }

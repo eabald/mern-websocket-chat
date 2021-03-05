@@ -2,13 +2,22 @@
 import React, { useEffect } from 'react';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getRoomsStart, setCurrentRoomStart } from '../../redux/room/room.actions';
+import {
+  getRoomsStart,
+  setCurrentRoomStart,
+} from '../../redux/room/room.actions';
 import { Room } from '../../redux/room/room.types';
 import { RootState } from '../../redux/root-reducer';
 // Styled
-import { RoomsListWrapper, RoomsListItem, RoomsListItemAdd } from './roomsList.styles';
+import {
+  RoomsListWrapper,
+  RoomsListItem,
+  RoomsListItemAdd,
+} from './roomsList.styles';
 // Components
 import SectionHeader from '../sectionHeader/sectionHeader.component';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 
 type RoomsListProps = {};
 
@@ -29,7 +38,14 @@ const RoomsList: React.FC<RoomsListProps> = () => {
       <SectionHeader>Rooms</SectionHeader>
       <RoomsListWrapper>
         {rooms.map((room: Room) => (
-          <RoomsListItem onClick={() => setRoom(room)} active={currentRoom && currentRoom._id === room._id } key={room._id}>{room.name}</RoomsListItem>
+          <RoomsListItem
+            onClick={() => setRoom(room)}
+            active={currentRoom && currentRoom._id === room._id}
+            key={room._id}
+          >
+            {room.name}
+            {room.hasUnreadMessages ? <FontAwesomeIcon icon={faExclamation} /> : null}
+          </RoomsListItem>
         ))}
         <RoomsListItemAdd active={false}>Add new room</RoomsListItemAdd>
       </RoomsListWrapper>

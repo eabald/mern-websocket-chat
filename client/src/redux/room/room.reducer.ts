@@ -11,6 +11,7 @@ import {
   GET_ROOMS_ERROR,
   SET_CURRENT_ROOM_SUCCESS,
   SET_CURRENT_ROOM_ERROR,
+  SET_UNREAD_MESSAGES,
 } from './room.types';
 
 const INITIAL_STATE: RoomState = {
@@ -53,6 +54,11 @@ const roomReducer: Reducer<RoomState, RoomAction> = (
       return {
         ...state,
         error: action.payload,
+      }
+    case SET_UNREAD_MESSAGES:
+      return {
+        ...state,
+        rooms: action.payload,
       }
     case RESET:
       return INITIAL_STATE;

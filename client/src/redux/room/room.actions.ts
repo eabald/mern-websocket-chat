@@ -12,6 +12,7 @@ import {
   SET_CURRENT_ROOM_START,
   SET_CURRENT_ROOM_SUCCESS,
   SET_CURRENT_ROOM_ERROR,
+  SET_UNREAD_MESSAGES,
 } from './room.types';
 
 export const createRoomStart = (room: Room): RoomAction => ({
@@ -58,3 +59,8 @@ export const setCurrentRoomError = (error: RoomError): RoomAction => ({
   type: SET_CURRENT_ROOM_ERROR,
   payload: error,
 });
+
+export const setUnreadMessages = (rooms: Room[]): RoomAction => ({
+  type: SET_UNREAD_MESSAGES,
+  payload: rooms,
+})
