@@ -44,8 +44,7 @@ const Login: React.FC<LoginProps> = () => {
             values: FormValues,
             actions: FormikHelpers<FormValues>
           ) => {
-            submitHandler(values);
-            setTimeout(() => actions.setSubmitting(false), 500);
+            submitHandler(values).finally(() => actions.setSubmitting(false));
           }}
         >
           {({touched, errors, isValid, isSubmitting}) => (

@@ -46,4 +46,9 @@ export const MessageFormSubmit = styled.button`
     color: #ffffff;
     text-decoration: underline;
   }
+  &:disabled {
+    cursor: not-allowed;
+    background: #999898;
+    color: #b6b6b6;
+  }
 `;

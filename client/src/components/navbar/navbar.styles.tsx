@@ -45,6 +45,7 @@ export const NavbarLink = styled(Link)`
 export const NavbarCurrentRoom = styled.div`
   display: flex;
   align-items: center;
+  margin-right: 10px;
   height: 50px;
   font-size: 18px;
   line-height: 50px;

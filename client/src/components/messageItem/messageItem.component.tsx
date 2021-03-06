@@ -11,14 +11,12 @@ import {
 } from './messageItem.styles';
 
 type MessageItemProps = {
-  key: string;
   content: string;
   user: User;
   timestamp: Date;
 };
 
 const MessageItem: React.FC<MessageItemProps> = ({
-  key,
   content,
   user,
   timestamp,
@@ -30,7 +28,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
     }
   })
   return (
-    <MessageItemWrapper ref={message} key={key}>
+    <MessageItemWrapper ref={message}>
       <MessageItemUser>
         {user.username}
         <MessageItemTimestamp>

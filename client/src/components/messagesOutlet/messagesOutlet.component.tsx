@@ -24,7 +24,7 @@ const MessagesOutlet: React.FC<MessagesOutletProps> = () => {
               content={message.content}
               user={message.user}
               timestamp={message.timestamp}
-            ></MessageItem>
+            />
           ))
         : ''}
     </MessagesOutletWrapper>
