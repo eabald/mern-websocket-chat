@@ -1,6 +1,8 @@
 import * as express from 'express';
 import * as socketio from 'socket.io';
 import { Server } from 'http';
+import { createAdapter } from 'socket.io-redis';
+import { RedisClient } from 'redis';
 import Controller from '../interfaces/controller.interface';
 import socketAuth from '../middleware/socketAuth.middleware';
 import Message from '../interfaces/message.interface';
@@ -16,6 +18,8 @@ class MessageController implements Controller {
   private message = messageModel;
   private user = userModel;
   private room = roomModel;
+  private pubClient: any;
+  private subClient: any;
 
   constructor() {
     //
@@ -23,6 +27,14 @@ class MessageController implements Controller {
 
   public initializeWebsocket(server: Server): void {
     this.websocket = new socketio.Server(server, { cors: { origin: '*' } });
+    this.pubClient = new RedisClient({
+      host: process.env.REDIS_HOST,
+      port: Number(process.env.REDIS_PORT),
+    });
+    this.subClient = this.pubClient.duplicate();
+    this.websocket.adapter(
+      createAdapter({ pubClient: this.pubClient, subClient: this.subClient })
+    );
     this.websocket.use(socketAuth);
     this.websocket.on('connection', (socket: SocketWithUser) =>
       this.bindSocketEvents(socket, this.websocket)

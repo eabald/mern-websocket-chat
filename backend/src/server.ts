@@ -12,11 +12,10 @@ import MessageController from './controllers/message.controller';
 import UserController from './controllers/user.controller';
 // middleware
 import logger from './middleware/logger.middleware';
-import errorMiddleware from './middleware/error.middleware';
 // env validator
 import EnvValidator from './validators/env.validator';
 
-dotenv.config({ path: '../.env' });
+dotenv.config({ path: process.env.NODE_ENV === 'development' ? '../.env' : '.env' });
 EnvValidator(process.env);
 const { BACKEND_PORT, MONGO_URI } = process.env;
 const ROOT_PATH = path.join(__dirname, 'public');

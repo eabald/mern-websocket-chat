@@ -9,6 +9,8 @@
 
 ### Start in development mode
 
+Copy .env.example.dev to .env, or suplement your own .env based on .env.example.dev.
+
 Run:
 
 ```bash
@@ -41,4 +43,14 @@ cd client && npm start
 
 ## Production
 
-TODO.
+Make init.sh script executable:
+
+```bash
+chmod +x init.sh
+```
+
+And run it:
+
+```bash
+./init.sh
+```

@@ -4,6 +4,8 @@ const EnvValidator = (env: object) : void => {
     MONGO_URI: str(),
     BACKEND_PORT: port(),
     JWT_SECRET: str(),
+    REDIS_PORT: str(),
+    REDIS_HOST: str(),
   });
 };
 

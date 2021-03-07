@@ -50,12 +50,14 @@ class AppController {
   }
 
   private initializeStatic(): void {
+    this.app.use(express.static(this.static))
     this.app.get('*', (request: express.Request, response: express.Response) =>
       response.sendFile('index.html', { root: this.static })
     );
   }
 
   private connectToTheDatabase(): void {
+    console.log(`mongodb://${this.mongoUri}`);
     mongoose.connect(`mongodb://${this.mongoUri}`, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
