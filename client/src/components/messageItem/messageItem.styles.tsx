@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 
 export const MessageItemWrapper = styled.div`
-  padding: 5px 5px 10px;
-  color: #ced7ff;
-  border-top: solid 1px #000;
+  padding: 5px;
+  color: rgb(206, 215, 255);
+  margin: 5px;
+  background: rgb(90, 90, 90);
+  border-radius: 5px;
+  box-shadow: 0 0 2px 1px rgb(150 150 150 / 50%);
 `;
 
 export const MessageItemUser = styled.div`
