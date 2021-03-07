@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const ProfileWrapper = styled.div`
+export const TermsAndConditionsWrapper = styled.div`
   background: #2e2e2e;
   border-radius: 5px;
   padding: 20px;

@@ -1,0 +1,21 @@
+// React
+import React from 'react';
+//  External
+import { useHistory } from 'react-router-dom';
+// Styled
+import { BackButtonElement } from './backButton.styles';
+// Components
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+
+type BackButtonProps = {};
+
+const BackButton:React.FC<BackButtonProps> = () => {
+  const history = useHistory();
+  return (
+    <BackButtonElement onClick={() => history.goBack()}>
+      <FontAwesomeIcon icon={faArrowLeft} />
+    </BackButtonElement>
+  )
+}
+export default BackButton;

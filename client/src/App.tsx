@@ -10,13 +10,14 @@ import { persistor } from './redux/store';
 import { ThemeProvider } from 'styled-components';
 import { MainTheme } from './themes/main.theme';
 // Components
-import Spinner from './components/spinner/spinner.component';
 import Profile from './pages/profile/profile.component';
 import Home from './pages/home/home.component';
 import Login from './pages/login/login.component';
 import Logout from './pages/logout/logout.component';
 import Register from './pages/register/register.component';
+import TermsAndConditions from './pages/termsAndConditions/termsAndConditions.component';
 import ErrorsOutlet from './components/errorsOutlet/errorsOutlet.component';
+import Spinner from './components/spinner/spinner.component';
 
 const App: React.FC = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.token);
@@ -41,6 +42,7 @@ const App: React.FC = () => {
                 {isLoggedIn ? <Redirect to='/' /> : <Register />}
               </Route>
               <Route path='/logout' component={Logout} />
+              <Route path='/terms-and-conditions' component={TermsAndConditions} />
               {/* <Route><Redirect to='/' /></Route> */}
             </Suspense>
           </Switch>

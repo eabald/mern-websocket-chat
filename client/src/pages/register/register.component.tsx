@@ -20,6 +20,8 @@ import Label from '../../components/form/label/label.component';
 import FormField from '../../components/form/formField/formField.component';
 import ValidationError from '../../components/form/validationError/validationError.component';
 import Checkbox from '../../components/form/checkbox/checkbox.component';
+import BackButton from '../../components/backButton/backButton.component';
+import TextBlock from '../../components/textBlock/textBlock.component';
 
 type RegisterProps = {};
 interface RegisterValues {
@@ -39,6 +41,7 @@ const Register: React.FC<RegisterProps> = () => {
 
   return (
     <MainLayout>
+      <BackButton />
       <RegisterWrapper>
         <SmallHeader>Register</SmallHeader>
         <Formik
@@ -55,8 +58,7 @@ const Register: React.FC<RegisterProps> = () => {
             values: RegisterValues,
             actions: FormikHelpers<RegisterValues>
           ) => {
-            submitHandler(values);
-            setTimeout(() => actions.setSubmitting(false), 500);
+            submitHandler(values).finally(() => actions.setSubmitting(false));
           }}
         >
           {({touched, errors, isValid, isSubmitting, values}) => (
@@ -99,6 +101,7 @@ const Register: React.FC<RegisterProps> = () => {
             </Form>
           )}
         </Formik>
+        <TextBlock>Have an account? Click <InlineLink to='/login'>here</InlineLink> to login.</TextBlock>
       </RegisterWrapper>
     </MainLayout>
   );

@@ -8,6 +8,10 @@ import {
   GET_USERS_SUCCESS,
   User,
   UserError,
+  UpdateUser,
+  UPDATE_USER_START,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
 } from './user.types';
 
 export const getUserStart = (id: string) => ({
@@ -38,3 +42,17 @@ export const getUsersError = (error: UserError) => ({
   type: GET_USERS_ERROR,
   payload: error,
 });
+
+export const updateUserStart = (user: UpdateUser) => ({
+  type: UPDATE_USER_START,
+  payload: user,
+})
+export const updateUserSuccess = (user: User) => ({
+  type: UPDATE_USER_SUCCESS,
+  payload: user,
+
+})
+export const updateUserError = (error: UserError) => ({
+  type: UPDATE_USER_ERROR,
+  payload: error,
+})

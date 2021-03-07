@@ -11,32 +11,51 @@ export const GET_USERS_START = 'GET_USERS_START';
 export const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS';
 export const GET_USERS_ERROR = 'GET_USERS_ERROR';
 
+export const UPDATE_USER_START = 'UPDATE_USER_START';
+export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
+export const UPDATE_USER_ERROR = 'UPDATE_USER_ERROR';
+
 export interface GetUserStartAction extends Action {
-  type: typeof GET_USER_START,
-  payload: string,
+  type: typeof GET_USER_START;
+  payload: string;
 }
 
 export interface GetUserSuccessAction extends Action {
-  type: typeof GET_USER_SUCCESS,
-  payload: User,
+  type: typeof GET_USER_SUCCESS;
+  payload: User;
 }
 
 export interface GetUserErrorAction extends Action {
-  type: typeof GET_USER_ERROR,
-  payload: UserError,
+  type: typeof GET_USER_ERROR;
+  payload: UserError;
 }
 export interface GetUsersStartAction extends Action {
-  type: typeof GET_USERS_START,
+  type: typeof GET_USERS_START;
 }
 
 export interface GetUsersSuccessAction extends Action {
-  type: typeof GET_USERS_SUCCESS,
-  payload: User[],
+  type: typeof GET_USERS_SUCCESS;
+  payload: User[];
 }
 
 export interface GetUsersErrorAction extends Action {
-  type: typeof GET_USERS_ERROR,
-  payload: UserError,
+  type: typeof GET_USERS_ERROR;
+  payload: UserError;
+}
+
+export interface UpdateUserStartAction extends Action {
+  type: typeof UPDATE_USER_START;
+  payload: UpdateUser;
+}
+
+export interface UpdateUserSuccessAction extends Action {
+  type: typeof UPDATE_USER_SUCCESS;
+  payload: User;
+}
+
+export interface UpdateUserErrorAction extends Action {
+  type: typeof UPDATE_USER_ERROR;
+  payload: UserError;
 }
 
 export type UserAction =
@@ -46,6 +65,9 @@ export type UserAction =
   | GetUsersStartAction
   | GetUsersSuccessAction
   | GetUsersErrorAction
+  | UpdateUserStartAction
+  | UpdateUserSuccessAction
+  | UpdateUserErrorAction
   | ResetAction;
 
 export interface UserState {
@@ -69,5 +91,12 @@ export interface User {
   password: string;
   socketId: string;
   rooms: any[];
-  save: any;
+}
+
+export interface UpdateUser {
+  _id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
