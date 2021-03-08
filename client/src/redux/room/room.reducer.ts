@@ -9,6 +9,8 @@ import {
   CREATE_ROOM_ERROR,
   GET_ROOMS_SUCCESS,
   GET_ROOMS_ERROR,
+  GET_ROOM_SUCCESS,
+  GET_ROOM_ERROR,
   SET_CURRENT_ROOM_SUCCESS,
   SET_CURRENT_ROOM_ERROR,
   SET_UNREAD_MESSAGES,
@@ -41,6 +43,16 @@ const roomReducer: Reducer<RoomState, RoomAction> = (
         rooms: action.payload,
       };
     case GET_ROOMS_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case GET_ROOM_SUCCESS:
+      return {
+        ...state,
+        rooms: [...state.rooms, action.payload],
+      };
+    case GET_ROOM_ERROR:
       return {
         ...state,
         error: action.payload,

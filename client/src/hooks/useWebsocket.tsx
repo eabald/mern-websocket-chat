@@ -7,7 +7,7 @@ import { RootState } from '../redux/root-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { User } from '../redux/user/user.types';
 import { Room } from '../redux/room/room.types';
-import { setCurrentRoomSuccess, setUnreadMessages } from '../redux/room/room.actions';
+import { getRoomStart, setCurrentRoomSuccess, setUnreadMessages } from '../redux/room/room.actions';
 
 const SOCKET_SERVER_URL = '/';
 
@@ -15,8 +15,15 @@ interface Msg {
   _id?: string;
   content: string;
   user: User;
-  room: Room | string;
   timestamp: Date;
+}
+
+interface MsgToSend extends Msg {
+  room: Room;
+}
+
+interface MsgReceived extends Msg {
+  room: string;
 }
 
 const useWebsocket = () => {
@@ -30,7 +37,7 @@ const useWebsocket = () => {
     socketRef.current = io(SOCKET_SERVER_URL, {
       auth: { token },
     });
-    socketRef.current.on('messageReceived', (message: Msg) => {
+    socketRef.current.on('messageReceived', (message: MsgReceived) => {
       if (currentRoom && currentRoom._id === message.room) {
         dispatch(
           setCurrentRoomSuccess({
@@ -45,7 +52,12 @@ const useWebsocket = () => {
           }
           return room;
         });
-        dispatch(setUnreadMessages(taggedRooms));
+        const notNew = !!taggedRooms.filter(room => room.hasUnreadMessages).length
+        if (notNew) {
+          dispatch(setUnreadMessages(taggedRooms));
+        } else {
+          dispatch(getRoomStart(message.room));
+        }
       }
     });
     return () => {
@@ -53,7 +65,7 @@ const useWebsocket = () => {
     };
   }, [token, currentRoom, dispatch, rooms]);
 
-  const sendMessage = (msg: Msg) => {
+  const sendMessage = (msg: MsgToSend) => {
     socketRef.current?.emit('messageSent', msg);
   };
 

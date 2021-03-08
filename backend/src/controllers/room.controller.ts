@@ -65,7 +65,7 @@ class RoomController implements Controller {
         await currentUser.save();
       })
     }
-    response.json(currentRoom);
+    response.json({ room: currentRoom });
   };
 
   private getUserRooms = async (

@@ -14,13 +14,17 @@ import {
   getRoomsError,
   setCurrentRoomSuccess,
   setCurrentRoomError,
+  getRoomSuccess,
+  getRoomError,
 } from './room.actions';
 // Types
 import {
   CreateRoomStart,
   CREATE_ROOM_START,
   GetRoomsStart,
+  GetRoomStart,
   GET_ROOMS_START,
+  GET_ROOM_START,
   Room,
   SetCurrentRoomStart,
   SET_CURRENT_ROOM_START,
@@ -56,6 +60,15 @@ export function* getRooms({ payload }: GetRoomsStart) {
   }
 }
 
+export function* getRoom({ payload }: GetRoomStart) {
+  try {
+    const { room } = yield getRoomRequest(payload);
+    yield getRoomSuccess(room);
+  } catch (error) {
+    yield put(getRoomError(error.response.data));
+  }
+}
+
 export function* setCurrentRoom({ payload }: SetCurrentRoomStart) {
   try {
     const { room } = yield getRoomRequest(payload._id ?? '');
@@ -74,6 +87,10 @@ export function* onGetRoomsStart() {
   yield takeLatest(GET_ROOMS_START, getRooms);
 }
 
+export function* onGetRoomStart() {
+  yield takeLatest(GET_ROOM_START, getRoom);
+}
+
 export function* onSetCurrentRoomStart() {
   yield takeLatest(SET_CURRENT_ROOM_START, setCurrentRoom);
 }
@@ -82,6 +99,7 @@ export function* roomSagas() {
   yield all([
     call(onCreateRoomStart),
     call(onGetRoomsStart),
+    call(onGetRoomStart),
     call(onSetCurrentRoomStart),
   ]);
 }

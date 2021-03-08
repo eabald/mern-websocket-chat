@@ -12,6 +12,10 @@ export const GET_ROOMS_START = 'GET_ROOMS_START';
 export const GET_ROOMS_SUCCESS = 'GET_ROOMS_SUCCESS';
 export const GET_ROOMS_ERROR = 'GET_ROOMS_ERROR';
 
+export const GET_ROOM_START = 'GET_ROOM_START';
+export const GET_ROOM_SUCCESS = 'GET_ROOM_SUCCESS';
+export const GET_ROOM_ERROR = 'GET_ROOM_ERROR';
+
 export const SET_CURRENT_ROOM_START = 'SET_CURRENT_ROOM_START';
 export const SET_CURRENT_ROOM_SUCCESS = 'SET_CURRENT_ROOM_SUCCESS';
 export const SET_CURRENT_ROOM_ERROR = 'SET_CURRENT_ROOM_ERROR';
@@ -48,6 +52,21 @@ export interface GetRoomsError extends Action {
   payload: RoomError;
 }
 
+export interface GetRoomStart extends Action {
+  type: typeof GET_ROOM_START;
+  payload: string;
+}
+
+export interface GetRoomSuccess extends Action {
+  type: typeof GET_ROOM_SUCCESS;
+  payload: Room;
+}
+
+export interface GetRoomError extends Action {
+  type: typeof GET_ROOM_ERROR;
+  payload: RoomError;
+}
+
 export interface SetCurrentRoomStart extends Action {
   type: typeof SET_CURRENT_ROOM_START,
   payload: Room,
@@ -75,6 +94,9 @@ export type RoomAction =
   | GetRoomsStart
   | GetRoomsSuccess
   | GetRoomsError
+  | GetRoomStart
+  | GetRoomSuccess
+  | GetRoomError
   | SetCurrentRoomStart
   | SetCurrentRoomSuccess
   | SetCurrentRoomError

@@ -6,6 +6,9 @@ import {
   GET_ROOMS_START,
   GET_ROOMS_SUCCESS,
   GET_ROOMS_ERROR,
+  GET_ROOM_START,
+  GET_ROOM_SUCCESS,
+  GET_ROOM_ERROR,
   Room,
   RoomError,
   RoomAction,
@@ -45,6 +48,21 @@ export const getRoomsError = (error: RoomError): RoomAction => ({
   payload: error,
 });
 
+export const getRoomStart = (id: string): RoomAction => ({
+  type: GET_ROOM_START,
+  payload: id,
+});
+
+export const getRoomSuccess = (room: Room): RoomAction => ({
+  type: GET_ROOM_SUCCESS,
+  payload: room,
+});
+
+export const getRoomError = (error: RoomError): RoomAction => ({
+  type: GET_ROOM_ERROR,
+  payload: error,
+});
+
 export const setCurrentRoomStart = (room: Room): RoomAction => ({
   type: SET_CURRENT_ROOM_START,
   payload: room,
@@ -63,4 +81,4 @@ export const setCurrentRoomError = (error: RoomError): RoomAction => ({
 export const setUnreadMessages = (rooms: Room[]): RoomAction => ({
   type: SET_UNREAD_MESSAGES,
   payload: rooms,
-})
+});

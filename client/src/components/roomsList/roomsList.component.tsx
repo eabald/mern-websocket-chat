@@ -1,5 +1,6 @@
 // React
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -27,6 +28,7 @@ const RoomsList: React.FC<RoomsListProps> = () => {
   const rooms = useSelector((state: RootState) => state.room.rooms);
   const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
   const setRoom = (room: Room) => dispatch(setCurrentRoomStart(room));
+  const location = useLocation();
   useEffect(() => {
     if (userId) {
       dispatch(getRoomsStart(userId));
@@ -44,12 +46,22 @@ const RoomsList: React.FC<RoomsListProps> = () => {
             key={room._id}
           >
             {room.name}
-            {room.hasUnreadMessages ? <FontAwesomeIcon icon={faExclamation} /> : null}
+            {room.hasUnreadMessages ? (
+              <FontAwesomeIcon icon={faExclamation} />
+            ) : null}
           </RoomsListItem>
         ))}
-        <RoomsListItemAdd active={false}>Add new room</RoomsListItemAdd>
+        <RoomsListItemAdd
+          to={{
+            pathname: '/modal/add-new-room',
+            state: { background: location }
+          }}
+        >
+          Add new room
+        </RoomsListItemAdd>
       </RoomsListWrapper>
     </>
   );
 };
+
 export default RoomsList;

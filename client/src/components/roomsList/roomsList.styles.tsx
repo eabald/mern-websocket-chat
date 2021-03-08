@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 export const RoomsListWrapper = styled.ul`
@@ -12,7 +13,7 @@ export const RoomsListWrapper = styled.ul`
 `;
 
 interface LiProps {
-  active: boolean | null,
+  active?: boolean | null,
 }
 
 const li = css<LiProps>`
@@ -37,8 +38,10 @@ export const RoomsListItem = styled.li`
   }
 `;
 
-export const RoomsListItemAdd = styled.li`
+export const RoomsListItemAdd = styled(Link)`
   ${li}
+  color: #ced7ff;
+  display: block;
   &:before {
     content: '+';
   }

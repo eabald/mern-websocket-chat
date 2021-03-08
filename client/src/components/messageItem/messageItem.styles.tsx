@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const MessageItemWrapper = styled.div`
   padding: 5px;
-  color: rgb(206, 215, 255);
+  color: #ced7ff;
   margin: 5px;
   background: rgb(90, 90, 90);
   border-radius: 5px;

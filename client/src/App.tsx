@@ -1,55 +1,26 @@
 // React
-import React, { Suspense } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 // Redux
-import { useSelector } from 'react-redux';
-import { RootState } from './redux/root-reducer';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor } from './redux/store';
 // Styled Components
 import { ThemeProvider } from 'styled-components';
 import { MainTheme } from './themes/main.theme';
 // Components
-import Profile from './pages/profile/profile.component';
-import Home from './pages/home/home.component';
-import Login from './pages/login/login.component';
-import Logout from './pages/logout/logout.component';
-import Register from './pages/register/register.component';
-import TermsAndConditions from './pages/termsAndConditions/termsAndConditions.component';
+import Router from './router';
 import ErrorsOutlet from './components/errorsOutlet/errorsOutlet.component';
 import Spinner from './components/spinner/spinner.component';
 
-const App: React.FC = () => {
-  const isLoggedIn = useSelector((state: RootState) => state.auth.token);
-
-  return (
-    <PersistGate loading={<Spinner />} persistor={persistor}>
-      <ThemeProvider theme={MainTheme}>
-        <ErrorsOutlet />
-        <BrowserRouter>
-          <Switch>
-            <Suspense fallback={<Spinner />}>
-              <Route path='/' exact>
-                {isLoggedIn ? <Home /> : <Redirect to='/login' />}
-              </Route>
-              <Route path='/profile'>
-                {isLoggedIn ? <Profile /> : <Redirect to='/login' />}
-              </Route>
-              <Route path='/login'>
-                {isLoggedIn ? <Redirect to='/' /> : <Login />}
-              </Route>
-              <Route path='/register'>
-                {isLoggedIn ? <Redirect to='/' /> : <Register />}
-              </Route>
-              <Route path='/logout' component={Logout} />
-              <Route path='/terms-and-conditions' component={TermsAndConditions} />
-              {/* <Route><Redirect to='/' /></Route> */}
-            </Suspense>
-          </Switch>
-        </BrowserRouter>
-      </ThemeProvider>
-    </PersistGate>
-  );
-};
+const App: React.FC = () => (
+  <PersistGate loading={<Spinner />} persistor={persistor}>
+    <ThemeProvider theme={MainTheme}>
+      <ErrorsOutlet />
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+    </ThemeProvider>
+  </PersistGate>
+);
 
 export default App;
