@@ -63,7 +63,7 @@ export function* getRooms({ payload }: GetRoomsStart) {
 export function* getRoom({ payload }: GetRoomStart) {
   try {
     const { room } = yield getRoomRequest(payload);
-    yield getRoomSuccess(room);
+    yield put(getRoomSuccess(room));
   } catch (error) {
     yield put(getRoomError(error.response.data));
   }

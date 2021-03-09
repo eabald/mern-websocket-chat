@@ -47,7 +47,7 @@ const RoomsList: React.FC<RoomsListProps> = () => {
           >
             {room.name}
             {room.hasUnreadMessages ? (
-              <FontAwesomeIcon icon={faExclamation} />
+              <FontAwesomeIcon icon={faExclamation} style={{ paddingLeft: '10px' }} />
             ) : null}
           </RoomsListItem>
         ))}
