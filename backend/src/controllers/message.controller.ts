@@ -18,8 +18,8 @@ class MessageController implements Controller {
   private message = messageModel;
   private user = userModel;
   private room = roomModel;
-  private pubClient: any;
-  private subClient: any;
+  private pubClient: RedisClient;
+  private subClient: RedisClient;
 
   constructor() {
     //
