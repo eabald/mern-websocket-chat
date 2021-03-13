@@ -11,6 +11,7 @@ interface User {
   socketId: string;
   rooms: Room[];
   save: any;
+  unread: Room[];
 }
 
 export default User;

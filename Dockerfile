@@ -27,4 +27,6 @@ COPY --from=BUILDER /usr/app/build /usr/app
 COPY --from=CLIENT /usr/app/build /usr/app/public
 COPY .env.example.prod .env
 
+EXPOSE 8000
+
 CMD ["node_modules/.bin/pm2-runtime", "server.js"]

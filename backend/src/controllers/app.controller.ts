@@ -57,7 +57,6 @@ class AppController {
   }
 
   private connectToTheDatabase(): void {
-    console.log(`mongodb://${this.mongoUri}`);
     mongoose.connect(`mongodb://${this.mongoUri}`, {
       useNewUrlParser: true,
       useUnifiedTopology: true,

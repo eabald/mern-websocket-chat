@@ -7,7 +7,12 @@ import { RootState } from '../redux/root-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { User } from '../redux/user/user.types';
 import { Room } from '../redux/room/room.types';
-import { getRoomStart, setCurrentRoomSuccess, setUnreadMessages } from '../redux/room/room.actions';
+import {
+  getRoomStart,
+  setCurrentRoomSuccess,
+  setUnreadMessages,
+} from '../redux/room/room.actions';
+import { updateUnread } from '../redux/user/user.actions';
 
 const SOCKET_SERVER_URL = '/';
 
@@ -31,6 +36,7 @@ const useWebsocket = () => {
   const token = useSelector((state: RootState) => state.auth.token);
   const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
   const rooms = useSelector((state: RootState) => state.room.rooms);
+  const unread = useSelector((state: RootState) => state.user.unread);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,16 +52,9 @@ const useWebsocket = () => {
           })
         );
       } else {
-        const taggedRooms = rooms.map((room) => {
-          if (room._id === message.room) {
-            room.hasUnreadMessages = true;
-          }
-          return room;
-        });
-        const notNew = !!taggedRooms.filter(room => room.hasUnreadMessages).length
-        if (notNew) {
-          dispatch(setUnreadMessages(taggedRooms));
-        } else {
+        dispatch(updateUnread(message.room));
+        const isNewRoom = !rooms.find((room) => room._id === message.room);
+        if (isNewRoom) {
           dispatch(getRoomStart(message.room));
         }
       }
@@ -63,7 +62,24 @@ const useWebsocket = () => {
     return () => {
       socketRef.current?.disconnect();
     };
-  }, [token, currentRoom, dispatch, rooms]);
+  });
+
+  useEffect(() => {
+    let changed = false;
+    const taggedRooms = rooms.map((room) => {
+      const currentUnread = room.hasUnreadMessages;
+      if (room._id && unread.includes(room._id)) {
+        room.hasUnreadMessages = true;
+      } else {
+        room.hasUnreadMessages = false;
+      }
+      changed = currentUnread !== room.hasUnreadMessages;
+      return room;
+    });
+    if (changed) {
+      dispatch(setUnreadMessages(taggedRooms));
+    }
+  }, [unread, rooms, dispatch]);
 
   const sendMessage = (msg: MsgToSend) => {
     socketRef.current?.emit('messageSent', msg);

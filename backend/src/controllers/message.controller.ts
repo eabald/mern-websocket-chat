@@ -66,7 +66,11 @@ class MessageController implements Controller {
     room.messages.push(newMessage);
     await room.save();
     const usersInRoom = await this.user.find({ _id: { $in: room.users } });
-    usersInRoom.forEach((user) => {
+    usersInRoom.forEach(async (user) => {
+      if (message.user._id !== user._id) {
+        user.unread = [...new Set([...user.unread, message.room])];
+        await user.save();
+      }
       const userSocket: socketio.Socket = websocket.sockets.sockets.get(
         user.socketId
       );
@@ -77,8 +81,10 @@ class MessageController implements Controller {
         }
       }
     });
-    socket.broadcast.to(message.room._id).emit('messageReceived', newMessage);
-    socket.nsp.to(message.room._id).emit('messageReceived', newMessage);
+    setTimeout(() => {
+      socket.broadcast.to(message.room._id).emit('messageReceived', newMessage);
+      socket.nsp.to(message.room._id).emit('messageReceived', newMessage);
+    }, 100);
   }
 }
 

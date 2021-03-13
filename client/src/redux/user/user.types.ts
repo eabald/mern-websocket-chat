@@ -15,6 +15,9 @@ export const UPDATE_USER_START = 'UPDATE_USER_START';
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
 export const UPDATE_USER_ERROR = 'UPDATE_USER_ERROR';
 
+export const UPDATE_UNREAD = 'UPDATE_UNREAD';
+export const UPDATE_READ = 'UPDATE_READ';
+
 export interface GetUserStartAction extends Action {
   type: typeof GET_USER_START;
   payload: string;
@@ -58,6 +61,16 @@ export interface UpdateUserErrorAction extends Action {
   payload: UserError;
 }
 
+export interface UpdateUnreadAction extends Action {
+  type: typeof UPDATE_UNREAD;
+  payload: string;
+}
+
+export interface UpdateReadAction extends Action {
+  type: typeof UPDATE_READ;
+  payload: string;
+}
+
 export type UserAction =
   | GetUserStartAction
   | GetUserSuccessAction
@@ -68,12 +81,15 @@ export type UserAction =
   | UpdateUserStartAction
   | UpdateUserSuccessAction
   | UpdateUserErrorAction
+  | UpdateUnreadAction
+  | UpdateReadAction
   | ResetAction;
 
 export interface UserState {
   user: User | null;
   users: User[];
   error: UserError | string | null;
+  unread: string[];
 }
 
 export interface UserError {

@@ -19,6 +19,12 @@ const userSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
       },
     ],
+    unread: [
+      {
+        ref: 'Room',
+        type: mongoose.Schema.Types.ObjectId,
+      },
+    ]
   },
   {
     toJSON: {

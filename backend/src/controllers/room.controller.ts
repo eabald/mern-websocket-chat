@@ -7,6 +7,7 @@ import roomModel from '../models/room.model';
 import userModel from '../models/user.model'
 import RoomNotFoundException from '../exceptions/RoomNotFoundException';
 import User from '../interfaces/user.interface';
+import RequestWithUser from '../interfaces/requestWithUser.interface';
 
 class RoomController implements Controller {
   public path = '/room';
@@ -36,11 +37,14 @@ class RoomController implements Controller {
   };
 
   private getRoom = async (
-    request: express.Request,
+    request: RequestWithUser,
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
     const id = request.params.id;
+    const user = await this.user.findById(request.user._id)
+    user.unread = user.unread.filter(roomId => roomId._id !== id);
+    await user.save();
     const room = await this.room.findById(id);
     if (room) {
       response.json({ room });

@@ -11,12 +11,15 @@ import {
   GET_USERS_ERROR,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  UPDATE_UNREAD,
+  UPDATE_READ,
 } from './user.types';
 
 const INITIAL_STATE: UserState = {
   user: null,
   users: [],
   error: null,
+  unread: [],
 };
 
 const userReducer: Reducer<UserState, UserAction> = (
@@ -54,6 +57,16 @@ const userReducer: Reducer<UserState, UserAction> = (
         ...state,
         error: action.payload,
       };
+    case UPDATE_UNREAD:
+      return {
+        ...state,
+        unread: [...new Set([...state.unread, action.payload])],
+      };
+    case UPDATE_READ:
+      return {
+        ...state,
+        unread: state.unread.filter(roomId => roomId !== action.payload),
+      }
     case RESET:
       return INITIAL_STATE;
     default:

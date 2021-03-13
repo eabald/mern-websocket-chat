@@ -46,7 +46,7 @@ const RoomsList: React.FC<RoomsListProps> = () => {
             key={room._id}
           >
             {room.name}
-            {room.hasUnreadMessages ? (
+            {room.hasUnreadMessages && currentRoom && currentRoom._id !== room._id ? (
               <FontAwesomeIcon icon={faExclamation} style={{ paddingLeft: '10px' }} />
             ) : null}
           </RoomsListItem>
