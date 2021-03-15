@@ -19,6 +19,7 @@ import ValidationError from '../../components/form/validationError/validationErr
 import Label from '../../components/form/label/label.component';
 import FormField from '../../components/form/formField/formField.component';
 import MultiSelect from '../../components/form/multiSelect/multiSelect.component';
+import { findUsersRequest } from '../../api/user.api';
 
 type AddNewRoomProps = {};
 interface FormValues {
@@ -29,11 +30,20 @@ interface FormValues {
 const AddNewRoom: React.FC<AddNewRoomProps> = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const users = useSelector((state: RootState) => state.user.users)
-  const selectValues = users.map(user => ({label: user.username, value: user._id}))
+  const currentUserId = useSelector((state: RootState) => state.user.user?._id)
   const submitHandler = async (values: FormValues): Promise<void> => {
+    values.users.push(currentUserId);
     await dispatch(createRoomStart({...values, messages: []}));
   };
+
+  const loadOptions = async (input: string) => {
+    if (input.length < 3) {
+      return [];
+    }
+    const data = await findUsersRequest(input);
+    const returnData = data.users.filter(user => user._id !== currentUserId).map(user => ({label: user.username, value: user._id}))
+    return returnData;
+  }
   return (
     <Modal title='Add new room'>
       <AddNewRoomContent>
@@ -67,6 +77,7 @@ const AddNewRoom: React.FC<AddNewRoomProps> = () => {
                 name='users'
                 id='users'
                 iid='users'
+                loadOptions={loadOptions}
                 errorInfo={
                   <ErrorMessage
                     name='users'
@@ -75,7 +86,7 @@ const AddNewRoom: React.FC<AddNewRoomProps> = () => {
                     )}
                   />
                 }
-                values={selectValues}
+                // values={selectValues}
               />
               <FormGroup>
                 <SubmitButton

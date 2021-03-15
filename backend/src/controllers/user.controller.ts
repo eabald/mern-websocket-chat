@@ -21,6 +21,7 @@ class UserController implements Controller {
     this.router.get(`${this.path}/get-all`, authMiddleware, this.getUsers);
     this.router.get(`${this.path}/get/:id`, authMiddleware, this.getUser);
     this.router.put(`${this.path}/update`, authMiddleware, this.updateUser);
+    this.router.post(`${this.path}/find`, authMiddleware, this.findUser);
   }
 
   private getUsers = async (
@@ -39,6 +40,15 @@ class UserController implements Controller {
     const user = await this.user.findById(id);
     response.json({ user });
   };
+
+  private findUser = async (
+    request: express.Request,
+    response: express.Response
+  ): Promise<void> => {
+    const query = request.body.query;
+    const users = await this.user.find({ username: { $regex: query } });
+    response.json({ users });
+  }
 
   private updateUser = async (
     request: express.Request,

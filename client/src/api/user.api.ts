@@ -28,6 +28,13 @@ export async function getUsersRequest(): Promise<UsersResponse> {
 export async function updateUserRequest(updateUser: UpdateUser): Promise<UserResponse> {
   const response = await axios.put(`/api/user/update`, updateUser, {
     withCredentials: true,
-  })
+  });
+  return response.data;
+}
+
+export async function findUsersRequest(query: string): Promise<UsersResponse> {
+  const response = await axios.post(`/api/user/find`, { query }, {
+    withCredentials: true,
+  });
   return response.data;
 }

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
-import { getUsersStart } from '../../redux/user/user.actions';
+// import { getUsersStart } from '../../redux/user/user.actions';
 import { User } from '../../redux/user/user.types';
 // Styled
 import { UsersListWrapper, UsersListItem } from './usersList.styles';
@@ -16,7 +16,7 @@ const UsersList: React.FC<UsersListProps> = () => {
   const dispatch = useDispatch();
   const users = useSelector((state: RootState) => state.user.users);
   useEffect(() => {
-    dispatch(getUsersStart());
+    // dispatch(getUsersStart());
   }, [dispatch]);
   return (
     <>
