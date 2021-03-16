@@ -61,7 +61,8 @@ class MessageController implements Controller {
     socket: SocketWithUser,
     websocket: socketio.Server
   ): Promise<void> {
-    const newMessage = await this.message.create(message);
+    let newMessage = await this.message.create(message);
+    newMessage = await newMessage.populate('user').execPopulate()
     const room = await this.room.findById(message.room._id);
     room.messages.push(newMessage);
     await room.save();

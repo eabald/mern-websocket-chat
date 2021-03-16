@@ -4,6 +4,7 @@ import Room from '../interfaces/room.interface';
 const roomSchema = new mongoose.Schema(
   {
     name: String,
+    type: { type: String, default: 'room' },
     users: [
       {
         ref: 'User',
@@ -13,7 +14,7 @@ const roomSchema = new mongoose.Schema(
     messages: [
       {
         ref: 'Message',
-        type: mongoose.Schema.Types.Mixed,
+        type: mongoose.Schema.Types.ObjectId,
       },
     ],
   },

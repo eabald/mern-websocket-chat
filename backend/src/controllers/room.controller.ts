@@ -45,7 +45,7 @@ class RoomController implements Controller {
     const user = await this.user.findById(request.user._id)
     user.unread = user.unread.filter(roomId => roomId._id !== id);
     await user.save();
-    const room = await this.room.findById(id);
+    const room = await this.room.findById(id).populate('users messages');
     if (room) {
       response.json({ room });
     } else {
@@ -78,7 +78,7 @@ class RoomController implements Controller {
     next: express.NextFunction
   ): Promise<void> => {
     const id = request.params.id;
-    const rooms = await this.room.find({ users: { $elemMatch: {$eq: id} } });
+    const rooms = await this.room.find({ users: { $elemMatch: {$eq: id} } }).populate('users messages');
     response.json({rooms});
   }
 }
