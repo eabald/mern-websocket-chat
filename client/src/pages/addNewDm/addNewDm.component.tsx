@@ -1,79 +1,66 @@
-// React
 import React from 'react';
-import { useHistory } from 'react-router';
-// Redux
+import Modal from '../../components/modal/modal.component';
+import { AddNewDmContent } from './addNewDm.styles';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import { RootState } from '../../redux/root-reducer';
 import { createRoomStart } from '../../redux/room/room.actions';
-// External
+import { findUsersRequest } from '../../api/user.api';
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
-// Validators
-import CreateRoomValidationSchema from '../../validators/createRoom.validator';
-// Styled
-import { AddNewRoomContent } from './addNewRoom.styles';
-// Components
-import Modal from '../../components/modal/modal.component';
+import CreateDmValidationSchema from '../../validators/createDm.validator';
 import SubmitButton from '../../components/form/submitButton/submitButton.component';
 import FormGroup from '../../components/form/formGroup/formGroup.component';
 import ValidationError from '../../components/form/validationError/validationError.component';
-import Label from '../../components/form/label/label.component';
-import FormField from '../../components/form/formField/formField.component';
 import MultiSelect from '../../components/form/multiSelect/multiSelect.component';
-// Api
-import { findUsersRequest } from '../../api/user.api';
+import { User } from '../../redux/user/user.types';
 
-type AddNewRoomProps = {};
+//
+// FIX VALIDATORS
+// FIX DUPLICATED DM
+//
+
+type AddNewDmProps = {};
 interface FormValues {
   users: any;
-  name: string;
 }
-
-const AddNewRoom: React.FC<AddNewRoomProps> = () => {
+const AddNewDm: React.FC<AddNewDmProps> = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const currentUserId = useSelector((state: RootState) => state.user.user?._id)
+  const currentUser = useSelector((state: RootState) => state.user.user);
   const submitHandler = async (values: FormValues): Promise<void> => {
-    values.users = values.users.map((user: any) => user.value);
-    values.users.push(currentUserId);
-    await dispatch(createRoomStart({...values, messages: []}));
+    const users = values.users.map((user: any) => user.value);
+    users.push(currentUser?._id);
+    let name = values.users.map((user: any) => user.username).push(currentUser?.username);
+    name = name.join('/');
+    await dispatch(createRoomStart({ name, type: 'dm', users, messages: [] }));
   };
-
   const loadOptions = async (input: string) => {
     if (input.length < 3) {
       return [];
     }
     const data = await findUsersRequest(input);
-    const returnData = data.users.filter(user => user._id !== currentUserId).map(user => ({label: user.username, value: user._id}))
+    const returnData = data.users
+      .filter((user: User) => user._id !== currentUser?._id)
+      .map((user) => ({ label: user.username, value: user._id, username: user.username }));
     return returnData;
-  }
+  };
   return (
-    <Modal title='Add new room'>
-      <AddNewRoomContent>
+    <Modal title='Add new direct message'>
+      <AddNewDmContent>
         <Formik
-          initialValues={{ users: [], name: '' }}
-          validationSchema={CreateRoomValidationSchema}
+          initialValues={{ users: [] }}
+          validationSchema={CreateDmValidationSchema}
           onSubmit={(
             values: FormValues,
             actions: FormikHelpers<FormValues>
           ) => {
-            submitHandler(values).then(() => actions.setSubmitting(false)).finally(() => history.goBack());
+            submitHandler(values)
+              .then(() => actions.setSubmitting(false))
+              .finally(() => history.goBack());
           }}
         >
           {(props) => (
             <Form>
-              <FormGroup>
-                <Label htmlFor='name'>Room name</Label>
-                <FormField
-                  id='name'
-                  name='name'
-                  type='name'
-                  error={props.touched.name && props.errors.name}
-                />
-                <ErrorMessage
-                  name='name'
-                  render={(error) => <ValidationError>{error}</ValidationError>}
-                />
-              </FormGroup>
               <MultiSelect
                 label='Users'
                 name='users'
@@ -98,8 +85,8 @@ const AddNewRoom: React.FC<AddNewRoomProps> = () => {
             </Form>
           )}
         </Formik>
-      </AddNewRoomContent>
+      </AddNewDmContent>
     </Modal>
   );
 };
-export default AddNewRoom;
+export default AddNewDm;

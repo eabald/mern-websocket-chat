@@ -22,7 +22,7 @@ const MultiSelect:React.FC<any> = ({ label, loadOptions, errorInfo, ...props }) 
           cacheOptions={true}
           name={field.name}
           isMulti={true}
-          onChange={(options: OptionTypeBase) => setValue(options.map((option: any) => option.value))}
+          onChange={(options: OptionTypeBase) => setValue(options)}
           instanceId={props.iid}
         />
       </MultiSelectWrapper>

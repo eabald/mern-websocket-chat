@@ -1,6 +1,7 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
 
-export const UsersListWrapper = styled.ul`
+export const DmsListWrapper = styled.ul`
   display: block;
   list-style: none;
   margin: 0;
@@ -12,21 +13,36 @@ export const UsersListWrapper = styled.ul`
 `;
 
 interface LiProps {
-  active: boolean,
+  active?: boolean | null,
 };
 
-export const UsersListItem = styled.li<LiProps>`
+const li = css<LiProps>`
   padding: 5px;
   padding-left: 10px;
   cursor: pointer;
   text-decoration: ${props => props.active ? 'underline' : 'none'};
   &:before {
-    content: '#';
     padding-right: 10px;
     text-decoration: none;
     display:inline-block;
   }
   &:hover {
     box-shadow: inset 0px 0px 10px 1px #ced7ff;
+  }
+`;
+
+export const DmsListItem = styled.li<LiProps>`
+  ${li}
+  &:before {
+    content: '#';
+  }
+`;
+
+export const DmsListItemAdd = styled(Link)`
+  ${li}
+  color: #ced7ff;
+  display: block;
+  &:before {
+    content: '+';
   }
 `;

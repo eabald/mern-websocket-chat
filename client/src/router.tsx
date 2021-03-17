@@ -14,6 +14,7 @@ import Logout from './pages/logout/logout.component';
 import Register from './pages/register/register.component';
 import TermsAndConditions from './pages/termsAndConditions/termsAndConditions.component';
 import AddNewRoom from './pages/addNewRoom/addNewRoom.component';
+import AddNewDm from './pages/addNewDm/addNewDm.component';
 
 type RouterProps = {};
 
@@ -45,6 +46,7 @@ const Router: React.FC<RouterProps> = () => {
         {/* <Route><Redirect to='/' /></Route> */}
       </Switch>
       {background && <Route path='/modal/add-new-room' children={<AddNewRoom />} />}
+      {background && <Route path='/modal/add-new-dm' children={<AddNewDm />} />}
     </>
   );
 };

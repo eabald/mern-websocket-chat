@@ -119,5 +119,6 @@ export interface Room {
   name: string;
   users: User[];
   messages: any[];
+  type?: 'room' | 'dm';
   hasUnreadMessages?: boolean,
 }

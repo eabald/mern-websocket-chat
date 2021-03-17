@@ -12,7 +12,7 @@ import { MainLayoutWrapper } from '../../layout/main/main.styles.layout';
 // Components
 import Navbar from '../../components/navbar/navbar.component';
 import RoomsList from '../../components/roomsList/roomsList.component';
-import UsersList from '../../components/usersList/usersList.component';
+import DmsList from '../../components/dmsList/dmsList.component';
 import MessageForm from '../../components/messageForm/messageForm.component';
 import MessagesOutlet from '../../components/messagesOutlet/messagesOutlet.component';
 
@@ -24,7 +24,7 @@ const Home: React.FC<HomeProps> = () => (
     <HomeWrapper>
       <HomeSideArea>
         <RoomsList />
-        <UsersList />
+        <DmsList />
       </HomeSideArea>
       <HomeMainArea>
         <MessagesOutlet />

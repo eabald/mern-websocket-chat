@@ -20,7 +20,7 @@ export const ModalWrapperWindow = styled.div`
   top: 25%;
   left: 25%;
   width: 50%;
-  height: 50%;
+  height: auto;
   background: #2e2e2e;
   border-radius: 5px;
   padding: 20px;

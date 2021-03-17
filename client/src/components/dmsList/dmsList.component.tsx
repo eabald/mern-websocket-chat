@@ -1,0 +1,43 @@
+// React
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+// Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../redux/root-reducer';
+import { Room } from '../../redux/room/room.types';
+import { setCurrentRoomStart } from '../../redux/room/room.actions';
+// Styled
+import { DmsListWrapper, DmsListItem, DmsListItemAdd } from './dmsList.styles';
+// Components
+import SectionHeader from '../sectionHeader/sectionHeader.component';
+
+type DmsListProps = {};
+
+const DmsList: React.FC<DmsListProps> = () => {
+  const dispatch = useDispatch();
+  const dms = useSelector((state: RootState) => state.room.rooms).filter(room => room.type === 'dm');
+  const currentUserId = useSelector((state: RootState) => state.user.user?._id);
+  const setDm = (room: Room) => dispatch(setCurrentRoomStart(room));
+  const location = useLocation();
+  return (
+    <>
+      <SectionHeader>Direct messages</SectionHeader>
+      <DmsListWrapper>
+        {dms.map((dm: Room) => (
+          <DmsListItem active={false} key={dm._id} onClick={() => setDm(dm)}>
+            {dm.users.filter(user => user._id !== currentUserId).map(user => user.username).join(', ')}
+          </DmsListItem>
+        ))}
+        <DmsListItemAdd
+          to={{
+            pathname: '/modal/add-new-dm',
+            state: { background: location }
+          }}
+        >
+          Add new direct message
+        </DmsListItemAdd>
+      </DmsListWrapper>
+    </>
+  );
+};
+export default DmsList;

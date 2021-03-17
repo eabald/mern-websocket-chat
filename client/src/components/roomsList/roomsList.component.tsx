@@ -25,7 +25,7 @@ type RoomsListProps = {};
 const RoomsList: React.FC<RoomsListProps> = () => {
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.user.user?.id);
-  const rooms = useSelector((state: RootState) => state.room.rooms);
+  const rooms = useSelector((state: RootState) => state.room.rooms).filter(room => room.type === 'room');
   const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
   const setRoom = (room: Room) => dispatch(setCurrentRoomStart(room));
   const location = useLocation();

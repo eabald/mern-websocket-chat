@@ -69,6 +69,7 @@ class RoomController implements Controller {
         await currentUser.save();
       })
     }
+    currentRoom = await currentRoom.populate('users').execPopulate()
     response.json({ room: currentRoom });
   };
 
