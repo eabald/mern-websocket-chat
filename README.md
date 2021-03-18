@@ -1,5 +1,7 @@
 # MERN-WEBSOCKET-CHAT
 
+![Build status](https://github.com/eabald/mern-websocket-chat/actions/workflows/ci.yml/badge.svg)
+
 ## Development
 
 ### Perquisites
