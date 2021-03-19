@@ -5,6 +5,9 @@ class RoomDto {
   @IsString()
   public name: string;
 
+  @IsString()
+  public type: string;
+
   @IsArray()
   public users: User[];
 }

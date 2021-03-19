@@ -59,7 +59,12 @@ class RoomController implements Controller {
     next: express.NextFunction
   ): Promise<void> => {
     const roomData: RoomDto = request.body;
-    let currentRoom = await this.room.findOne(roomData);
+    let currentRoom;
+    if (roomData.type === 'room') {
+      currentRoom = await this.room.findOne({ name: roomData.name, type: roomData.type, users: { $all: roomData.users }});
+    } else {
+      currentRoom = await this.room.findOne({ type: roomData.type, users: { $all: roomData.users }});
+    }
     if (!currentRoom) {
       currentRoom = await this.room.create(roomData);
       const users = currentRoom.users

@@ -14,11 +14,6 @@ import ValidationError from '../../components/form/validationError/validationErr
 import MultiSelect from '../../components/form/multiSelect/multiSelect.component';
 import { User } from '../../redux/user/user.types';
 
-//
-// FIX VALIDATORS
-// FIX DUPLICATED DM
-//
-
 type AddNewDmProps = {};
 interface FormValues {
   users: any;
@@ -30,7 +25,8 @@ const AddNewDm: React.FC<AddNewDmProps> = () => {
   const submitHandler = async (values: FormValues): Promise<void> => {
     const users = values.users.map((user: any) => user.value);
     users.push(currentUser?._id);
-    let name = values.users.map((user: any) => user.username).push(currentUser?.username);
+    let name = values.users.map((user: any) => user.username);
+    name.push(currentUser?.username);
     name = name.join('/');
     await dispatch(createRoomStart({ name, type: 'dm', users, messages: [] }));
   };

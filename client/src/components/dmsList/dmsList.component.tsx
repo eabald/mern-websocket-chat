@@ -16,6 +16,7 @@ type DmsListProps = {};
 const DmsList: React.FC<DmsListProps> = () => {
   const dispatch = useDispatch();
   const dms = useSelector((state: RootState) => state.room.rooms).filter(room => room.type === 'dm');
+  const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
   const currentUserId = useSelector((state: RootState) => state.user.user?._id);
   const setDm = (room: Room) => dispatch(setCurrentRoomStart(room));
   const location = useLocation();
@@ -24,7 +25,7 @@ const DmsList: React.FC<DmsListProps> = () => {
       <SectionHeader>Direct messages</SectionHeader>
       <DmsListWrapper>
         {dms.map((dm: Room) => (
-          <DmsListItem active={false} key={dm._id} onClick={() => setDm(dm)}>
+          <DmsListItem key={dm._id} onClick={() => setDm(dm)} active={currentRoom && currentRoom._id === dm._id}>
             {dm.users.filter(user => user._id !== currentUserId).map(user => user.username).join(', ')}
           </DmsListItem>
         ))}
