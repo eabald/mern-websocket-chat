@@ -84,7 +84,12 @@ class RoomController implements Controller {
     next: express.NextFunction
   ): Promise<void> => {
     const id = request.params.id;
-    const rooms = await this.room.find({ users: { $elemMatch: {$eq: id} } }).populate('users messages');
+    const rooms = await this.room.find({ users: { $elemMatch: {$eq: id} } }).populate({
+      path: 'users messages',
+      populate: {
+        path: 'user',
+      },
+    });
     response.json({rooms});
   }
 }
