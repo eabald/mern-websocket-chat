@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const MessageItemWrapper = styled.div`
   padding: 5px;
@@ -26,4 +27,16 @@ export const MessageItemTimestamp = styled.div`
 export const MessageItemContent = styled.div`
   font-family: ${props=> props.theme.font};
   font-size: 12px;
+`;
+
+export const MessageItemUsername = styled(Link)`
+  cursor: pointer;
+  font-family: ${props=> props.theme.font};
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #ced7ff;
+  &:hover {
+    text-decoration: underline;
+  }
 `;

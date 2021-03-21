@@ -1,18 +1,25 @@
+// React
 import React from 'react';
-import Modal from '../../components/modal/modal.component';
-import { AddNewDmContent } from './addNewDm.styles';
-import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
+// Redux
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
 import { createRoomStart } from '../../redux/room/room.actions';
-import { findUsersRequest } from '../../api/user.api';
+import { User } from '../../redux/user/user.types';
+// External
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
+// Api
+import { findUsersRequest } from '../../api/user.api';
+// Validators
 import CreateDmValidationSchema from '../../validators/createDm.validator';
+// Styled
+import { AddNewDmContent } from './addNewDm.styles';
+// Components
+import Modal from '../../components/modal/modal.component';
 import SubmitButton from '../../components/form/submitButton/submitButton.component';
 import FormGroup from '../../components/form/formGroup/formGroup.component';
 import ValidationError from '../../components/form/validationError/validationError.component';
 import MultiSelect from '../../components/form/multiSelect/multiSelect.component';
-import { User } from '../../redux/user/user.types';
 
 type AddNewDmProps = {};
 interface FormValues {

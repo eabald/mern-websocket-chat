@@ -18,13 +18,6 @@ export async function getUserRequest(id: string): Promise<UserResponse> {
   return response.data;
 }
 
-export async function getUsersRequest(): Promise<UsersResponse> {
-  const response = await axios.get(`/api/user/get-all`, {
-    withCredentials: true,
-  });
-  return response.data;
-}
-
 export async function updateUserRequest(updateUser: UpdateUser): Promise<UserResponse> {
   const response = await axios.put(`/api/user/update`, updateUser, {
     withCredentials: true,

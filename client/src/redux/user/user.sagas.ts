@@ -3,45 +3,31 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 // Api
 import {
   getUserRequest,
-  getUsersRequest,
   updateUserRequest,
 } from '../../api/user.api';
 // Types
 import {
-  getUserError,
-  getUsersError,
-  getUsersSuccess,
-  getUserSuccess,
+  getUserDetailsError,
+  getUserDetailsSuccess,
   updateUserError,
   updateUserSuccess,
 } from './user.actions';
 import {
-  GetUserStartAction,
-  GET_USERS_START,
-  GET_USER_START,
+  GetUserDetailsStartAction,
+  GET_USER_DETAILS_START,
   UpdateUserStartAction,
   UPDATE_USER_START,
 } from './user.types';
 // Utils
 import { checkForUnauthorized } from '../sagas.utils';
 
-export function* getUser({ payload }: GetUserStartAction) {
+export function* getUserDetails({ payload }: GetUserDetailsStartAction) {
   try {
     const { user } = yield getUserRequest(payload);
-    yield put(getUserSuccess(user));
+    yield put(getUserDetailsSuccess(user));
   } catch (error) {
     yield checkForUnauthorized(error.response.data);
-    yield put(getUserError(error.response.data));
-  }
-}
-
-export function* getUsers() {
-  try {
-    const { users } = yield getUsersRequest();
-    yield put(getUsersSuccess(users));
-  } catch (error) {
-    yield checkForUnauthorized(error.response.data);
-    yield put(getUsersError(error.response.data));
+    yield put(getUserDetailsError(error.response.data));
   }
 }
 
@@ -54,12 +40,8 @@ export function* updateUser({ payload }: UpdateUserStartAction) {
   }
 }
 
-export function* onGetUserStart() {
-  yield takeLatest(GET_USER_START, getUser);
-}
-
-export function* onGetUsersStart() {
-  yield takeLatest(GET_USERS_START, getUsers);
+export function* onGetUserDetailsStart() {
+  yield takeLatest(GET_USER_DETAILS_START, getUserDetails);
 }
 
 export function* onUpdateUserStart() {
@@ -68,8 +50,7 @@ export function* onUpdateUserStart() {
 
 export function* userSagas() {
   yield all([
-    call(onGetUserStart),
-    call(onGetUsersStart),
+    call(onGetUserDetailsStart),
     call(onUpdateUserStart),
   ]);
 }

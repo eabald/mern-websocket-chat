@@ -3,9 +3,9 @@ import {
   GET_USER_ERROR,
   GET_USER_START,
   GET_USER_SUCCESS,
-  GET_USERS_ERROR,
-  GET_USERS_START,
-  GET_USERS_SUCCESS,
+  GET_USER_DETAILS_ERROR,
+  GET_USER_DETAILS_START,
+  GET_USER_DETAILS_SUCCESS,
   User,
   UserError,
   UpdateUser,
@@ -31,17 +31,18 @@ export const getUserError = (error: UserError) => ({
   payload: error,
 });
 
-export const getUsersStart = () => ({
-  type: GET_USERS_START,
+export const getUserDetailsStart = (id: string) => ({
+  type: GET_USER_DETAILS_START,
+  payload: id,
 });
 
-export const getUsersSuccess = (users: User[]) => ({
-  type: GET_USERS_SUCCESS,
-  payload: users,
+export const getUserDetailsSuccess = (user: User) => ({
+  type: GET_USER_DETAILS_SUCCESS,
+  payload: user,
 });
 
-export const getUsersError = (error: UserError) => ({
-  type: GET_USERS_ERROR,
+export const getUserDetailsError = (error: UserError) => ({
+  type: GET_USER_DETAILS_ERROR,
   payload: error,
 });
 

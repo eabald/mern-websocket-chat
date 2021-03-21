@@ -15,6 +15,7 @@ import Register from './pages/register/register.component';
 import TermsAndConditions from './pages/termsAndConditions/termsAndConditions.component';
 import AddNewRoom from './pages/addNewRoom/addNewRoom.component';
 import AddNewDm from './pages/addNewDm/addNewDm.component';
+import UserDetails from './pages/userDetails/userDetails.component';
 
 type RouterProps = {};
 
@@ -32,9 +33,6 @@ const Router: React.FC<RouterProps> = () => {
         <Route path='/' exact>
           {isLoggedIn ? <Home /> : <Redirect to='/login' />}
         </Route>
-        <Route path='/profile'>
-          {isLoggedIn ? <Profile /> : <Redirect to='/login' />}
-        </Route>
         <Route path='/login'>
           {isLoggedIn ? <Redirect to='/' /> : <Login />}
         </Route>
@@ -45,8 +43,10 @@ const Router: React.FC<RouterProps> = () => {
         <Route path='/terms-and-conditions' component={TermsAndConditions} />
         {/* <Route><Redirect to='/' /></Route> */}
       </Switch>
+      {background && <Route path='/profile' children={isLoggedIn ? <Profile /> : <Redirect to='/login' />} />}
       {background && <Route path='/modal/add-new-room' children={<AddNewRoom />} />}
       {background && <Route path='/modal/add-new-dm' children={<AddNewDm />} />}
+      {background && <Route path='/modal/user-details/:id' children={<UserDetails />} />}
     </>
   );
 };

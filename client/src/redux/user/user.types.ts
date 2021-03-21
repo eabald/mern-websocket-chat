@@ -7,9 +7,9 @@ export const GET_USER_START = 'GET_USER_START';
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
 export const GET_USER_ERROR = 'GET_USER_ERROR';
 
-export const GET_USERS_START = 'GET_USERS_START';
-export const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS';
-export const GET_USERS_ERROR = 'GET_USERS_ERROR';
+export const GET_USER_DETAILS_START = 'GET_USER_DETAILS_START';
+export const GET_USER_DETAILS_SUCCESS = 'GET_USER_DETAILS_SUCCESS';
+export const GET_USER_DETAILS_ERROR = 'GET_USER_DETAILS_ERROR';
 
 export const UPDATE_USER_START = 'UPDATE_USER_START';
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
@@ -28,21 +28,23 @@ export interface GetUserSuccessAction extends Action {
   payload: User;
 }
 
-export interface GetUserErrorAction extends Action {
-  type: typeof GET_USER_ERROR;
+export interface GetUserDetailsStartAction extends Action {
+  type: typeof GET_USER_DETAILS_START;
+  payload: string;
+}
+
+export interface GetUserDetailsSuccessAction extends Action {
+  type: typeof GET_USER_DETAILS_SUCCESS;
+  payload: User;
+}
+
+export interface GetUserDetailsErrorAction extends Action {
+  type: typeof GET_USER_DETAILS_ERROR;
   payload: UserError;
 }
-export interface GetUsersStartAction extends Action {
-  type: typeof GET_USERS_START;
-}
 
-export interface GetUsersSuccessAction extends Action {
-  type: typeof GET_USERS_SUCCESS;
-  payload: User[];
-}
-
-export interface GetUsersErrorAction extends Action {
-  type: typeof GET_USERS_ERROR;
+export interface GetUserErrorAction extends Action {
+  type: typeof GET_USER_ERROR;
   payload: UserError;
 }
 
@@ -75,9 +77,9 @@ export type UserAction =
   | GetUserStartAction
   | GetUserSuccessAction
   | GetUserErrorAction
-  | GetUsersStartAction
-  | GetUsersSuccessAction
-  | GetUsersErrorAction
+  | GetUserDetailsStartAction
+  | GetUserDetailsSuccessAction
+  | GetUserDetailsErrorAction
   | UpdateUserStartAction
   | UpdateUserSuccessAction
   | UpdateUserErrorAction

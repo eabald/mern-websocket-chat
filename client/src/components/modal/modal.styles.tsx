@@ -13,12 +13,13 @@ export const ModalWrapper = styled.div`
   color: #ced7ff;
   font-family: ${props => props.theme.font};
   overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const ModalWrapperWindow = styled.div`
-  position: absolute;
-  top: 25%;
-  left: 25%;
+  position: relative;
   width: 50%;
   height: auto;
   background: #2e2e2e;

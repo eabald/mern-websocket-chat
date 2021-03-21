@@ -7,8 +7,8 @@ import {
   UserAction,
   GET_USER_SUCCESS,
   GET_USER_ERROR,
-  GET_USERS_SUCCESS,
-  GET_USERS_ERROR,
+  GET_USER_DETAILS_SUCCESS,
+  GET_USER_DETAILS_ERROR,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
   UPDATE_UNREAD,
@@ -37,12 +37,12 @@ const userReducer: Reducer<UserState, UserAction> = (
         ...state,
         error: action.payload,
       };
-    case GET_USERS_SUCCESS:
+    case GET_USER_DETAILS_SUCCESS:
       return {
         ...state,
-        users: action.payload,
+        users: [...state.users, action.payload],
       };
-    case GET_USERS_ERROR:
+    case GET_USER_DETAILS_ERROR:
       return {
         ...state,
         error: action.payload,
