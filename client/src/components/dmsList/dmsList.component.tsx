@@ -10,6 +10,8 @@ import { setCurrentRoomStart } from '../../redux/room/room.actions';
 import { DmsListWrapper, DmsListItem, DmsListItemAdd } from './dmsList.styles';
 // Components
 import SectionHeader from '../sectionHeader/sectionHeader.component';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 
 type DmsListProps = {};
 
@@ -27,6 +29,9 @@ const DmsList: React.FC<DmsListProps> = () => {
         {dms.map((dm: Room) => (
           <DmsListItem key={dm._id} onClick={() => setDm(dm)} active={currentRoom && currentRoom._id === dm._id}>
             {dm.users.filter(user => user._id !== currentUserId).map(user => user.username).join(', ')}
+            {dm.hasUnreadMessages && currentRoom && currentRoom._id !== dm._id ? (
+              <FontAwesomeIcon icon={faExclamation} style={{ paddingLeft: '10px' }} />
+            ) : null}
           </DmsListItem>
         ))}
         <DmsListItemAdd

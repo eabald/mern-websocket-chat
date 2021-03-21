@@ -41,7 +41,6 @@ class MessageController implements Controller {
     );
   }
 
-  // workout better naming convention
   private bindSocketEvents(
     socket: SocketWithUser,
     websocket: socketio.Server
@@ -68,8 +67,9 @@ class MessageController implements Controller {
     await room.save();
     const usersInRoom = await this.user.find({ _id: { $in: room.users } });
     usersInRoom.forEach(async (user) => {
-      if (message.user._id !== user._id) {
-        user.unread = [...new Set([...user.unread, message.room])];
+      const alreadyUnread = user.unread.map(item => item._id.toString()).includes(message.room._id);
+      if (message.user.id !== user.id && !alreadyUnread) {
+        user.unread.push(message.room);
         await user.save();
       }
       const userSocket: socketio.Socket = websocket.sockets.sockets.get(

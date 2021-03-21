@@ -31,3 +31,10 @@ export async function findUsersRequest(query: string): Promise<UsersResponse> {
   });
   return response.data;
 }
+
+export async function updateUnreadRequest(roomId: string) {
+  const response = await axios.post(`/api/user/update-unread/${roomId}`, {}, {
+    withCredentials: true,
+  });
+  return response.data;
+}

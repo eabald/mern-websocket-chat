@@ -5,6 +5,7 @@ import authMiddleware from '../middleware/auth.middleware';
 import userModel from '../models/user.model';
 import AuthenticationService from '../services/authentication.service';
 import AuthenticationTokenMissingException from '../exceptions/AuthenticationTokenMissingException';
+import RequestWithUser from '../interfaces/requestWithUser.interface';
 
 class UserController implements Controller {
   public path = '/user';
@@ -22,6 +23,7 @@ class UserController implements Controller {
     this.router.get(`${this.path}/get/:id`, authMiddleware, this.getUser);
     this.router.put(`${this.path}/update`, authMiddleware, this.updateUser);
     this.router.post(`${this.path}/find`, authMiddleware, this.findUser);
+    this.router.post(`${this.path}/update-unread/:id`, authMiddleware, this.updateUnread);
   }
 
   private getUsers = async (
@@ -69,6 +71,18 @@ class UserController implements Controller {
       response.json(user);
     }
   };
+
+  private updateUnread = async (
+    request: RequestWithUser,
+    response: express.Response,
+  ): Promise<void> => {
+    const userId = request.user.id;
+    const roomId = request.params.id;
+    const user = await this.user.findById(userId);
+    user.unread = user.unread.filter(unread => unread._id.toString() !== roomId);
+    await user.save();
+    response.json({ state: 'success' });
+  }
 }
 
 export default UserController;

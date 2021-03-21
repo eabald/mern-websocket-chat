@@ -33,6 +33,7 @@ import {
 import { checkForUnauthorized } from '../sagas.utils';
 import { RootState } from '../root-reducer';
 import { updateRead } from '../user/user.actions';
+import { updateUnreadRequest } from '../../api/user.api';
 
 export const selectCurrentRoom = (state: RootState): Room | null => state.room.currentRoom;
 
@@ -74,6 +75,7 @@ export function* getRoom({ payload }: GetRoomStart) {
 export function* setCurrentRoom({ payload }: SetCurrentRoomStart) {
   try {
     const { room } = yield getRoomRequest(payload._id ?? '');
+    yield updateUnreadRequest(payload._id ?? '');
     yield put(setCurrentRoomSuccess(room));
     yield put(updateRead(room._id));
   } catch (error) {
