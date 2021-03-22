@@ -45,7 +45,12 @@ class RoomController implements Controller {
     const user = await this.user.findById(request.user._id)
     user.unread = user.unread.filter(roomId => roomId._id !== id);
     await user.save();
-    const room = await this.room.findById(id).populate('users messages');
+    const room = await this.room.findById(id).populate({
+      path: 'users messages',
+      populate: {
+        path: 'user',
+      },
+    });
     if (room) {
       response.json({ room });
     } else {
