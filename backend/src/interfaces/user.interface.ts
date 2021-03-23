@@ -9,6 +9,7 @@ interface User {
   email: string;
   password: string;
   socketId: string;
+  blockedBy: User[]
   rooms: Room[];
   save: any;
   unread: Room[];

@@ -44,9 +44,9 @@ const Router: React.FC<RouterProps> = () => {
         {/* <Route><Redirect to='/' /></Route> */}
       </Switch>
       {background && <Route path='/profile' children={isLoggedIn ? <Profile /> : <Redirect to='/login' />} />}
-      {background && <Route path='/modal/add-new-room' children={<AddNewRoom />} />}
-      {background && <Route path='/modal/add-new-dm' children={<AddNewDm />} />}
-      {background && <Route path='/modal/user-details/:id' children={<UserDetails />} />}
+      {background && <Route path='/modal/add-new-room' children={isLoggedIn ? <AddNewRoom /> : <Redirect to='/login' />} />}
+      {background && <Route path='/modal/add-new-dm' children={isLoggedIn ? <AddNewDm /> : <Redirect to='/login' />} />}
+      {background && <Route path='/modal/user-details/:id' children={isLoggedIn ? <UserDetails /> : <Redirect to='/login' />} />}
     </>
   );
 };

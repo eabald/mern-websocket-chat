@@ -4,6 +4,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
 import { clearAuthError } from '../../redux/auth/auth.actions';
+import { unsetFlashMessage } from '../../redux/flash/flash.actions';
 // Styled
 import { ErrorsOutletWrapper } from './errorsOutlet.styles';
 // Components
@@ -14,9 +15,29 @@ type ErrorsOutletProps = {};
 const ErrorsOutlet: React.FC<ErrorsOutletProps> = () => {
   const dispatch = useDispatch();
   const authError = useSelector((state: RootState) => state.auth.error);
+  const userError = useSelector((state: RootState) => state.user.error);
+  const flashMessages = useSelector((state: RootState) => state.flash.messages);
   return (
     <ErrorsOutletWrapper>
-      {authError ? <ErrorLayerMessage message={authError.message} onClickHandler={() => dispatch(clearAuthError())} /> : null}
+      {authError ? (
+        <ErrorLayerMessage
+          message={authError.message}
+          onClickHandler={() => dispatch(clearAuthError())}
+        />
+      ) : null}
+      {userError ? (
+        <ErrorLayerMessage
+          message={userError.message ?? ''}
+          onClickHandler={() => dispatch(clearAuthError())}
+        />
+      ) : null}
+      {flashMessages.map((flash, i) => (
+        <ErrorLayerMessage
+          key={i}
+          message={flash.message}
+          onClickHandler={() => dispatch(unsetFlashMessage(flash))}
+        />
+      ))}
     </ErrorsOutletWrapper>
   );
 };

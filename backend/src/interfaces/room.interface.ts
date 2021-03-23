@@ -6,6 +6,7 @@ interface Room {
   name: string;
   users: User[];
   messages: Message[];
+  type: string;
 }
 
 export default Room;

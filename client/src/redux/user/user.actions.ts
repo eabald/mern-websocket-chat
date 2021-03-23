@@ -14,6 +14,10 @@ import {
   UPDATE_USER_ERROR,
   UPDATE_UNREAD,
   UPDATE_READ,
+  BLOCK_USER_START,
+  BLOCK_USER_SUCCESS,
+  BLOCK_USER_ERROR,
+  UserStatus,
 } from './user.types';
 
 export const getUserStart = (id: string) => ({
@@ -70,3 +74,18 @@ export const updateRead = (roomId: string) => ({
   type: UPDATE_READ,
   payload: roomId,
 });
+
+export const blockUserStart = (userId: string) => ({
+  type: BLOCK_USER_START,
+  payload: userId,
+});
+
+export const blockUserSuccess = (userStatus: UserStatus) => ({
+  type: BLOCK_USER_SUCCESS,
+  payload: userStatus,
+})
+
+export const blockUserError = (error: UserError) => ({
+  type: BLOCK_USER_ERROR,
+  payload: error,
+})

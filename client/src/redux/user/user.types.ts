@@ -15,6 +15,10 @@ export const UPDATE_USER_START = 'UPDATE_USER_START';
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
 export const UPDATE_USER_ERROR = 'UPDATE_USER_ERROR';
 
+export const BLOCK_USER_START = 'BLOCK_USER_START';
+export const BLOCK_USER_SUCCESS = 'BLOCK_USER_SUCCESS';
+export const BLOCK_USER_ERROR = 'BLOCK_USER_ERROR';
+
 export const UPDATE_UNREAD = 'UPDATE_UNREAD';
 export const UPDATE_READ = 'UPDATE_READ';
 
@@ -73,6 +77,21 @@ export interface UpdateReadAction extends Action {
   payload: string;
 }
 
+export interface BlockUserStartAction extends Action {
+  type: typeof BLOCK_USER_START;
+  payload: string;
+}
+
+export interface BlockUserSuccessAction extends Action {
+  type: typeof BLOCK_USER_SUCCESS;
+  payload: UserStatus;
+}
+
+export interface BlockUserErrorAction extends Action {
+  type: typeof BLOCK_USER_ERROR;
+  payload: UserError;
+}
+
 export type UserAction =
   | GetUserStartAction
   | GetUserSuccessAction
@@ -85,17 +104,25 @@ export type UserAction =
   | UpdateUserErrorAction
   | UpdateUnreadAction
   | UpdateReadAction
+  | BlockUserStartAction
+  | BlockUserSuccessAction
+  | BlockUserErrorAction
   | ResetAction;
 
 export interface UserState {
   user: User | null;
   users: User[];
-  error: UserError | string | null;
+  error: UserError | null;
   unread: string[];
 }
 
 export interface UserError {
   status: number;
+  message: string;
+}
+
+export interface UserStatus {
+  status: string;
   message: string;
 }
 

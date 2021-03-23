@@ -32,8 +32,15 @@ export async function findUsersRequest(query: string): Promise<UsersResponse> {
   return response.data;
 }
 
-export async function updateUnreadRequest(roomId: string) {
+export async function updateUnreadRequest(roomId: string): Promise<AxiosResponse> {
   const response = await axios.post(`/api/user/update-unread/${roomId}`, {}, {
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+export async function blockUserRequest(userId: string): Promise<AxiosResponse> {
+  const response = await axios.post(`/api/user/block/${userId}`, {}, {
     withCredentials: true,
   });
   return response.data;

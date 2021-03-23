@@ -13,6 +13,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       get: (): undefined => undefined,
     },
+    blockedBy: [
+      {
+        ref: 'User',
+        type: mongoose.Schema.Types.ObjectId,
+      },
+    ],
     rooms: [
       {
         ref: 'Room',

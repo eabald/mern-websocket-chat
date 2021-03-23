@@ -24,6 +24,7 @@ class UserController implements Controller {
     this.router.put(`${this.path}/update`, authMiddleware, this.updateUser);
     this.router.post(`${this.path}/find`, authMiddleware, this.findUser);
     this.router.post(`${this.path}/update-unread/:id`, authMiddleware, this.updateUnread);
+    this.router.post(`${this.path}/block/:id`, authMiddleware, this.blockUser);
   }
 
   private getUsers = async (
@@ -44,11 +45,11 @@ class UserController implements Controller {
   };
 
   private findUser = async (
-    request: express.Request,
+    request: RequestWithUser,
     response: express.Response
   ): Promise<void> => {
     const query = request.body.query;
-    const users = await this.user.find({ username: { $regex: query } });
+    const users = await this.user.find({ username: { $regex: query }, _id: { $nin: request.user.blockedBy } });
     response.json({ users });
   }
 
@@ -82,6 +83,19 @@ class UserController implements Controller {
     user.unread = user.unread.filter(unread => unread._id.toString() !== roomId);
     await user.save();
     response.json({ state: 'success' });
+  }
+
+  private blockUser = async (
+    request: RequestWithUser,
+    response: express.Response,
+  ): Promise<void> => {
+    const blockedById = request.user.id;
+    const userId = request.params.id;
+    const user = await this.user.findById(userId);
+    const blockedBy = await this.user.findById(blockedById);
+    user.blockedBy.push(blockedBy);
+    await user.save();
+    response.json({ status:{ state: 'success', message: 'User blocked' } });
   }
 }
 

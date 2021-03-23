@@ -63,6 +63,15 @@ class MessageController implements Controller {
     let newMessage = await this.message.create(message);
     newMessage = await newMessage.populate('user').execPopulate()
     const room = await this.room.findById(message.room._id);
+    const isBlocked = room.users.some(user => socket.user.blockedBy.includes(user));
+    if (room.type === 'dm' && isBlocked) {
+      console.log('here');
+      socket.emit('messageBlocked', {
+        status: 'blocked',
+        message: 'Sending message to this user has been blocked.'
+      });
+      return;
+    }
     room.messages.push(newMessage);
     await room.save();
     const usersInRoom = await this.user.find({ _id: { $in: room.users } });

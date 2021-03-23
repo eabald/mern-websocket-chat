@@ -1,6 +1,11 @@
 // React
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+// Redux
+import { User } from '../../redux/user/user.types';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/root-reducer';
+import { getUserDetailsStart } from '../../redux/user/user.actions';
 // Styled
 import {
   UserDetailsWrapper,
@@ -10,11 +15,8 @@ import {
 } from './userDetails.styles';
 // Components
 import Modal from '../../components/modal/modal.component';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/root-reducer';
-import { getUserDetailsStart } from '../../redux/user/user.actions';
 import Spinner from '../../components/spinner/spinner.component';
-import { User } from '../../redux/user/user.types';
+import BlockUser from '../../components/blockUser/blockUser.component';
 
 type UserDetailsProps = {};
 
@@ -37,7 +39,6 @@ const UserDetails: React.FC<UserDetailsProps> = () => {
     } else {
       dispatch(getUserDetailsStart(id));
     }
-    console.log(currentUserDetailsInAvailable);
   }, [usersAvailable, dispatch, id]);
   return (
     <Modal title='Details'>
@@ -70,6 +71,7 @@ const UserDetails: React.FC<UserDetailsProps> = () => {
                 {currentUserDetails?.lastName}
               </UserDetailsText>
             </UserDetailsItemWrapper>
+            <BlockUser id={id} username={currentUserDetails?.username} />
           </>
         )}
       </UserDetailsWrapper>

@@ -4,15 +4,20 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import {
   getUserRequest,
   updateUserRequest,
+  blockUserRequest,
 } from '../../api/user.api';
 // Types
 import {
+  blockUserError,
+  blockUserSuccess,
   getUserDetailsError,
   getUserDetailsSuccess,
   updateUserError,
   updateUserSuccess,
 } from './user.actions';
 import {
+  BlockUserStartAction,
+  BLOCK_USER_START,
   GetUserDetailsStartAction,
   GET_USER_DETAILS_START,
   UpdateUserStartAction,
@@ -20,6 +25,7 @@ import {
 } from './user.types';
 // Utils
 import { checkForUnauthorized } from '../sagas.utils';
+import { setFlashMessage, updateLoading } from '../flash/flash.actions';
 
 export function* getUserDetails({ payload }: GetUserDetailsStartAction) {
   try {
@@ -40,6 +46,18 @@ export function* updateUser({ payload }: UpdateUserStartAction) {
   }
 }
 
+export function* blockUser({ payload }: BlockUserStartAction) {
+  try {
+    yield put(updateLoading(true));
+    const { status } = yield blockUserRequest(payload);
+    yield put(blockUserSuccess(status));
+    yield put(setFlashMessage(status));
+    yield put(updateLoading(false));
+  } catch (error) {
+    yield put(blockUserError(error.response.data));
+  }
+}
+
 export function* onGetUserDetailsStart() {
   yield takeLatest(GET_USER_DETAILS_START, getUserDetails);
 }
@@ -48,10 +66,15 @@ export function* onUpdateUserStart() {
   yield takeLatest(UPDATE_USER_START, updateUser);
 }
 
+export function* onBlockUserStart() {
+  yield takeLatest(BLOCK_USER_START, blockUser);
+}
+
 export function* userSagas() {
   yield all([
     call(onGetUserDetailsStart),
     call(onUpdateUserStart),
+    call(onBlockUserStart),
   ]);
 }
 

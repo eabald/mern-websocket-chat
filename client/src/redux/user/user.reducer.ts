@@ -13,6 +13,8 @@ import {
   UPDATE_USER_ERROR,
   UPDATE_UNREAD,
   UPDATE_READ,
+  BLOCK_USER_SUCCESS,
+  BLOCK_USER_ERROR,
 } from './user.types';
 
 const INITIAL_STATE: UserState = {
@@ -66,6 +68,13 @@ const userReducer: Reducer<UserState, UserAction> = (
       return {
         ...state,
         unread: state.unread.filter(roomId => roomId !== action.payload),
+      };
+    case BLOCK_USER_SUCCESS:
+      return {...state};
+    case BLOCK_USER_ERROR:
+      return {
+        ...state,
+        error: action.payload,
       }
     case RESET:
       return INITIAL_STATE;
