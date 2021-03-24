@@ -12,9 +12,9 @@ export const FreepikInfoWrapper = styled.div`
 
 export const FreepikInfoLink = styled.a`
   text-decoration: none;
-  color: #4759a8;
+  color: ${props => props.theme.accentsBackground};
   &:hover {
-    color: #5a6fca;
+    color: ${props => props.theme.secondaryTextColor};
     text-decoration: underline;
   }
 `;

@@ -18,7 +18,7 @@ export const ButtonLoaderWrapper = styled.div`
 `;
 
 export const ButtonLoaderDot = styled.div<AnimationProps>`
-  background-color: #ced7ff;
+  background-color: ${props => props.theme.mainTextColor};
   border-radius: 50%;
   width: 10px;
   height: 10px;

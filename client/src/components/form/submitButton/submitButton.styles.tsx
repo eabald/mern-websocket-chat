@@ -6,8 +6,8 @@ export const SubmitButtonElement = styled.button`
   width: 100%;
   font-family: ${props => props.theme.font};
   text-transform: uppercase;
-  background: #4759a8;
-  color: #ced7ff;
+  background: ${props => props.theme.accentsBackground};
+  color: ${props => props.theme.mainTextColor};
   text-decoration: none;
   text-align: center;
   padding: 10px;
@@ -15,14 +15,14 @@ export const SubmitButtonElement = styled.button`
   border: 0;
   border-radius: 5px;
   &:hover {
-    background: #5a6fca;
-    color: #ffffff;
+    background: ${props => props.theme.secondaryTextColor};
+    color: ${props => props.theme.white};
     text-decoration: underline;
   }
   &:disabled {
     cursor: not-allowed;
-    background: #788ce4;
-    color: #b6b6b6;
+    background: ${props => props.theme.disabledBackground};
+    color: ${props => props.theme.disabled};
     text-decoration: none;
   }
 `

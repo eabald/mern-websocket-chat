@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export const MessageItemWrapper = styled.div`
   padding: 5px;
-  color: #ced7ff;
+  color: ${props => props.theme.mainTextColor};
   margin: 5px;
   background: rgb(90, 90, 90);
   border-radius: 5px;
@@ -35,7 +35,7 @@ export const MessageItemUsername = styled(Link)`
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
-  color: #ced7ff;
+  color: ${props => props.theme.mainTextColor};
   &:hover {
     text-decoration: underline;
   }

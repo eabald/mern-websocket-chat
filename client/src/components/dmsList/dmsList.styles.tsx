@@ -6,7 +6,7 @@ export const DmsListWrapper = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
-  color: #ced7ff;
+  color: ${props => props.theme.mainTextColor};
   font-family: ${props => props.theme.font};
   max-height: calc(50% - 50px);
   overflow-y: auto;
@@ -27,7 +27,7 @@ const li = css<LiProps>`
     display:inline-block;
   }
   &:hover {
-    box-shadow: inset 0px 0px 10px 1px #ced7ff;
+    box-shadow: inset 0px 0px 10px 1px ${props => props.theme.mainTextColor};
   }
 `;
 
@@ -40,7 +40,7 @@ export const DmsListItem = styled.li<LiProps>`
 
 export const DmsListItemAdd = styled(Link)`
   ${li}
-  color: #ced7ff;
+  color: ${props => props.theme.mainTextColor};
   display: block;
   &:before {
     content: '+';

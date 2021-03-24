@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const BackButtonElement = styled.button`
-  background: #2f3131;
+  background: ${props => props.theme.navBackground};
   border: 0;
   appearance: none;
   position: absolute;
@@ -13,10 +13,10 @@ export const BackButtonElement = styled.button`
   font-size: 24px;
   line-height: 50px;
   text-align: center;
-  color: #979696;
+  color: ${props => props.theme.navTextColor};
   cursor: pointer;
   &:hover {
-    background: #3e3f3f;
-    color: #e1e1e1;
+    background: ${props => props.theme.navBackgroundHover};
+    color: ${props => props.theme.navBackgroundHoverColor};
   }
 `;

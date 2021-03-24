@@ -32,8 +32,8 @@ export const MessageFormSubmit = styled.button`
   width: calc(5% - 10px);
   font-family: ${props => props.theme.font};
   text-transform: uppercase;
-  background: #7487da;
-  color: #ced7ff;
+  background: ${props => props.theme.messageSubmitButtonBackGround};
+  color: ${props => props.theme.mainTextColor};
   text-decoration: none;
   text-align: center;
   padding: 10px;
@@ -42,13 +42,13 @@ export const MessageFormSubmit = styled.button`
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   &:hover {
-    background: #5a6fca;
-    color: #ffffff;
+    background: ${props => props.theme.secondaryTextColor};
+    color: ${props => props.theme.white};
     text-decoration: underline;
   }
   &:disabled {
     cursor: not-allowed;
-    background: #999898;
-    color: #b6b6b6;
+    background: ${props => props.theme.messageSubmitButtonBackGroundDisabled};
+    color: ${props => props.theme.disabled};
   }
 `;

@@ -5,8 +5,8 @@ export const NavbarContainer = styled.div`
   display: block;
   height: 100%;
   width: 100%;
-  background: #2f3131;
-  border-bottom: solid 1px #000;
+  background: ${props => props.theme.navBackground};
+  border-bottom: solid 1px ${props => props.theme.black};
 `
 
 export const NavbarLinksWrapper = styled.div`
@@ -22,7 +22,7 @@ export const NavbarGreetings = styled.div`
   padding-left: 10px;
   margin-right: auto;
   font-family: ${props => props.theme.font};
-  color: #ced7ff;
+  color: ${props => props.theme.mainTextColor};
   text-transform: uppercase;
   font-size: 24px;
   text-align: center;
@@ -35,10 +35,10 @@ export const NavbarLink = styled(Link)`
   font-size: 24px;
   line-height: 50px;
   text-align: center;
-  color: #979696;
+  color: ${props => props.theme.navTextColor};
   &:hover {
-    background: #3e3f3f;
-    color: #e1e1e1;
+    background: ${props => props.theme.navBackgroundHover};
+    color: ${props => props.theme.navBackgroundHoverColor};
   }
 `
 
@@ -50,6 +50,6 @@ export const NavbarCurrentRoom = styled.div`
   font-size: 18px;
   line-height: 50px;
   text-align: center;
-  color: #979696;
+  color: ${props => props.theme.navTextColor};
   font-family: ${props => props.theme.font};
 `;

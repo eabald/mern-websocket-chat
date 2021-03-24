@@ -1,5 +1,6 @@
 // React
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 // Redux
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
@@ -19,13 +20,23 @@ type NavbarProps = {};
 
 const Navbar: React.FC<NavbarProps> = () => {
   const username = useSelector((state: RootState) => state.user.user?.username);
-  const currentRoom = useSelector((state: RootState) => state.room.currentRoom?.name)
+  const currentRoom = useSelector(
+    (state: RootState) => state.room.currentRoom?.name
+  );
+  const location = useLocation();
   return (
     <NavbarContainer>
       <NavbarLinksWrapper>
         <NavbarGreetings>Hi {username}</NavbarGreetings>
-        <NavbarCurrentRoom>{currentRoom ? `# ${currentRoom}` : ''}</NavbarCurrentRoom>
-        <NavbarLink to='/profile'>
+        <NavbarCurrentRoom>
+          {currentRoom ? `# ${currentRoom}` : ''}
+        </NavbarCurrentRoom>
+        <NavbarLink
+          to={{
+            pathname: '/profile',
+            state: { background: location },
+          }}
+        >
           <FontAwesomeIcon icon={faUser} />
         </NavbarLink>
         <NavbarLink to='/logout'>

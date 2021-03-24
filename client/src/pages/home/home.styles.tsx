@@ -20,13 +20,13 @@ export const HomeNavArea = styled.div`
 `
 export const HomeSideArea = styled.div`
   grid-area: side;
-  border-right: solid 1px #000;
+  border-right: solid 1px ${props => props.theme.black};
 `
 export const HomeMainArea = styled.div`
   grid-area: main;
 `
 export const HomeInputArea = styled.div`
   grid-area: input;
-  border-top: solid 1px #000;
+  border-top: solid 1px ${props => props.theme.black};
   height: 100%;
 `

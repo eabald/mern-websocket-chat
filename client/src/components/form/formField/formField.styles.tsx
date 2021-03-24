@@ -15,6 +15,6 @@ export const FormFieldElement = styled(Field)`
   border-radius: 5px;
   ${({ error }) =>
     error && css`
-      box-shadow: 0px 0px 10px 10px #5a5a5a;
+      box-shadow: 0px 0px 10px 10px ${props => props.theme.mainBackground};
     `}
 `;

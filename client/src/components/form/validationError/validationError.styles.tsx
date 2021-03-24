@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const ValidationErrorWrapper = styled.small`
-  color: #5a6fca;
+  color: ${props => props.theme.secondaryTextColor};
   display: block;
   padding-top: 10px;
   font-weight: 700;

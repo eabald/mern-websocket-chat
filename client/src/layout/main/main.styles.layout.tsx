@@ -6,7 +6,7 @@ export const MainLayoutWrapper = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  background: #5a5a5a;
+  background: ${props => props.theme.mainBackground};
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -17,7 +17,7 @@ export const MainLayoutWrapper = styled.div`
     width: 200%;
     height: 200%;
     content: '';
-    background: #4759a8;
+    background: ${props => props.theme.accentsBackground};
     transform: skewY(45deg) translateY(-30%);
   }
 `;

@@ -8,7 +8,7 @@ export const LogoutWrapper = styled.div`
   grid-template-areas:
     'img info'
     'img link';
-  background: #2e2e2e;
+  background: ${props => props.theme.modalBackground};
   border-radius: 5px;
   padding: 20px;
 `;

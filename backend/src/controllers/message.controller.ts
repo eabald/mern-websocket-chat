@@ -93,7 +93,7 @@ class MessageController implements Controller {
     });
     setTimeout(() => {
       socket.broadcast.to(message.room._id).emit('messageReceived', newMessage);
-      socket.nsp.to(message.room._id).emit('messageReceived', newMessage);
+      socket.emit('messageReceived', newMessage);
     }, 100);
   }
 }

@@ -4,9 +4,9 @@ export const ErrorLayerMessageContainer = styled.div`
   display: block;
   padding: 20px;
   text-align: center;
-  background: #ca47c0;
+  background: ${props => props.theme.errorMessageBackground};
   font-family: ${props => props.theme.font};
-  color: #fff;
+  color: ${props => props.theme.white};
 `;
 
 export const ErrorLayerMessageText = styled.div`
