@@ -132,7 +132,7 @@ export interface User {
   username: string;
   firstName: string;
   lastName: string;
-  email: string;
+  email?: string;
   password: string;
   socketId: string;
   rooms: any[];

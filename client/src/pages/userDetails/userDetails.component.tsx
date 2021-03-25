@@ -48,12 +48,6 @@ const UserDetails: React.FC<UserDetailsProps> = () => {
         ) : (
           <>
             <UserDetailsItemWrapper>
-              <UserDetailsLabel>Email:</UserDetailsLabel>
-              <UserDetailsText>
-                {currentUserDetails?.email}
-              </UserDetailsText>
-            </UserDetailsItemWrapper>
-            <UserDetailsItemWrapper>
               <UserDetailsLabel>Username:</UserDetailsLabel>
               <UserDetailsText>
                 {currentUserDetails?.username}

@@ -3,7 +3,10 @@ import User from '../interfaces/user.interface';
 
 const userSchema = new mongoose.Schema(
   {
-    email: String,
+    email: {
+      type: String,
+      get: (): undefined => undefined,
+    },
     firstName: String,
     lastName: String,
     socketId: String,
