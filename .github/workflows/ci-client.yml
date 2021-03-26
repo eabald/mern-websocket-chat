@@ -2,9 +2,12 @@ name: CI-client
 
 on:
   push:
-    path: client/**
+    path:
+      - 'client/**'
     branches: [ master ]
   pull_request:
+    path:
+      - 'client/**'
     branches: [ master ]
 
   workflow_dispatch:
