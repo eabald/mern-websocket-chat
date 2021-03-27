@@ -27,14 +27,18 @@ import {
 } from './auth.actions';
 import { getUserSuccess } from '../user/user.actions';
 import { reset } from '../root-actions';
+import { updateLoading } from '../flash/flash.actions';
 
 export function* signIn({ payload }: SignInStartAction) {
   try {
+    yield put(updateLoading(true));
     const { token, refreshToken, user } = yield signInRequest(payload);
-    yield put(signInSuccess({token, refreshToken}));
+    yield put(signInSuccess({ token, refreshToken }));
     yield put(getUserSuccess(user));
     yield put(clearAuthError());
+    yield put(updateLoading(false));
   } catch (error) {
+    yield put(updateLoading(false));
     yield put(signInError(error.response.data));
   }
 }
@@ -42,7 +46,7 @@ export function* signIn({ payload }: SignInStartAction) {
 export function* signUp({ payload }: SignUpStartAction) {
   try {
     const { token, refreshToken, user } = yield signUpRequest(payload);
-    yield put(signUpSuccess({token, refreshToken}));
+    yield put(signUpSuccess({ token, refreshToken }));
     yield put(getUserSuccess(user));
     yield put(clearAuthError());
   } catch (error) {

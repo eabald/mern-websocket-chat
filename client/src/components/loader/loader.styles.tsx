@@ -4,26 +4,31 @@ interface AnimationProps {
   animationDelay: string;
 }
 
-export const SpinnerWrapper = styled.div`
-  display: flex;
-  min-height: 100px;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const SpinnerDotsWrapper = styled.div`
+export const LoaderWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 32px;
+  background: ${props => props.theme.loaderBackground};
 `;
 
-export const SpinnerDot = styled.div<AnimationProps>`
+export const LoaderDotsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+`;
+
+export const LoaderDot = styled.div<AnimationProps>`
   background-color: ${props => props.theme.mainTextColor};
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  margin: 0 10px;
+  width: 40px;
+  height: 40px;
+  margin: 0 20px;
 
   animation: ${props => props.theme.BounceAnimation} 0.4s ease infinite;
   animation-delay: ${props => props.animationDelay};

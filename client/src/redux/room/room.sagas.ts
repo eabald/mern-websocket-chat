@@ -34,52 +34,65 @@ import { checkForUnauthorized } from '../sagas.utils';
 import { RootState } from '../root-reducer';
 import { updateRead } from '../user/user.actions';
 import { updateUnreadRequest } from '../../api/user.api';
+import { updateLoading } from '../flash/flash.actions';
 
 export const selectCurrentRoom = (state: RootState): Room | null => state.room.currentRoom;
 
 export function* createRoom({ payload }: CreateRoomStart) {
   try {
+    yield put(updateLoading(true));
     const { room } = yield createRoomRequest(payload);
     yield put(createRoomSuccess(room));
     yield put(setCurrentRoomSuccess(room));
+    yield put(updateLoading(false));
   } catch (error) {
     yield checkForUnauthorized(error.response.data);
+    yield put(updateLoading(false));
     yield put(createRoomError(error.response.data));
   }
 }
 
 export function* getRooms({ payload }: GetRoomsStart) {
   try {
+    yield put(updateLoading(true));
     const { rooms } = yield getRoomsRequest(payload);
     yield put(getRoomsSuccess(rooms));
     const currentRoom: Room | null = yield select(selectCurrentRoom);
     if (!currentRoom) {
       yield put(setCurrentRoomSuccess(rooms[0]));
     }
-
+    yield put(updateLoading(false));
   } catch (error) {
     yield checkForUnauthorized(error.response.data);
+    yield put(updateLoading(false));
     yield put(getRoomsError(error.response.data));
   }
 }
 
 export function* getRoom({ payload }: GetRoomStart) {
   try {
+    yield put(updateLoading(true));
     const { room } = yield getRoomRequest(payload);
     yield put(getRoomSuccess(room));
+    yield put(updateLoading(false));
   } catch (error) {
+    yield checkForUnauthorized(error.response.data);
+    yield put(updateLoading(false));
     yield put(getRoomError(error.response.data));
   }
 }
 
 export function* setCurrentRoom({ payload }: SetCurrentRoomStart) {
   try {
+    yield put(updateLoading(true));
     const { room } = yield getRoomRequest(payload._id ?? '');
     yield updateUnreadRequest(payload._id ?? '');
     yield put(setCurrentRoomSuccess(room));
     yield put(updateRead(room._id));
+    yield put(updateLoading(false));
   } catch (error) {
     yield checkForUnauthorized(error.response.data);
+    yield put(updateLoading(false));
     yield put(setCurrentRoomError(error.response.data));
   }
 }

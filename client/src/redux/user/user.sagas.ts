@@ -29,19 +29,26 @@ import { setFlashMessage, updateLoading } from '../flash/flash.actions';
 
 export function* getUserDetails({ payload }: GetUserDetailsStartAction) {
   try {
+    yield put(updateLoading(true));
     const { user } = yield getUserRequest(payload);
     yield put(getUserDetailsSuccess(user));
+    yield put(updateLoading(false));
   } catch (error) {
     yield checkForUnauthorized(error.response.data);
+    yield put(updateLoading(false));
     yield put(getUserDetailsError(error.response.data));
   }
 }
 
 export function* updateUser({ payload }: UpdateUserStartAction) {
   try {
+    yield put(updateLoading(true));
     const { user } = yield updateUserRequest(payload);
     yield put(updateUserSuccess(user));
+    yield put(updateLoading(false));
   } catch (error) {
+    yield checkForUnauthorized(error.response.data);
+    yield put(updateLoading(false));
     yield put(updateUserError(error));
   }
 }
@@ -54,6 +61,8 @@ export function* blockUser({ payload }: BlockUserStartAction) {
     yield put(setFlashMessage(status));
     yield put(updateLoading(false));
   } catch (error) {
+    yield checkForUnauthorized(error.response.data);
+    yield put(updateLoading(false));
     yield put(blockUserError(error.response.data));
   }
 }

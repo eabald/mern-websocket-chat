@@ -10,15 +10,16 @@ import { MainTheme } from './themes/main.theme';
 // Components
 import Router from './router';
 import ErrorsOutlet from './components/errorsOutlet/errorsOutlet.component';
-import Spinner from './components/spinner/spinner.component';
+import Loader from './components/loader/loader.component';
 
 const App: React.FC = () => (
-  <PersistGate loading={<Spinner />} persistor={persistor}>
+  <PersistGate loading={<Loader />} persistor={persistor}>
     <ThemeProvider theme={MainTheme}>
       <ErrorsOutlet />
       <BrowserRouter>
         <Router />
       </BrowserRouter>
+      <Loader />
     </ThemeProvider>
   </PersistGate>
 );

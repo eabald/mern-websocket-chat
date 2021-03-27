@@ -1,10 +1,4 @@
-import styled, { keyframes } from 'styled-components';
-
-const BounceAnimation = keyframes`
-  0% { margin-bottom: 0; }
-  50% { margin-bottom: 10px }
-  100% { margin-bottom: 0 }
-`;
+import styled from 'styled-components';
 
 interface AnimationProps {
   animationDelay: string;
@@ -24,6 +18,6 @@ export const ButtonLoaderDot = styled.div<AnimationProps>`
   height: 10px;
   margin: 0 5px;
 
-  animation: ${BounceAnimation} 0.4s ease infinite;
+  animation: ${props => props.theme.BounceAnimation} 0.4s ease infinite;
   animation-delay: ${props => props.animationDelay};
 `;

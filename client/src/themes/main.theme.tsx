@@ -1,3 +1,5 @@
+import { keyframes } from 'styled-components';
+
 export const MainTheme = {
   font: 'roboto',
   modalBackground: '#2e2e2e',
@@ -17,4 +19,11 @@ export const MainTheme = {
   errorMessageBackground: '#ca47c0',
   messageSubmitButtonBackGround: '#7487da',
   messageSubmitButtonBackGroundDisabled: '#999898',
-}
+  loaderBackground: 'rgba(90, 90, 90, 0.75)',
+
+  BounceAnimation: keyframes`
+    0% { margin-bottom: 0; }
+    50% { margin-bottom: 10px }
+    100% { margin-bottom: 0 }
+  `,
+};
