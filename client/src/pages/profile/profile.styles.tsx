@@ -7,6 +7,9 @@ export const ProfileWrapper = styled.div`
   max-width: 1100px;
   max-height: calc(100vh - 80px);
   overflow-y: auto;
+  @media only screen and (max-width: 768px) {
+    padding: 0;
+  }
   &::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);

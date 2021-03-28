@@ -2,17 +2,16 @@ import styled from 'styled-components';
 
 export const ModalWrapper = styled.div`
   position: fixed;
-  left: 0;
   top: 0;
-  width: 100%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
   background: rgba(0, 0, 0, 0.5);
   z-index: 500;
   color: ${props => props.theme.mainTextColor};
   font-family: ${props => props.theme.font};
-  overflow-y: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,6 +25,12 @@ export const ModalWrapperWindow = styled.div`
   border-radius: 5px;
   padding: 20px;
   box-shadow: 0 0 2px 1px rgb(150 150 150 / 50%);
+  min-width: 33%;
+  max-width: 95%;
+  z-index: 1;
+  @media only screen and (max-width: 768px) {
+    width: 80%;
+  }
 `
 
 export const ModalWrapperClose = styled.div`

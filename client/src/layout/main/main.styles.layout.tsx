@@ -25,4 +25,8 @@ export const MainLayoutWrapper = styled.div`
 export const MainLayoutBox = styled.div`
   z-index: 1;
   min-width: 33%;
+  max-width: 95%;
+  @media only screen and (max-width: 768px) {
+    width: 95%;
+  }
 `;

@@ -37,13 +37,22 @@ import { updateUnreadRequest } from '../../api/user.api';
 import { updateLoading } from '../flash/flash.actions';
 
 export const selectCurrentRoom = (state: RootState): Room | null => state.room.currentRoom;
+export const selectRooms = (state: RootState): Room[] => state.room.rooms;
 
 export function* createRoom({ payload }: CreateRoomStart) {
   try {
     yield put(updateLoading(true));
     const { room } = yield createRoomRequest(payload);
-    yield put(createRoomSuccess(room));
-    yield put(setCurrentRoomSuccess(room));
+    const rooms: Room[] = yield select(selectRooms);
+    const roomInRooms = rooms.find(item => item._id === room._id);
+    if (!roomInRooms) {
+      yield put(createRoomSuccess(room));
+    }
+    if (roomInRooms) {
+      yield put(setCurrentRoomSuccess(roomInRooms));
+    } else {
+      yield put(setCurrentRoomSuccess(room));
+    }
     yield put(updateLoading(false));
   } catch (error) {
     yield checkForUnauthorized(error.response.data);

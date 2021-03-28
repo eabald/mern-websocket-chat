@@ -6,6 +6,10 @@ export const TermsAndConditionsWrapper = styled.div`
   padding: 20px;
   max-width: 1100px;
   max-height: calc(100vh - 80px);
+  @media only screen and (max-width: 768px) {
+    max-width: 100vw;
+    max-height: calc(100vh - 50px);
+  }
   overflow-y: auto;
   &::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);

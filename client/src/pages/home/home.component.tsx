@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useRef, MouseEvent } from 'react';
 // Styled
 import {
   HomeWrapper,
@@ -15,27 +15,46 @@ import RoomsList from '../../components/roomsList/roomsList.component';
 import DmsList from '../../components/dmsList/dmsList.component';
 import MessageForm from '../../components/messageForm/messageForm.component';
 import MessagesOutlet from '../../components/messagesOutlet/messagesOutlet.component';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/root-reducer';
+import { updateMobileMenu } from '../../redux/flash/flash.actions';
 
 type HomeProps = {};
 
-const Home: React.FC<HomeProps> = () => (
-  <>
-    <MainLayoutWrapper />
-    <HomeWrapper>
-      <HomeSideArea>
-        <RoomsList />
-        <DmsList />
-      </HomeSideArea>
-      <HomeMainArea>
-        <MessagesOutlet />
-      </HomeMainArea>
-      <HomeInputArea>
-        <MessageForm />
-      </HomeInputArea>
-      <HomeNavArea>
-        <Navbar />
-      </HomeNavArea>
-    </HomeWrapper>
-  </>
-);
+const Home: React.FC<HomeProps> = () => {
+  const isOpen = useSelector((state: RootState) => state.flash.mobileMenuOpen);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
+  const clickMenuHandle = (e: MouseEvent<HTMLDivElement>): void => {
+    if (e.target !== mobileMenuRef.current && e.target !== navRef.current) {
+      dispatch(updateMobileMenu(false));
+    }
+  };
+  const closeMenuHandler = () => dispatch(updateMobileMenu(false));
+  return (
+    <>
+      <MainLayoutWrapper />
+      <HomeWrapper>
+        <HomeSideArea
+          onClick={clickMenuHandle}
+          className={`${isOpen ? 'is-open' : ''}`}
+          ref={mobileMenuRef}
+        >
+          <RoomsList />
+          <DmsList />
+        </HomeSideArea>
+        <HomeMainArea onClick={closeMenuHandler}>
+          <MessagesOutlet />
+        </HomeMainArea>
+        <HomeInputArea onClick={closeMenuHandler}>
+          <MessageForm />
+        </HomeInputArea>
+        <HomeNavArea ref={navRef}>
+          <Navbar />
+        </HomeNavArea>
+      </HomeWrapper>
+    </>
+  );
+};
 export default Home;

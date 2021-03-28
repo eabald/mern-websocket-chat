@@ -26,6 +26,9 @@ export const NavbarGreetings = styled.div`
   text-transform: uppercase;
   font-size: 24px;
   text-align: center;
+  @media only screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const NavbarLink = styled(Link)`
@@ -52,4 +55,20 @@ export const NavbarCurrentRoom = styled.div`
   text-align: center;
   color: ${props => props.theme.navTextColor};
   font-family: ${props => props.theme.font};
+  @media only screen and (max-width: 768px) {
+    margin-left: auto;
+    text-overflow: ellipsis;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: right;
+    display: block;
+  }
+`;
+
+export const NavbarHamburger = styled.div`
+  display: none;
+  @media only screen and (max-width: 768px) {
+    display: block
+  }
 `;

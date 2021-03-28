@@ -17,6 +17,9 @@ import {
   MessageFormTextArea,
   MessageFormSubmit,
 } from './messageForm.styles';
+// Components
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 type MessageFormProps = {};
 interface FormValues {
@@ -60,8 +63,8 @@ const MessageForm: React.FC<MessageFormProps> = () => {
         actions.resetForm({ values: { msg: '' } });
       }}
     >
-      {({ isValid, isSubmitting, handleChange, values, handleSubmit }) => (
-        <MessageFormWrapper processing={isSubmitting}>
+      {({ isValid, handleChange, values, handleSubmit }) => (
+        <MessageFormWrapper>
           <Form>
             <MessageFormTextArea
               name='msg'
@@ -74,7 +77,7 @@ const MessageForm: React.FC<MessageFormProps> = () => {
               value={values.msg}
             />
             <MessageFormSubmit type='submit' disabled={!isValid}>
-              +
+              <FontAwesomeIcon icon={faPaperPlane} />
             </MessageFormSubmit>
           </Form>
         </MessageFormWrapper>

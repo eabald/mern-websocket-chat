@@ -9,6 +9,8 @@ export const SET_FLASH_MESSAGE = 'SET_FLASH_MESSAGE';
 
 export const UNSET_FLASH_MESSAGE = 'UNSET_FLASH_MESSAGE';
 
+export const UPDATE_MOBILE_MENU = 'UPDATE_MOBILE_MENU';
+
 export interface UpdateLoadingAction extends Action {
   type: typeof UPDATE_LOADING;
   payload: boolean;
@@ -24,10 +26,16 @@ export interface UnsetFlashMessageAction extends Action {
   payload: FlashMessage;
 }
 
+export interface UpdateMobileMenuAction extends Action {
+  type: typeof UPDATE_MOBILE_MENU;
+  payload: boolean;
+}
+
 export type FlashAction =
   | UpdateLoadingAction
   | SetFlashMessageAction
   | UnsetFlashMessageAction
+  | UpdateMobileMenuAction
   | ResetAction;
 
 export interface FlashMessage {
@@ -38,4 +46,5 @@ export interface FlashMessage {
 export interface FlashState {
   loading: boolean;
   messages: FlashMessage[];
+  mobileMenuOpen: boolean;
 }

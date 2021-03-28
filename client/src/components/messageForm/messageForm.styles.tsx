@@ -1,15 +1,11 @@
 import styled from 'styled-components';
 
-interface MessageFormWrapperProps {
-  processing: boolean,
-}
 
-export const MessageFormWrapper = styled.div<MessageFormWrapperProps>`
+export const MessageFormWrapper = styled.div`
   display: block;
   height: calc(100% - 10px);
   width: calc(100% - 10px);
   padding: 5px;
-  /* add loading */
   form {
     height: 100%;
     display: flex;
@@ -25,6 +21,9 @@ export const MessageFormTextArea = styled.textarea`
   border-radius: 5px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  @media only screen and (max-width: 768px) {
+    width: 80%;
+  }
 `;
 
 export const MessageFormSubmit = styled.button`
@@ -41,6 +40,9 @@ export const MessageFormSubmit = styled.button`
   border: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  @media only screen and (max-width: 768px) {
+    width: calc(20% - 10px);
+  }
   &:hover {
     background: ${props => props.theme.secondaryTextColor};
     color: ${props => props.theme.white};
