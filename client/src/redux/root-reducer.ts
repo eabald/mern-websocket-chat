@@ -6,7 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import authReducer from './auth/auth.reducer';
 import userReducer from './user/user.reducer';
 import roomReducer from './room/room.reducer'
-import flashReducer from './flash/flash.reducer'
+import utilsReducer from './utils/utils.reducer'
 // Types
 import { RootAction } from './root-types';
 
@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
   room: roomReducer,
-  flash: flashReducer,
+  utils: utilsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

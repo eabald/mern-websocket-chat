@@ -3,24 +3,24 @@ import { Reducer } from 'redux';
 // Types
 import { RESET } from '../root-types';
 import {
-  FlashAction,
-  FlashState,
+  UtilsAction,
+  UtilsState,
   SET_FLASH_MESSAGE,
   UNSET_FLASH_MESSAGE,
   UPDATE_LOADING,
   UPDATE_MOBILE_MENU,
-} from './flash.types';
+} from './utils.types';
 
-const INITIAL_STATE: FlashState = {
+const INITIAL_STATE: UtilsState = {
   loading: false,
   messages: [],
   mobileMenuOpen: false,
 };
 
-const flashReducer: Reducer<FlashState, FlashAction> = (
+const utilsReducer: Reducer<UtilsState, UtilsAction> = (
   state = INITIAL_STATE,
-  action: FlashAction
-): FlashState => {
+  action: UtilsAction
+): UtilsState => {
   switch (action.type) {
     case UPDATE_LOADING:
       return {
@@ -53,4 +53,4 @@ const flashReducer: Reducer<FlashState, FlashAction> = (
   }
 };
 
-export default flashReducer;
+export default utilsReducer;

@@ -13,8 +13,8 @@ import {
   setUnreadMessages,
 } from '../redux/room/room.actions';
 import { updateUnread } from '../redux/user/user.actions';
-import { FlashMessage } from '../redux/flash/flash.types';
-import { setFlashMessage } from '../redux/flash/flash.actions';
+import { FlashMessage } from '../redux/utils/utils.types';
+import { setFlashMessage } from '../redux/utils/utils.actions';
 
 const SOCKET_SERVER_URL = '/';
 

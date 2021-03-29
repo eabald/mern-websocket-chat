@@ -4,7 +4,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
 import { clearAuthError } from '../../redux/auth/auth.actions';
-import { unsetFlashMessage } from '../../redux/flash/flash.actions';
+import { unsetFlashMessage } from '../../redux/utils/utils.actions';
 // Styled
 import { ErrorsOutletWrapper } from './errorsOutlet.styles';
 // Components
@@ -16,7 +16,7 @@ const ErrorsOutlet: React.FC<ErrorsOutletProps> = () => {
   const dispatch = useDispatch();
   const authError = useSelector((state: RootState) => state.auth.error);
   const userError = useSelector((state: RootState) => state.user.error);
-  const flashMessages = useSelector((state: RootState) => state.flash.messages);
+  const flashMessages = useSelector((state: RootState) => state.utils.messages);
   return (
     <ErrorsOutletWrapper>
       {authError ? (

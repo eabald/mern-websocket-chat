@@ -31,7 +31,7 @@ export interface UpdateMobileMenuAction extends Action {
   payload: boolean;
 }
 
-export type FlashAction =
+export type UtilsAction =
   | UpdateLoadingAction
   | SetFlashMessageAction
   | UnsetFlashMessageAction
@@ -43,7 +43,7 @@ export interface FlashMessage {
   message: string;
 }
 
-export interface FlashState {
+export interface UtilsState {
   loading: boolean;
   messages: FlashMessage[];
   mobileMenuOpen: boolean;

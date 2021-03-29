@@ -12,7 +12,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 type HamburgerProps = {};
 
 const Hamburger: React.FC<HamburgerProps> = () => {
-  const isOpen = useSelector((state: RootState) => state.flash.mobileMenuOpen);
+  const isOpen = useSelector((state: RootState) => state.utils.mobileMenuOpen);
   return (
     <HamburgerWrapper className={`${isOpen ? 'is-open' : ''}`}>
       <FontAwesomeIcon icon={faBars} />

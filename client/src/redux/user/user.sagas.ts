@@ -25,7 +25,7 @@ import {
 } from './user.types';
 // Utils
 import { checkForUnauthorized } from '../sagas.utils';
-import { setFlashMessage, updateLoading } from '../flash/flash.actions';
+import { setFlashMessage, updateLoading } from '../utils/utils.actions';
 
 export function* getUserDetails({ payload }: GetUserDetailsStartAction) {
   try {

@@ -1,5 +1,9 @@
 // React
 import React, { useRef, MouseEvent } from 'react';
+// Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/root-reducer';
+import { updateMobileMenu } from '../../redux/utils/utils.actions';
 // Styled
 import {
   HomeWrapper,
@@ -15,14 +19,11 @@ import RoomsList from '../../components/roomsList/roomsList.component';
 import DmsList from '../../components/dmsList/dmsList.component';
 import MessageForm from '../../components/messageForm/messageForm.component';
 import MessagesOutlet from '../../components/messagesOutlet/messagesOutlet.component';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/root-reducer';
-import { updateMobileMenu } from '../../redux/flash/flash.actions';
 
 type HomeProps = {};
 
 const Home: React.FC<HomeProps> = () => {
-  const isOpen = useSelector((state: RootState) => state.flash.mobileMenuOpen);
+  const isOpen = useSelector((state: RootState) => state.utils.mobileMenuOpen);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();

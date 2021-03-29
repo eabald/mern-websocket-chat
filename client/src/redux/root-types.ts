@@ -4,9 +4,9 @@ import { Action } from 'redux';
 import { AuthAction } from './auth/auth.types'
 import { RoomAction } from './room/room.types';
 import { UserAction } from './user/user.types'
-import { FlashAction } from './flash/flash.types'
+import { UtilsAction } from './utils/utils.types'
 
-export type RootAction = AuthAction | UserAction | RoomAction | FlashAction;
+export type RootAction = AuthAction | UserAction | RoomAction | UtilsAction;
 
 export const RESET = 'RESET';
 

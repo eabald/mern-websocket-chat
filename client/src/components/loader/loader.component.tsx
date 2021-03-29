@@ -9,7 +9,7 @@ import { LoaderWrapper, LoaderDotsWrapper, LoaderDot } from './loader.styles';
 type LoaderProps = {};
 
 const Loader: React.FC<LoaderProps> = () => {
-  const loading = useSelector((state: RootState) => state.flash.loading);
+  const loading = useSelector((state: RootState) => state.utils.loading);
   return (
     <>
       {loading ? (

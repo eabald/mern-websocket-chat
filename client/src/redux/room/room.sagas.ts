@@ -34,7 +34,7 @@ import { checkForUnauthorized } from '../sagas.utils';
 import { RootState } from '../root-reducer';
 import { updateRead } from '../user/user.actions';
 import { updateUnreadRequest } from '../../api/user.api';
-import { updateLoading } from '../flash/flash.actions';
+import { updateLoading } from '../utils/utils.actions';
 
 export const selectCurrentRoom = (state: RootState): Room | null => state.room.currentRoom;
 export const selectRooms = (state: RootState): Room[] => state.room.rooms;

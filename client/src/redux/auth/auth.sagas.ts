@@ -27,7 +27,7 @@ import {
 } from './auth.actions';
 import { getUserSuccess } from '../user/user.actions';
 import { reset } from '../root-actions';
-import { updateLoading } from '../flash/flash.actions';
+import { updateLoading } from '../utils/utils.actions';
 
 export function* signIn({ payload }: SignInStartAction) {
   try {

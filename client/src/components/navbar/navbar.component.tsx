@@ -17,14 +17,14 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPowerOff, faUser } from '@fortawesome/free-solid-svg-icons';
 import Hamburger from '../hamburger/hamburger.component';
-import { updateMobileMenu } from '../../redux/flash/flash.actions';
+import { updateMobileMenu } from '../../redux/utils/utils.actions';
 
 type NavbarProps = {};
 
 const Navbar: React.FC<NavbarProps> = () => {
   const hamburger = useRef<HTMLDivElement>(null);
   const username = useSelector((state: RootState) => state.user.user?.username);
-  const isOpen = useSelector((state: RootState) => state.flash.mobileMenuOpen);
+  const isOpen = useSelector((state: RootState) => state.utils.mobileMenuOpen);
   const currentRoom = useSelector(
     (state: RootState) => state.room.currentRoom?.name
   );

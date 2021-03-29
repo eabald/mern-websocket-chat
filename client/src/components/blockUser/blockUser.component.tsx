@@ -23,7 +23,7 @@ type BlockUserProps = {
 
 const BlockUser: React.FC<BlockUserProps> = ({ id, username }) => {
   const dispatch = useDispatch();
-  const loading = useSelector((state: RootState) => state.flash.loading );
+  const loading = useSelector((state: RootState) => state.utils.loading );
   const history = useHistory();
 
   const onClickHandler = () => {
