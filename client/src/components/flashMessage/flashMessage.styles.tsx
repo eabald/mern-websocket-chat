@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const ErrorLayerMessageContainer = styled.div`
+export const FlashMessageContainer = styled.div`
   display: block;
   padding: 20px;
   text-align: center;
@@ -9,7 +9,7 @@ export const ErrorLayerMessageContainer = styled.div`
   color: ${props => props.theme.white};
 `;
 
-export const ErrorLayerMessageText = styled.div`
+export const FlashMessageText = styled.div`
   padding-left: 20px;
   text-transform: uppercase;
   display: inline-block;

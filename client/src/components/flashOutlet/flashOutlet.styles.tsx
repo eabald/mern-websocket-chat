@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const ErrorsOutletWrapper = styled.div`
+export const FlashOutletWrapper = styled.div`
   position: fixed;
   top: 100px;
   width: 70%;

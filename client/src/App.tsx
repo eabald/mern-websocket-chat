@@ -9,13 +9,13 @@ import { ThemeProvider } from 'styled-components';
 import { MainTheme } from './themes/main.theme';
 // Components
 import Router from './router';
-import ErrorsOutlet from './components/errorsOutlet/errorsOutlet.component';
+import FlashOutlet from './components/flashOutlet/flashOutlet.component';
 import Loader from './components/loader/loader.component';
 
 const App: React.FC = () => (
   <PersistGate loading={<Loader />} persistor={persistor}>
     <ThemeProvider theme={MainTheme}>
-      <ErrorsOutlet />
+      <FlashOutlet />
       <BrowserRouter>
         <Router />
       </BrowserRouter>
