@@ -36,11 +36,14 @@ class UserController implements Controller {
   };
 
   private getUser = async (
-    request: express.Request,
+    request: RequestWithUser,
     response: express.Response
   ): Promise<void> => {
     const id = request.params.id;
     const user = await this.user.findById(id);
+    if (request.user.id !== id) {
+      user.email = undefined;
+    }
     response.json({ user });
   };
 
