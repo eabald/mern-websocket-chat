@@ -27,6 +27,7 @@ type RegisterProps = {};
 interface RegisterValues {
   email: string;
   password: string;
+  passwordConfirm: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -48,6 +49,7 @@ const Register: React.FC<RegisterProps> = () => {
           initialValues={{
             email: '',
             password: '',
+            passwordConfirm: '',
             username: '',
             firstName: '',
             lastName: '',
@@ -61,47 +63,120 @@ const Register: React.FC<RegisterProps> = () => {
             submitHandler(values).finally(() => actions.setSubmitting(false));
           }}
         >
-          {({touched, errors, isValid, isSubmitting, values}) => (
+          {({ touched, errors, isValid, isSubmitting, values }) => (
             <Form>
               <FormGroup>
                 <Label htmlFor='email'>Email</Label>
-                <FormField id='email' name='email' type='email' placeholder='awesome@person.com'  error={touched.email && errors.email} />
-                <ErrorMessage name='email' render={error => <ValidationError>{error}</ValidationError>} />
+                <FormField
+                  id='email'
+                  name='email'
+                  type='email'
+                  placeholder='awesome@person.com'
+                  error={touched.email && errors.email}
+                />
+                <ErrorMessage
+                  name='email'
+                  render={(error) => <ValidationError>{error}</ValidationError>}
+                />
               </FormGroup>
               <FormGroup>
                 <Label htmlFor='username'>Username</Label>
-                <FormField id='username' name='username' type='text' placeholder='AwesomePerson'  error={touched.username && errors.username} />
-                <ErrorMessage name='username' render={error => <ValidationError>{error}</ValidationError>} />
+                <FormField
+                  id='username'
+                  name='username'
+                  type='text'
+                  placeholder='AwesomePerson'
+                  error={touched.username && errors.username}
+                />
+                <ErrorMessage
+                  name='username'
+                  render={(error) => <ValidationError>{error}</ValidationError>}
+                />
               </FormGroup>
               <FormGroup>
                 <Label htmlFor='firstName'>First name</Label>
-                <FormField id='firstName' name='firstName' type='text' placeholder='Awesome' error={touched.firstName && errors.firstName} />
-                <ErrorMessage name='FirstName' render={error => <ValidationError>{error}</ValidationError>} />
+                <FormField
+                  id='firstName'
+                  name='firstName'
+                  type='text'
+                  placeholder='Awesome'
+                  error={touched.firstName && errors.firstName}
+                />
+                <ErrorMessage
+                  name='FirstName'
+                  render={(error) => <ValidationError>{error}</ValidationError>}
+                />
               </FormGroup>
               <FormGroup>
                 <Label htmlFor='lastName'>Last name</Label>
-                <FormField id='lastName' name='lastName' type='text' placeholder='Person' error={touched.lastName && errors.lastName} />
-                <ErrorMessage name='lastName' render={error => <ValidationError>{error}</ValidationError>} />
+                <FormField
+                  id='lastName'
+                  name='lastName'
+                  type='text'
+                  placeholder='Person'
+                  error={touched.lastName && errors.lastName}
+                />
+                <ErrorMessage
+                  name='lastName'
+                  render={(error) => <ValidationError>{error}</ValidationError>}
+                />
               </FormGroup>
               <FormGroup>
                 <Label htmlFor='password'>Password</Label>
-                <FormField id='password' name='password' type='password' error={touched.password && errors.password}/>
-                <ErrorMessage name='password' render={error => <ValidationError>{error}</ValidationError>} />
+                <FormField
+                  id='password'
+                  name='password'
+                  type='password'
+                  error={touched.password && errors.password}
+                />
+                <ErrorMessage
+                  name='password'
+                  render={(error) => <ValidationError>{error}</ValidationError>}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor='passwordConfirm'>Confirm password</Label>
+                <FormField
+                  id='passwordConfirm'
+                  name='passwordConfirm'
+                  type='password'
+                  error={touched.passwordConfirm && errors.passwordConfirm}
+                />
+                <ErrorMessage
+                  name='passwordConfirm'
+                  render={(error) => <ValidationError>{error}</ValidationError>}
+                />
               </FormGroup>
               <Checkbox
                 name='terms'
                 error={touched.terms && errors.terms}
-                errorInfo={<ErrorMessage name='terms' render={error => <ValidationError>{error}</ValidationError>} />}
+                errorInfo={
+                  <ErrorMessage
+                    name='terms'
+                    render={(error) => (
+                      <ValidationError>{error}</ValidationError>
+                    )}
+                  />
+                }
               >
-                Accept <InlineLink to='/terms-and-conditions'>terms and conditions</InlineLink>
+                Accept{' '}
+                <InlineLink to='/terms-and-conditions'>
+                  terms and conditions
+                </InlineLink>
               </Checkbox>
               <FormGroup>
-                <SubmitButton disabled={!isValid || isSubmitting || !values.terms}  loading={isSubmitting}/>
+                <SubmitButton
+                  disabled={!isValid || isSubmitting || !values.terms}
+                  loading={isSubmitting}
+                />
               </FormGroup>
             </Form>
           )}
         </Formik>
-        <TextBlock>Have an account? Click <InlineLink to='/login'>here</InlineLink> to login.</TextBlock>
+        <TextBlock>
+          Have an account? Click <InlineLink to='/login'>here</InlineLink> to
+          login.
+        </TextBlock>
       </RegisterWrapper>
     </MainLayout>
   );
