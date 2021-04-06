@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 
 export const store = createStore(
   rootReducer,
-  applyMiddleware(logger, sagaMiddleware)
+  applyMiddleware(...middlewares)
 );
 
 interceptors(store);
