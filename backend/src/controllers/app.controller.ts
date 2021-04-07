@@ -3,6 +3,7 @@ import errorMiddleware from '../middleware/error.middleware';
 import { createServer, Server } from 'http';
 import mongoose from 'mongoose';
 import Controller from '../interfaces/controller.interface';
+import ErrorLogger from '../middleware/errorLogger.middleware'
 
 class AppController {
   public app: express.Application;
@@ -40,6 +41,7 @@ class AppController {
   }
 
   private initializeErrorMiddleware(): void {
+    this.app.use(ErrorLogger);
     this.app.use(errorMiddleware);
   }
 
