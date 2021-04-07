@@ -1,9 +1,9 @@
 import HttpException from './HttpException';
 
-class AuthenticationTokenExpiredException extends HttpException {
+class VerificationTokenExpiredException extends HttpException {
   constructor() {
-    super(401, 'Authentication token expired');
+    super(401, 'Verification email expired, sending new one.');
   }
 }
 
-export default AuthenticationTokenExpiredException;
+export default VerificationTokenExpiredException;

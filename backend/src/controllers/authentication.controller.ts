@@ -19,6 +19,11 @@ import AuthenticationService from '../services/authentication.service';
 import InternalServerErrorException from '../exceptions/InternalServerErrorException';
 import RefreshTokenDto from '../dto/refreshToken.dto';
 import roomModel from '../models/room.model';
+import EmailService from '../services/email.service';
+import RegistrationEmailException from '../exceptions/RegistrationEmailException';
+import VerificationTokenExpiredException from '../exceptions/VerificationTokenExpiredException';
+import DataStoredInVerificationToken from '../interfaces/dataStoredInVerificationToken';
+import EmailNotVerifiedException from '../exceptions/EmailNotVerifiedException';
 
 class AuthenticationController implements Controller {
   public path = '/auth';
@@ -27,10 +32,12 @@ class AuthenticationController implements Controller {
   private refreshToken = refreshTokenModel;
   private room = roomModel;
   private authService: AuthenticationService;
+  private emailService: EmailService;
 
   constructor() {
     this.initializeRoutes();
     this.authService = new AuthenticationService();
+    this.emailService = new EmailService();
   }
 
   private initializeRoutes() {
@@ -50,6 +57,7 @@ class AuthenticationController implements Controller {
       this.loggingIn
     );
     this.router.post(`${this.path}/logout`, this.loggingOut);
+    this.router.get(`${this.path}/verify`, this.verifyEmail);
   }
 
   private createToken(user: User): TokenData {
@@ -79,6 +87,16 @@ class AuthenticationController implements Controller {
     };
   }
 
+  private createVerificationToken(email: string): TokenData {
+    const expiresIn = 3600000 * 24;
+    const secret = process.env.JWT_SECRET;
+    const token = jwt.sign({ email }, secret, { expiresIn });
+    return {
+      expiresIn,
+      token,
+    };
+  }
+
   private registration = async (
     request: express.Request,
     response: express.Response,
@@ -91,24 +109,62 @@ class AuthenticationController implements Controller {
       next(new UserWithThatUsernameAlreadyExistsException(userData.username));
     } else {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
-      const defaultRooms = await this.room.find({ $or: [{ name: 'general' }, { name: 'random' }]})
+      const defaultRooms = await this.room.find({
+        $or: [{ name: 'general' }, { name: 'random' }],
+      });
+      const { token } = this.createVerificationToken(userData.email);
       const user = await this.user.create({
         ...userData,
         password: hashedPassword,
         rooms: defaultRooms,
+        verificationToken: token,
       });
       defaultRooms.forEach(async (room) => {
         room.users.push(user._id);
         await room.save();
-      })
-      user.password = undefined;
-      const { token, expiresIn } = this.createToken(user);
-      const refreshToken = await this.createRefreshToken(user);
-      response.cookie('Authorization', token, {
-        maxAge: expiresIn,
-        httpOnly: true,
       });
-      response.json({ token, user, refreshToken: refreshToken.token });
+      try {
+        await this.emailService.sendEmail(
+          user.email,
+          process.env.EMAIL_TEMPLATE_EMAIL_VERIFICATION,
+          {
+            verifyUrl: `${process.env.DOMAIN}/verify?token=${encodeURI(token)}`,
+          }
+        );
+        response.json({ status: 'success', message: 'Registration complete, check your inbox for verification email.' });
+      } catch (error) {
+        next(new RegistrationEmailException());
+      }
+    }
+  };
+
+  private verifyEmail = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const token = request.params.token;
+    try {
+      if (!token) {
+        next(new AuthenticationTokenMissingException());
+      } else {
+        const { email } = jwt.verify(token, process.env.JWT_SECRET) as DataStoredInVerificationToken;
+        const user = await this.user.findOne({ email });
+        if (!user) {
+          next(new WrongCredentialsException());
+        } else {
+          user.verificationToken = '';
+          user.emailVerified = true;
+          await user.save();
+          response.json({ status: 'success', message: 'Email verified, you can sign in now.' })
+        }
+      }
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        next(new VerificationTokenExpiredException());
+      } else {
+        next(new InternalServerErrorException());
+      }
     }
   };
 
@@ -122,7 +178,9 @@ class AuthenticationController implements Controller {
       if (!refreshToken) {
         next(new AuthenticationTokenMissingException());
       } else {
-        const tokenDoc = await this.refreshToken.findOne({ token: refreshToken });
+        const tokenDoc = await this.refreshToken.findOne({
+          token: refreshToken,
+        });
         if (!tokenDoc) {
           next(new WrongAuthenticationTokenException());
         } else {
@@ -139,7 +197,7 @@ class AuthenticationController implements Controller {
       console.error(error);
       next(new InternalServerErrorException());
     }
-  }
+  };
 
   private loggingIn = async (
     request: express.Request,
@@ -148,6 +206,9 @@ class AuthenticationController implements Controller {
   ): Promise<void> => {
     const logInData: LogInDto = request.body;
     const user = await this.user.findOne({ email: logInData.email });
+    if (!user.emailVerified) {
+      next(new EmailNotVerifiedException());
+    }
     if (user) {
       const isPasswordMatching = await bcrypt.compare(
         logInData.password,
