@@ -8,11 +8,13 @@ import { TermsAndConditionsWrapper } from './termsAndConditions.styles';
 import SectionHeader from '../../components/sectionHeader/sectionHeader.component';
 import SmallHeader from '../../components/smallHeader/smallHeader.component';
 import TextBlock from '../../components/textBlock/textBlock.component';
+import BackButton from '../../components/backButton/backButton.component';
 
 type TermsAndConditionsProps = {};
 
 const TermsAndConditions: React.FC<TermsAndConditionsProps> = () => (
   <MainLayout>
+    <BackButton />
     <TermsAndConditionsWrapper>
       <SmallHeader>Generic Terms and Conditions Template</SmallHeader>
       <TextBlock>
