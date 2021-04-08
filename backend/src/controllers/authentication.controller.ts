@@ -128,11 +128,13 @@ class AuthenticationController implements Controller {
           user.email,
           process.env.EMAIL_TEMPLATE_EMAIL_VERIFICATION,
           {
+            subject: 'Email verification',
             verifyUrl: `${process.env.DOMAIN}/verify?token=${encodeURI(token)}`,
           }
         );
         response.json({ status: 'success', message: 'Registration complete, check your inbox for verification email.' });
       } catch (error) {
+        await user.deleteOne();
         next(new RegistrationEmailException());
       }
     }

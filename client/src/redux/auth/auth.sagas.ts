@@ -19,7 +19,6 @@ import {
 import {
   signInError,
   signInSuccess,
-  signUpSuccess,
   signUpError,
   signOutSuccess,
   signOutError,
@@ -27,7 +26,8 @@ import {
 } from './auth.actions';
 import { getUserSuccess } from '../user/user.actions';
 import { reset } from '../root-actions';
-import { updateLoading } from '../utils/utils.actions';
+import { setFlashMessage, updateLoading } from '../utils/utils.actions';
+import history from '../history';
 
 export function* signIn({ payload }: SignInStartAction) {
   try {
@@ -45,9 +45,9 @@ export function* signIn({ payload }: SignInStartAction) {
 
 export function* signUp({ payload }: SignUpStartAction) {
   try {
-    const { token, refreshToken, user } = yield signUpRequest(payload);
-    yield put(signUpSuccess({ token, refreshToken }));
-    yield put(getUserSuccess(user));
+    const { status, message } = yield signUpRequest(payload);
+    yield put(setFlashMessage({ status, message }));
+    history.push('/login');
     yield put(clearAuthError());
   } catch (error) {
     yield put(signUpError(error.response.data));
