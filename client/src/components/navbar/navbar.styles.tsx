@@ -26,7 +26,7 @@ export const NavbarGreetings = styled.div`
   text-transform: uppercase;
   font-size: 24px;
   text-align: center;
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 910px) {
     display: none;
   }
 `;
@@ -55,7 +55,7 @@ export const NavbarCurrentRoom = styled.div`
   text-align: center;
   color: ${props => props.theme.navTextColor};
   font-family: ${props => props.theme.font};
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 910px) {
     margin-left: auto;
     text-overflow: ellipsis;
     width: 100px;
@@ -68,7 +68,7 @@ export const NavbarCurrentRoom = styled.div`
 
 export const NavbarHamburger = styled.div`
   display: none;
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 910px) {
     display: block
   }
 `;

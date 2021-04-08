@@ -26,6 +26,9 @@ export const MainLayoutBox = styled.div`
   z-index: 1;
   min-width: 33%;
   max-width: 95%;
+  @media only screen and (max-width: 1366px) {
+    min-width: 50%;
+  }
   @media only screen and (max-width: 768px) {
     width: 95%;
   }
