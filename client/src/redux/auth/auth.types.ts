@@ -2,6 +2,7 @@
 import { Action } from 'redux';
 // Types
 import { ResetAction } from '../root-types';
+import { FlashMessage } from '../utils/utils.types';
 
 export const SIGN_IN_START = 'SIGN_IN_START';
 export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';
@@ -14,6 +15,10 @@ export const SIGN_UP_ERROR = 'SIGN_UP_ERROR';
 export const SIGN_OUT_START = 'SIGN_OUT_START';
 export const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS';
 export const SIGN_OUT_ERROR = 'SIGN_OUT_ERROR';
+
+export const VERIFY_START = 'VERIFY_START';
+export const VERIFY_SUCCESS = 'VERIFY_SUCCESS';
+export const VERIFY_ERROR = 'VERIFY_ERROR';
 
 export const CLEAR_AUTH_ERROR = 'CLEAR_AUTH_ERROR';
 
@@ -60,6 +65,21 @@ export interface SignOutErrorAction extends Action {
   payload: AuthError;
 }
 
+export interface VerifyStartAction extends Action {
+  type: typeof VERIFY_START;
+  payload: string;
+}
+
+export interface VerifySuccessAction extends Action {
+  type: typeof VERIFY_SUCCESS;
+  payload: FlashMessage;
+}
+
+export interface VerifyErrorAction extends Action {
+  type: typeof VERIFY_ERROR;
+  payload: AuthError;
+}
+
 export interface ClearAuthErrorAction extends Action {
   type: typeof CLEAR_AUTH_ERROR;
 }
@@ -74,6 +94,9 @@ export type AuthAction =
   | SignOutStartAction
   | SignOutSuccessAction
   | SignOutErrorAction
+  | VerifyStartAction
+  | VerifySuccessAction
+  | VerifyErrorAction
   | ClearAuthErrorAction
   | ResetAction;
 

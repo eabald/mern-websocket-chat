@@ -39,3 +39,15 @@ export async function signUpRequest(
   );
   return response.data;
 }
+
+export async function verifyEmailRequest(
+  token: string
+): Promise<RegisterResponse> {
+  const response: AxiosResponse = await axios.get(`/api/auth/verify`, {
+    params: {
+      token,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+}

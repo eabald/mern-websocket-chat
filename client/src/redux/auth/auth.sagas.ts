@@ -8,12 +8,15 @@ import {
   SignInStartAction,
   SignUpStartAction,
   SignOutStartAction,
+  VerifyStartAction,
+  VERIFY_START,
 } from './auth.types';
 // Api
 import {
   signInRequest,
   signUpRequest,
   signOutRequest,
+  verifyEmailRequest,
 } from '../../api/auth.api';
 // Actions
 import {
@@ -23,6 +26,7 @@ import {
   signOutSuccess,
   signOutError,
   clearAuthError,
+  verifyError,
 } from './auth.actions';
 import { getUserSuccess } from '../user/user.actions';
 import { reset } from '../root-actions';
@@ -45,22 +49,42 @@ export function* signIn({ payload }: SignInStartAction) {
 
 export function* signUp({ payload }: SignUpStartAction) {
   try {
+    yield put(updateLoading(true));
     const { status, message } = yield signUpRequest(payload);
     yield put(setFlashMessage({ status, message }));
     history.push('/login');
     yield put(clearAuthError());
+    yield put(updateLoading(false));
   } catch (error) {
+    yield put(updateLoading(false));
     yield put(signUpError(error.response.data));
   }
 }
 
 export function* signOut() {
   try {
+    yield put(updateLoading(true));
     yield signOutRequest();
     yield put(signOutSuccess());
     yield put(reset());
+    yield put(updateLoading(false));
   } catch (error) {
+    yield put(updateLoading(false));
     yield put(signOutError(error.response.data));
+  }
+}
+
+export function* verify({ payload }: VerifyStartAction) {
+  try {
+    yield put(updateLoading(true));
+    const { status, message } = yield verifyEmailRequest(payload);
+    yield put(setFlashMessage({ status, message }));
+    history.push('/login');
+    yield put(clearAuthError());
+    yield put(updateLoading(false));
+  } catch (error) {
+    yield put(updateLoading(false));
+    yield put(verifyError(error.response.data));
   }
 }
 
@@ -76,8 +100,17 @@ export function* onSignOutStart() {
   yield takeLatest<SignOutStartAction>(SIGN_OUT_START, signOut);
 }
 
+export function* onVerifyStart() {
+  yield takeLatest<VerifyStartAction>(VERIFY_START, verify);
+}
+
 export function* authSagas() {
-  yield all([call(onSignInStart), call(onSignUpStart), call(onSignOutStart)]);
+  yield all([
+    call(onSignInStart),
+    call(onSignUpStart),
+    call(onSignOutStart),
+    call(onVerifyStart),
+  ]);
 }
 
 export default authSagas;

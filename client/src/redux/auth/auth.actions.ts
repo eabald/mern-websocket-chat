@@ -13,6 +13,9 @@ import {
   SIGN_OUT_SUCCESS,
   SIGN_OUT_ERROR,
   CLEAR_AUTH_ERROR,
+  VERIFY_START,
+  VERIFY_SUCCESS,
+  VERIFY_ERROR,
 } from './auth.types';
 
 export const signInStart = (credentials: Credentials) => ({
@@ -20,7 +23,10 @@ export const signInStart = (credentials: Credentials) => ({
   payload: credentials,
 });
 
-export const signInSuccess = (tokens: {token: string, refreshToken: string}) => ({
+export const signInSuccess = (tokens: {
+  token: string;
+  refreshToken: string;
+}) => ({
   type: SIGN_IN_SUCCESS,
   payload: tokens,
 });
@@ -35,7 +41,10 @@ export const signUpStart = (signUpCredentials: SignUpCredentials) => ({
   payload: signUpCredentials,
 });
 
-export const signUpSuccess = (tokens: {token: string, refreshToken: string}) => ({
+export const signUpSuccess = (tokens: {
+  token: string;
+  refreshToken: string;
+}) => ({
   type: SIGN_UP_SUCCESS,
   payload: tokens,
 });
@@ -59,6 +68,20 @@ export const signOutError = (error: AuthError) => ({
   payload: error,
 });
 
+export const verifyStart = (token: string) => ({
+  type: VERIFY_START,
+  payload: token,
+});
+
+export const verifySuccess = () => ({
+  type: VERIFY_SUCCESS,
+});
+
+export const verifyError = (error: AuthError) => ({
+  type: VERIFY_ERROR,
+  payload: error,
+});
+
 export const clearAuthError = () => ({
   type: CLEAR_AUTH_ERROR,
-})
+});
