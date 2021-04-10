@@ -13,6 +13,8 @@ interface User {
   rooms: Room[];
   save: any;
   unread: Room[];
+  verificationToken: string;
+  emailVerified: boolean;
 }
 
 export default User;

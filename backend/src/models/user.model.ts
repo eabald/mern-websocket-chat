@@ -9,6 +9,11 @@ const userSchema = new mongoose.Schema(
     socketId: String,
     username: String,
     terms: Boolean,
+    verificationToken: String,
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
     password: {
       type: String,
       get: (): undefined => undefined,
