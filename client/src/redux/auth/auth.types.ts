@@ -20,6 +20,14 @@ export const VERIFY_START = 'VERIFY_START';
 export const VERIFY_SUCCESS = 'VERIFY_SUCCESS';
 export const VERIFY_ERROR = 'VERIFY_ERROR';
 
+export const RESET_PASSWORD_START = 'RESET_PASSWORD_START';
+export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
+export const RESET_PASSWORD_ERROR = 'RESET_PASSWORD_ERROR';
+
+export const CHANGE_PASSWORD_START = 'CHANGE_PASSWORD_START';
+export const CHANGE_PASSWORD_SUCCESS = 'CHANGE_PASSWORD_SUCCESS';
+export const CHANGE_PASSWORD_ERROR = 'CHANGE_PASSWORD_ERROR';
+
 export const CLEAR_AUTH_ERROR = 'CLEAR_AUTH_ERROR';
 
 export interface SignInStartAction extends Action {
@@ -80,6 +88,36 @@ export interface VerifyErrorAction extends Action {
   payload: AuthError;
 }
 
+export interface ResetPasswordStartAction extends Action {
+  type: typeof RESET_PASSWORD_START;
+  payload: ResetPasswordData;
+}
+
+export interface ResetPasswordSuccessAction extends Action {
+  type: typeof RESET_PASSWORD_SUCCESS;
+  payload: FlashMessage;
+}
+
+export interface ResetPasswordErrorAction extends Action {
+  type: typeof RESET_PASSWORD_ERROR;
+  payload: AuthError;
+}
+
+export interface ChangePasswordStartAction extends Action {
+  type: typeof CHANGE_PASSWORD_START;
+  payload: ChangePasswordData;
+}
+
+export interface ChangePasswordSuccessAction extends Action {
+  type: typeof CHANGE_PASSWORD_SUCCESS;
+  payload: FlashMessage;
+}
+
+export interface ChangePasswordErrorAction extends Action {
+  type: typeof CHANGE_PASSWORD_ERROR;
+  payload: AuthError;
+}
+
 export interface ClearAuthErrorAction extends Action {
   type: typeof CLEAR_AUTH_ERROR;
 }
@@ -97,6 +135,12 @@ export type AuthAction =
   | VerifyStartAction
   | VerifySuccessAction
   | VerifyErrorAction
+  | ResetPasswordStartAction
+  | ResetPasswordSuccessAction
+  | ResetPasswordErrorAction
+  | ChangePasswordStartAction
+  | ChangePasswordSuccessAction
+  | ChangePasswordErrorAction
   | ClearAuthErrorAction
   | ResetAction;
 
@@ -109,6 +153,16 @@ export interface SignUpCredentials extends Credentials {
   username: string;
   firstName: string;
   lastName: string;
+}
+
+export interface ResetPasswordData {
+  email: string;
+}
+
+export interface ChangePasswordData {
+  password: string;
+  passwordConfirm: string;
+  token: string;
 }
 
 export interface AuthState {

@@ -14,6 +14,10 @@ import {
   CLEAR_AUTH_ERROR,
   VERIFY_SUCCESS,
   VERIFY_ERROR,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_ERROR,
+  CHANGE_PASSWORD_SUCCESS,
+  CHANGE_PASSWORD_ERROR,
 } from './auth.types';
 
 const INITIAL_STATE: AuthState = {
@@ -74,6 +78,24 @@ const authReducer: Reducer<AuthState, AuthAction> = (
         ...state,
       };
     case VERIFY_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case RESET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+      };
+    case RESET_PASSWORD_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case CHANGE_PASSWORD_SUCCESS:
+      return {
+        ...state,
+      };
+    case CHANGE_PASSWORD_ERROR:
       return {
         ...state,
         error: action.payload,

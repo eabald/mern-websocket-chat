@@ -10,6 +10,10 @@ import {
   SignOutStartAction,
   VerifyStartAction,
   VERIFY_START,
+  ResetPasswordStartAction,
+  RESET_PASSWORD_START,
+  ChangePasswordStartAction,
+  CHANGE_PASSWORD_START,
 } from './auth.types';
 // Api
 import {
@@ -17,6 +21,8 @@ import {
   signUpRequest,
   signOutRequest,
   verifyEmailRequest,
+  resetPasswordRequest,
+  changePasswordRequest,
 } from '../../api/auth.api';
 // Actions
 import {
@@ -27,6 +33,8 @@ import {
   signOutError,
   clearAuthError,
   verifyError,
+  resetPasswordError,
+  changePasswordError,
 } from './auth.actions';
 import { getUserSuccess } from '../user/user.actions';
 import { reset } from '../root-actions';
@@ -88,6 +96,33 @@ export function* verify({ payload }: VerifyStartAction) {
   }
 }
 
+export function* resetPassword({ payload }: ResetPasswordStartAction) {
+  try {
+    yield put(updateLoading(true));
+    const { status, message } = yield resetPasswordRequest(payload);
+    yield put(setFlashMessage({ status, message }));
+    yield put(clearAuthError());
+    yield put(updateLoading(false));
+  } catch (error) {
+    yield put(updateLoading(false));
+    yield put(resetPasswordError(error.response.data));
+  }
+}
+
+export function* changePassword({ payload }: ChangePasswordStartAction) {
+  try {
+    yield put(updateLoading(true));
+    const { status, message } = yield changePasswordRequest(payload);
+    yield put(setFlashMessage({ status, message }));
+    history.push('/login');
+    yield put(clearAuthError());
+    yield put(updateLoading(false));
+  } catch (error) {
+    yield put(updateLoading(false));
+    yield put(changePasswordError(error.response.data));
+  }
+}
+
 export function* onSignInStart() {
   yield takeLatest<SignInStartAction>(SIGN_IN_START, signIn);
 }
@@ -104,12 +139,28 @@ export function* onVerifyStart() {
   yield takeLatest<VerifyStartAction>(VERIFY_START, verify);
 }
 
+export function* onResetPasswordStart() {
+  yield takeLatest<ResetPasswordStartAction>(
+    RESET_PASSWORD_START,
+    resetPassword
+  );
+}
+
+export function* onChangePasswordStart() {
+  yield takeLatest<ChangePasswordStartAction>(
+    CHANGE_PASSWORD_START,
+    changePassword
+  );
+}
+
 export function* authSagas() {
   yield all([
     call(onSignInStart),
     call(onSignUpStart),
     call(onSignOutStart),
     call(onVerifyStart),
+    call(onResetPasswordStart),
+    call(onChangePasswordStart),
   ]);
 }
 

@@ -4,6 +4,7 @@ export const FlashMessageContainer = styled.div`
   display: block;
   padding: 20px;
   text-align: center;
+  margin-bottom: 5px;
   background: ${props => props.theme.errorMessageBackground};
   font-family: ${props => props.theme.font};
   color: ${props => props.theme.white};

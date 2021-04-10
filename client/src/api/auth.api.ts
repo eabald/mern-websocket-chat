@@ -1,7 +1,12 @@
 // External
 import axios, { AxiosResponse } from 'axios';
 // Types
-import { Credentials, SignUpCredentials } from '../redux/auth/auth.types';
+import {
+  ChangePasswordData,
+  Credentials,
+  ResetPasswordData,
+  SignUpCredentials,
+} from '../redux/auth/auth.types';
 import { User } from '../redux/user/user.types';
 
 interface TokenResponse extends AxiosResponse {
@@ -49,5 +54,27 @@ export async function verifyEmailRequest(
     },
     withCredentials: true,
   });
+  return response.data;
+}
+
+export async function resetPasswordRequest(
+  resetPasswordData: ResetPasswordData
+): Promise<RegisterResponse> {
+  const response: AxiosResponse = await axios.post(
+    `/api/auth/reset-password`,
+    resetPasswordData,
+    { withCredentials: true }
+  );
+  return response.data;
+}
+
+export async function changePasswordRequest(
+  changePasswordData: ChangePasswordData
+): Promise<RegisterResponse> {
+  const response: AxiosResponse = await axios.post(
+    `/api/auth/change-password`,
+    changePasswordData,
+    { withCredentials: true }
+  );
   return response.data;
 }

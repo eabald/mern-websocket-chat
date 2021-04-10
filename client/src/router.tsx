@@ -17,6 +17,8 @@ import AddNewRoom from './pages/addNewRoom/addNewRoom.component';
 import AddNewDm from './pages/addNewDm/addNewDm.component';
 import UserDetails from './pages/userDetails/userDetails.component';
 import VerifyEmail from './pages/verifyEmail/verifyEmail.component';
+import ResetPassword from './pages/resetPassword/resetPassword.component';
+import ChangePassword from './pages/changePassword/changePassword.component';
 
 type RouterProps = {};
 
@@ -42,6 +44,12 @@ const Router: React.FC<RouterProps> = () => {
         </Route>
         <Route path='/verify'>
           {isLoggedIn ? <Redirect to='/' /> : <VerifyEmail />}
+        </Route>
+        <Route path='/reset-password'>
+          {isLoggedIn ? <Redirect to='/' /> : <ResetPassword />}
+        </Route>
+        <Route path='/change-password'>
+          {isLoggedIn ? <Redirect to='/' /> : <ChangePassword />}
         </Route>
         <Route path='/logout' component={Logout} />
         <Route path='/terms-and-conditions' component={TermsAndConditions} />
