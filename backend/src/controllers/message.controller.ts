@@ -4,12 +4,14 @@ import { Server } from 'http';
 import { createAdapter } from 'socket.io-redis';
 import { RedisClient } from 'redis';
 import Controller from '../interfaces/controller.interface';
-import socketAuth from '../middleware/socketAuth.middleware';
 import Message from '../interfaces/message.interface';
 import messageModel from '../models/message.model';
 import SocketWithUser from '../interfaces/socketWithUser.interface';
 import userModel from './../models/user.model';
 import roomModel from '../models/room.model';
+import passportSocketIo from 'passport.socketio'
+import session from 'express-session';
+import connectRedis from 'connect-redis';
 
 class MessageController implements Controller {
   public path = '/message';
@@ -35,7 +37,17 @@ class MessageController implements Controller {
     this.websocket.adapter(
       createAdapter({ pubClient: this.pubClient, subClient: this.subClient })
     );
-    this.websocket.use(socketAuth);
+    const RedisStore = connectRedis(session);
+    this.websocket.use(passportSocketIo.authorize({
+      secret: process.env.SESSION_SECRET,
+      store: new RedisStore({
+        client: new RedisClient({
+          host: process.env.REDIS_HOST,
+          port: Number(process.env.REDIS_PORT),
+        }),
+        disableTouch: true,
+      }),
+    }));
     this.websocket.on('connection', (socket: SocketWithUser) =>
       this.bindSocketEvents(socket, this.websocket)
     );
@@ -52,7 +64,7 @@ class MessageController implements Controller {
   }
 
   private rejoinUserRooms(socket: SocketWithUser): void {
-    socket.user.rooms.forEach((room) => socket.join(room._id));
+    socket.request.user.rooms.forEach((room) => socket.join(room._id));
   }
 
   private async messageReceived(
@@ -63,7 +75,7 @@ class MessageController implements Controller {
     let newMessage = await this.message.create(message);
     newMessage = await newMessage.populate('user').execPopulate()
     const room = await this.room.findById(message.room._id);
-    const isBlocked = room.users.some(user => socket.user.blockedBy.includes(user));
+    const isBlocked = room.users.some(user => socket.request.user.blockedBy.includes(user));
     if (room.type === 'dm' && isBlocked) {
       console.log('here');
       socket.emit('messageBlocked', {
