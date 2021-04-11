@@ -9,6 +9,11 @@ interface TokenResponse extends AxiosResponse {
   user: User;
 }
 
+interface RegisterResponse {
+  status: string;
+  message: string;
+}
+
 export async function signInRequest(
   credentials: Credentials
 ): Promise<TokenResponse> {
@@ -26,8 +31,8 @@ export async function signOutRequest(): Promise<void> {
 
 export async function signUpRequest(
   signUpCredentials: SignUpCredentials
-): Promise<TokenResponse> {
-  const response: TokenResponse = await axios.post(
+): Promise<RegisterResponse> {
+  const response: AxiosResponse = await axios.post(
     '/api/auth/register',
     signUpCredentials,
     { withCredentials: true }

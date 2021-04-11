@@ -1,9 +1,10 @@
 // React
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { Router as DomRuter } from 'react-router-dom';
 // Redux
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor } from './redux/store';
+import history from './redux/history';
 // Styled Components
 import { ThemeProvider } from 'styled-components';
 import { MainTheme } from './themes/main.theme';
@@ -16,9 +17,9 @@ const App: React.FC = () => (
   <PersistGate loading={<Loader />} persistor={persistor}>
     <ThemeProvider theme={MainTheme}>
       <FlashOutlet />
-      <BrowserRouter>
+      <DomRuter history={history}>
         <Router />
-      </BrowserRouter>
+      </DomRuter>
       <Loader />
     </ThemeProvider>
   </PersistGate>
