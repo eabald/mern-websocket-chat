@@ -16,6 +16,7 @@ import TermsAndConditions from './pages/termsAndConditions/termsAndConditions.co
 import AddNewRoom from './pages/addNewRoom/addNewRoom.component';
 import AddNewDm from './pages/addNewDm/addNewDm.component';
 import UserDetails from './pages/userDetails/userDetails.component';
+import VerifyEmail from './pages/verifyEmail/verifyEmail.component';
 
 type RouterProps = {};
 
@@ -38,6 +39,9 @@ const Router: React.FC<RouterProps> = () => {
         </Route>
         <Route path='/register'>
           {isLoggedIn ? <Redirect to='/' /> : <Register />}
+        </Route>
+        <Route path='/verify'>
+          {isLoggedIn ? <Redirect to='/' /> : <VerifyEmail />}
         </Route>
         <Route path='/logout' component={Logout} />
         <Route path='/terms-and-conditions' component={TermsAndConditions} />

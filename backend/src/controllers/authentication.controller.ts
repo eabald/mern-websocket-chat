@@ -132,7 +132,11 @@ class AuthenticationController implements Controller {
             verifyUrl: `${process.env.DOMAIN}/verify?token=${encodeURI(token)}`,
           }
         );
-        response.json({ status: 'success', message: 'Registration complete, check your inbox for verification email.' });
+        response.json({
+          status: 'success',
+          message:
+            'Registration complete, check your inbox for verification email.',
+        });
       } catch (error) {
         await user.deleteOne();
         next(new RegistrationEmailException());
@@ -145,20 +149,33 @@ class AuthenticationController implements Controller {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const token = request.params.token;
+    const token = String(request.query.token);
     try {
       if (!token) {
         next(new AuthenticationTokenMissingException());
       } else {
-        const { email } = jwt.verify(token, process.env.JWT_SECRET) as DataStoredInVerificationToken;
+        const { email } = jwt.verify(
+          token,
+          process.env.JWT_SECRET
+        ) as DataStoredInVerificationToken;
         const user = await this.user.findOne({ email });
         if (!user) {
           next(new WrongCredentialsException());
         } else {
-          user.verificationToken = '';
-          user.emailVerified = true;
-          await user.save();
-          response.json({ status: 'success', message: 'Email verified, you can sign in now.' })
+          if (user.verificationToken === '') {
+            response.json({
+              status: 'success',
+              message: 'Already verified, you can sign in now.',
+            });
+          } else {
+            user.verificationToken = '';
+            user.emailVerified = true;
+            await user.save();
+            response.json({
+              status: 'success',
+              message: 'Email verified, you can sign in now.',
+            });
+          }
         }
       }
     } catch (error) {
