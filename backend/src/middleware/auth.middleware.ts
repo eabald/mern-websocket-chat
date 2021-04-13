@@ -7,7 +7,7 @@ async function authMiddleware(
   response: Response,
   next: NextFunction
 ): Promise<void> {
-  if (request.isAuthenticated) {
+  if (request.isAuthenticated()) {
     next();
   } else {
     next(new AuthenticationTokenMissingException());

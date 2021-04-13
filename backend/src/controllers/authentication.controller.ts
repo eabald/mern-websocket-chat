@@ -56,22 +56,22 @@ class AuthenticationController implements Controller {
     done: any
   ): Promise<void> => {
     const user = await this.user.findOne({ email: username });
-    if (!user.emailVerified) {
-      done(new EmailNotVerifiedException());
-    }
     if (user) {
+      if (!user.emailVerified) {
+        return done(new EmailNotVerifiedException());
+      }
       const isPasswordMatching = await bcrypt.compare(
         password,
         user.get('password', null, { getters: false })
       );
       if (isPasswordMatching) {
         user.password = undefined;
-        done(null, user);
+        return done(null, user);
       } else {
-        done(new WrongCredentialsException());
+        return done(new WrongCredentialsException());
       }
     } else {
-      done(new WrongCredentialsException());
+      return done(new WrongCredentialsException());
     }
   };
 
@@ -281,7 +281,7 @@ class AuthenticationController implements Controller {
   ): Promise<void> => {
     passport.authenticate('local', (err, user, info) => {
       request.login(user, () =>
-        response.json({ user })
+        response.json({ user, token: request.sessionID })
       );
     })(request, response, next);
   };
