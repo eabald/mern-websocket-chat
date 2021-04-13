@@ -7,8 +7,6 @@ import createSagaMiddleware, { SagaMiddleware } from 'redux-saga';
 import rootReducer from './root-reducer';
 // Root Sagas
 import rootSaga from './root-saga';
-// Utils
-import interceptors from '../api/interceptors';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -23,8 +21,6 @@ export const store = createStore(
   rootReducer,
   applyMiddleware(...middlewares)
 );
-
-interceptors(store);
 
 sagaMiddleware.run(rootSaga);
 

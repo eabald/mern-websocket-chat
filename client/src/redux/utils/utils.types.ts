@@ -1,7 +1,5 @@
 // External
 import { Action } from 'redux';
-// Types
-import { ResetAction } from '../root-types';
 
 export const UPDATE_LOADING = 'UPDATE_LOADING';
 
@@ -10,6 +8,12 @@ export const SET_FLASH_MESSAGE = 'SET_FLASH_MESSAGE';
 export const UNSET_FLASH_MESSAGE = 'UNSET_FLASH_MESSAGE';
 
 export const UPDATE_MOBILE_MENU = 'UPDATE_MOBILE_MENU';
+
+export const RESET = 'RESET';
+
+export interface ResetAction extends Action {
+  type: typeof RESET,
+}
 
 export interface UpdateLoadingAction extends Action {
   type: typeof UPDATE_LOADING;

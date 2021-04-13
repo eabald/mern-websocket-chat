@@ -5,6 +5,7 @@ import {
   SET_FLASH_MESSAGE,
   UNSET_FLASH_MESSAGE,
   UPDATE_MOBILE_MENU,
+  RESET,
 } from './utils.types';
 
 export const updateLoading = (isLoading: boolean): UtilsAction => ({
@@ -26,3 +27,7 @@ export const updateMobileMenu = (isOpen: boolean): UtilsAction => ({
   type: UPDATE_MOBILE_MENU,
   payload: isOpen,
 })
+
+export const reset = () => ({
+  type: RESET,
+});

@@ -53,7 +53,7 @@ const Router: React.FC<RouterProps> = () => {
         </Route>
         <Route path='/logout' component={Logout} />
         <Route path='/terms-and-conditions' component={TermsAndConditions} />
-        {/* <Route><Redirect to='/' /></Route> */}
+        <Route><Redirect to='/' /></Route>
       </Switch>
       {background && <Route path='/profile' children={isLoggedIn ? <Profile /> : <Redirect to='/login' />} />}
       {background && <Route path='/modal/add-new-room' children={isLoggedIn ? <AddNewRoom /> : <Redirect to='/login' />} />}

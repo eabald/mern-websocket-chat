@@ -1,7 +1,7 @@
 // External
 import { Reducer } from 'redux';
 // Types
-import { RESET } from '../root-types';
+import { RESET } from '../utils/utils.types';
 import {
   AuthState,
   AuthAction,
@@ -23,7 +23,6 @@ import {
 const INITIAL_STATE: AuthState = {
   token: null,
   error: null,
-  refreshToken: null,
 };
 
 const authReducer: Reducer<AuthState, AuthAction> = (
@@ -35,42 +34,36 @@ const authReducer: Reducer<AuthState, AuthAction> = (
       return {
         ...state,
         token: action.payload.token,
-        refreshToken: action.payload.refreshToken,
         error: null,
       };
     case SIGN_IN_ERROR:
       return {
         ...state,
         token: null,
-        refreshToken: null,
         error: action.payload,
       };
     case SIGN_UP_SUCCESS:
       return {
         ...state,
         token: action.payload.token,
-        refreshToken: action.payload.refreshToken,
         error: null,
       };
     case SIGN_UP_ERROR:
       return {
         ...state,
         token: null,
-        refreshToken: null,
         error: action.payload,
       };
     case SIGN_OUT_SUCCESS:
       return {
         ...state,
         token: null,
-        refreshToken: null,
         error: null,
       };
     case SIGN_OUT_ERROR:
       return {
         ...state,
         token: null,
-        refreshToken: null,
         error: action.payload,
       };
     case VERIFY_SUCCESS:

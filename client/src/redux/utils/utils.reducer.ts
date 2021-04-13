@@ -1,7 +1,6 @@
 // External
 import { Reducer } from 'redux';
 // Types
-import { RESET } from '../root-types';
 import {
   UtilsAction,
   UtilsState,
@@ -9,6 +8,7 @@ import {
   UNSET_FLASH_MESSAGE,
   UPDATE_LOADING,
   UPDATE_MOBILE_MENU,
+  RESET,
 } from './utils.types';
 
 const INITIAL_STATE: UtilsState = {

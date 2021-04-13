@@ -1,7 +1,7 @@
 // External
 import { Reducer } from 'redux';
 // Types
-import { RESET } from '../root-types';
+import { RESET } from '../utils/utils.types';
 import {
   UserState,
   UserAction,

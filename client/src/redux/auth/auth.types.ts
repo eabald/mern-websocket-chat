@@ -1,8 +1,7 @@
 // External
 import { Action } from 'redux';
 // Types
-import { ResetAction } from '../root-types';
-import { FlashMessage } from '../utils/utils.types';
+import { ResetAction, FlashMessage } from '../utils/utils.types';
 
 export const SIGN_IN_START = 'SIGN_IN_START';
 export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';
@@ -37,7 +36,7 @@ export interface SignInStartAction extends Action {
 
 export interface SignInSuccessAction extends Action {
   type: typeof SIGN_IN_SUCCESS;
-  payload: {token: string, refreshToken: string};
+  payload: {token: string};
 }
 
 export interface SignInErrorAction extends Action {
@@ -52,7 +51,7 @@ export interface SignUpStartAction extends Action {
 
 export interface SignUpSuccessAction extends Action {
   type: typeof SIGN_UP_SUCCESS;
-  payload: {token: string, refreshToken: string};
+  payload: {token: string};
 }
 
 export interface SignUpErrorAction extends Action {
@@ -168,7 +167,6 @@ export interface ChangePasswordData {
 export interface AuthState {
   token: string | null;
   error: AuthError | null;
-  refreshToken: string | null;
 }
 
 export interface AuthError {

@@ -30,7 +30,7 @@ import {
   SET_CURRENT_ROOM_START,
 } from './room.types';
 // Utils
-import { checkForUnauthorized } from '../sagas.utils';
+import { checkForUnauthorized } from '../auth/auth.sagas';
 import { RootState } from '../root-reducer';
 import { updateRead } from '../user/user.actions';
 import { updateUnreadRequest } from '../../api/user.api';
