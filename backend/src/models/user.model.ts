@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     username: String,
     terms: Boolean,
     verificationToken: String,
+    resetToken: String,
     emailVerified: {
       type: Boolean,
       default: false,

@@ -15,6 +15,7 @@ interface User {
   unread: Room[];
   verificationToken: string;
   emailVerified: boolean;
+  resetToken: string;
 }
 
 export default User;

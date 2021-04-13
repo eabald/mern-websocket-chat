@@ -23,7 +23,9 @@ import EmailService from '../services/email.service';
 import RegistrationEmailException from '../exceptions/RegistrationEmailException';
 import VerificationTokenExpiredException from '../exceptions/VerificationTokenExpiredException';
 import DataStoredInVerificationToken from '../interfaces/dataStoredInVerificationToken';
+import DataStoredInResetPasswordToken from '../interfaces/dataStoredInResetPasswordToken';
 import EmailNotVerifiedException from '../exceptions/EmailNotVerifiedException';
+import { v4 as uuidv4} from 'uuid'
 
 class AuthenticationController implements Controller {
   public path = '/auth';
@@ -58,6 +60,8 @@ class AuthenticationController implements Controller {
     );
     this.router.post(`${this.path}/logout`, this.loggingOut);
     this.router.get(`${this.path}/verify`, this.verifyEmail);
+    this.router.post(`${this.path}/reset-password`, this.resetPasswordEmail);
+    this.router.get(`${this.path}/change-password`, this.changePassword);
   }
 
   private createToken(user: User): TokenData {
@@ -183,6 +187,84 @@ class AuthenticationController implements Controller {
         next(new VerificationTokenExpiredException());
       } else {
         next(new InternalServerErrorException());
+      }
+    }
+  };
+
+  private resetPasswordEmail = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ) => {
+    const { email } = request.body;
+    try {
+      if (!email) {
+        next(new WrongCredentialsException());
+      } else {
+        const user = await this.user.findOne({ email });
+        if (!user) {
+          next(new WrongCredentialsException());
+        } else {
+          const resetToken = uuidv4();
+          const token = jwt.sign({ email, resetToken }, process.env.JVT_SECRET);
+          user.resetToken = resetToken;
+          await user.save();
+          await this.emailService.sendEmail(
+            user.email,
+            process.env.EMAIL_TEMPLATE_RESET_PASSWORD,
+            {
+              subject: 'Reset password',
+              verifyUrl: `${process.env.DOMAIN}/change-password?token=${encodeURI(token)}`,
+            }
+          );
+          response.json({
+            status: 'success',
+            message:
+              'Reset password message sent, check your inbox for verification email.',
+          });
+        }
+      }
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        next(new VerificationTokenExpiredException());
+      } else {
+        next(new InternalServerErrorException());
+      }
+    }
+  };
+
+  private changePassword = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ) => {
+    const { password } = request.body;
+    const { token } = request.params;
+    if (!password || !token) {
+      next(new WrongCredentialsException());
+    } else {
+      try {
+        const { email, resetToken } = jwt.verify(token, process.env.JWT_SECRET) as DataStoredInResetPasswordToken;
+        const user = await this.user.findOne({ email, resetToken });
+        if (!user) {
+          next(new WrongCredentialsException());
+        } else {
+          user.resetToken = '';
+          const hashedPassword = await bcrypt.hash(password, 10);
+          user.password = hashedPassword;
+          user.save();
+          response.json({
+            status: 'success',
+            message:
+              'Password reset complete, you can log in now using new password.',
+          });
+        }
+      } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+          next(new VerificationTokenExpiredException());
+        } else {
+          next(new InternalServerErrorException());
+        }
       }
     }
   };
