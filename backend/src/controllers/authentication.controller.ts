@@ -280,9 +280,14 @@ class AuthenticationController implements Controller {
     next: express.NextFunction
   ): Promise<void> => {
     passport.authenticate('local', (err, user, info) => {
-      request.login(user, () =>
-        response.json({ user, token: request.sessionID })
-      );
+      console.log(err, user, info);
+      if (err) {
+        next(err);
+      } else {
+        request.login(user, () =>
+          response.json({ user, token: request.sessionID })
+        );
+      }
     })(request, response, next);
   };
 
