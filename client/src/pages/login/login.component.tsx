@@ -65,6 +65,7 @@ const Login: React.FC<LoginProps> = () => {
                 <FormField id='password' name='password' type='password' error={touched.password && errors.password} />
                 <ErrorMessage name='password' render={error => <ValidationError>{error}</ValidationError>} />
               </FormGroup>
+              <TextBlock><InlineLink to='/reset-password'>Forgot your password?</InlineLink></TextBlock>
               <FormGroup>
                 <SubmitButton disabled={!isValid || isSubmitting} loading={isSubmitting}/>
               </FormGroup>

@@ -16,6 +16,14 @@ import {
   VERIFY_START,
   VERIFY_SUCCESS,
   VERIFY_ERROR,
+  RESET_PASSWORD_START,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_ERROR,
+  CHANGE_PASSWORD_START,
+  CHANGE_PASSWORD_SUCCESS,
+  CHANGE_PASSWORD_ERROR,
+  ResetPasswordData,
+  ChangePasswordData,
 } from './auth.types';
 
 export const signInStart = (credentials: Credentials) => ({
@@ -79,6 +87,34 @@ export const verifySuccess = () => ({
 
 export const verifyError = (error: AuthError) => ({
   type: VERIFY_ERROR,
+  payload: error,
+});
+
+export const resetPasswordStart = (resetPasswordData: ResetPasswordData) => ({
+  type: RESET_PASSWORD_START,
+  payload: resetPasswordData,
+});
+
+export const resetPasswordSuccess = () => ({
+  type: RESET_PASSWORD_SUCCESS,
+});
+
+export const resetPasswordError = (error: AuthError) => ({
+  type: RESET_PASSWORD_ERROR,
+  payload: error,
+});
+
+export const changePasswordStart = (changePasswordData: ChangePasswordData) => ({
+  type: CHANGE_PASSWORD_START,
+  payload: changePasswordData,
+});
+
+export const changePasswordSuccess = () => ({
+  type: CHANGE_PASSWORD_SUCCESS,
+});
+
+export const changePasswordError = (error: AuthError) => ({
+  type: CHANGE_PASSWORD_ERROR,
   payload: error,
 });
 

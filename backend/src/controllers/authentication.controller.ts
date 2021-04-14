@@ -61,7 +61,7 @@ class AuthenticationController implements Controller {
     this.router.post(`${this.path}/logout`, this.loggingOut);
     this.router.get(`${this.path}/verify`, this.verifyEmail);
     this.router.post(`${this.path}/reset-password`, this.resetPasswordEmail);
-    this.router.get(`${this.path}/change-password`, this.changePassword);
+    this.router.post(`${this.path}/change-password`, this.changePassword);
   }
 
   private createToken(user: User): TokenData {
@@ -206,7 +206,7 @@ class AuthenticationController implements Controller {
           next(new WrongCredentialsException());
         } else {
           const resetToken = uuidv4();
-          const token = jwt.sign({ email, resetToken }, process.env.JVT_SECRET);
+          const token = jwt.sign({ email, resetToken }, process.env.JWT_SECRET);
           user.resetToken = resetToken;
           await user.save();
           await this.emailService.sendEmail(
@@ -238,8 +238,7 @@ class AuthenticationController implements Controller {
     response: express.Response,
     next: express.NextFunction
   ) => {
-    const { password } = request.body;
-    const { token } = request.params;
+    const { password, token } = request.body;
     if (!password || !token) {
       next(new WrongCredentialsException());
     } else {
