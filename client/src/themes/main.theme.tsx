@@ -1,4 +1,5 @@
 import { keyframes } from 'styled-components';
+import { faBomb, faCheck } from '@fortawesome/free-solid-svg-icons';
 
 export const MainTheme = {
   font: 'roboto',
@@ -16,10 +17,19 @@ export const MainTheme = {
   disabled: '#b6b6b6',
   disabledBackground: '#788ce4',
   scrollBackground: '#5a5a5a',
-  errorMessageBackground: '#ca47c0',
   messageSubmitButtonBackGround: '#7487da',
   messageSubmitButtonBackGroundDisabled: '#999898',
   loaderBackground: 'rgba(90, 90, 90, 0.75)',
+
+  flashBg: {
+    error: '#ca47c0',
+    success: '#788ce4',
+  },
+
+  flashIconsMap: {
+    success: faCheck,
+    error: faBomb,
+  },
 
   BounceAnimation: keyframes`
     0% { margin-bottom: 0; }
