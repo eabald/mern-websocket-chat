@@ -3,7 +3,11 @@ import errorMiddleware from '../middleware/error.middleware';
 import { createServer, Server } from 'http';
 import mongoose from 'mongoose';
 import Controller from '../interfaces/controller.interface';
-import ErrorLogger from '../middleware/errorLogger.middleware'
+import ErrorLogger from '../middleware/errorLogger.middleware';
+import connectRedis from 'connect-redis';
+import session from 'express-session';
+import { RedisClient } from 'redis';
+import passport from 'passport';
 
 class AppController {
   public app: express.Application;
@@ -29,6 +33,8 @@ class AppController {
 
     this.connectToTheDatabase();
     this.initializeMiddlewares();
+    this.initializeSession();
+    this.initializePassportSession();
     this.initializeControllers(controllers);
     this.initializeStatic();
     this.initializeErrorMiddleware();
@@ -36,8 +42,26 @@ class AppController {
 
   private initializeMiddlewares(): void {
     this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(express.urlencoded({ extended: true }));
     this.middlewares.forEach((middleware) => this.app.use(middleware));
+  }
+
+  private initializeSession(): void {
+    const RedisStore = connectRedis(session);
+    this.app.use(
+      session({
+        secret: process.env.SESSION_SECRET,
+        store: new RedisStore({
+          client: new RedisClient({
+            host: process.env.REDIS_HOST,
+            port: Number(process.env.REDIS_PORT),
+          }),
+          disableTouch: true,
+        }),
+        resave: false,
+        saveUninitialized: false,
+      })
+    );
   }
 
   private initializeErrorMiddleware(): void {
@@ -52,10 +76,15 @@ class AppController {
   }
 
   private initializeStatic(): void {
-    this.app.use(express.static(this.static))
+    this.app.use(express.static(this.static));
     this.app.get('*', (request: express.Request, response: express.Response) =>
       response.sendFile('index.html', { root: this.static })
     );
+  }
+  private initializePassportSession(): void {
+
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
   }
 
   private connectToTheDatabase(): void {

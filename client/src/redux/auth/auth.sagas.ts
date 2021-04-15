@@ -14,6 +14,7 @@ import {
   RESET_PASSWORD_START,
   ChangePasswordStartAction,
   CHANGE_PASSWORD_START,
+  AuthError,
 } from './auth.types';
 // Api
 import {
@@ -29,6 +30,7 @@ import {
   signInError,
   signInSuccess,
   signUpError,
+  signOutStart,
   signOutSuccess,
   signOutError,
   clearAuthError,
@@ -37,15 +39,14 @@ import {
   changePasswordError,
 } from './auth.actions';
 import { getUserSuccess } from '../user/user.actions';
-import { reset } from '../root-actions';
-import { setFlashMessage, updateLoading } from '../utils/utils.actions';
+import { setFlashMessage, updateLoading, reset } from '../utils/utils.actions';
 import history from '../history';
 
 export function* signIn({ payload }: SignInStartAction) {
   try {
     yield put(updateLoading(true));
-    const { token, refreshToken, user } = yield signInRequest(payload);
-    yield put(signInSuccess({ token, refreshToken }));
+    const { token, user } = yield signInRequest(payload);
+    yield put(signInSuccess({ token }));
     yield put(getUserSuccess(user));
     yield put(clearAuthError());
     yield put(updateLoading(false));
@@ -120,6 +121,12 @@ export function* changePassword({ payload }: ChangePasswordStartAction) {
   } catch (error) {
     yield put(updateLoading(false));
     yield put(changePasswordError(error.response.data));
+  }
+}
+
+export function* checkForUnauthorized(error: AuthError) {
+  if (error.status === 401) {
+    yield put(signOutStart());
   }
 }
 

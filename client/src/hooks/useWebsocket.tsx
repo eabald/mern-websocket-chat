@@ -35,16 +35,13 @@ interface MsgReceived extends Msg {
 
 const useWebsocket = () => {
   const socketRef = useRef<Socket>();
-  const token = useSelector((state: RootState) => state.auth.token);
   const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
   const rooms = useSelector((state: RootState) => state.room.rooms);
   const unread = useSelector((state: RootState) => state.user.unread);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    socketRef.current = io(SOCKET_SERVER_URL, {
-      auth: { token },
-    });
+    socketRef.current = io(SOCKET_SERVER_URL);
     socketRef.current.on('messageReceived', (message: MsgReceived) => {
       if (currentRoom && currentRoom._id === message.room) {
         dispatch(

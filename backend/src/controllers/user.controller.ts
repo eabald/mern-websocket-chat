@@ -3,7 +3,6 @@ import UpdateUserDto from '../dto/updateUser.dto';
 import Controller from '../interfaces/controller.interface';
 import authMiddleware from '../middleware/auth.middleware';
 import userModel from '../models/user.model';
-import AuthenticationService from '../services/authentication.service';
 import AuthenticationTokenMissingException from '../exceptions/AuthenticationTokenMissingException';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
 
@@ -11,11 +10,9 @@ class UserController implements Controller {
   public path = '/user';
   public router = express.Router();
   private user = userModel;
-  private authService: AuthenticationService;
 
   constructor() {
     this.initializeRoutes();
-    this.authService = new AuthenticationService();
   }
 
   private initializeRoutes(): void {
@@ -57,13 +54,13 @@ class UserController implements Controller {
   }
 
   private updateUser = async (
-    request: express.Request,
+    request: RequestWithUser,
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
     const updateData: UpdateUserDto = request.body;
     const cookies = request.cookies;
-    const user = await this.authService.findAndVerifyUser(cookies.Authorization);
+    const user = await this.user.findById(request.user.id)
     if (updateData._id !== user.id) {
       next(new AuthenticationTokenMissingException());
     } else {

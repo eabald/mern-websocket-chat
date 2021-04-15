@@ -33,7 +33,6 @@ export const signInStart = (credentials: Credentials) => ({
 
 export const signInSuccess = (tokens: {
   token: string;
-  refreshToken: string;
 }) => ({
   type: SIGN_IN_SUCCESS,
   payload: tokens,

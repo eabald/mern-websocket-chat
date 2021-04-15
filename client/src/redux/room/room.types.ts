@@ -1,7 +1,7 @@
 // External
 import { Action } from 'redux';
 // Types
-import { ResetAction } from '../root-types';
+import { ResetAction } from '../utils/utils.types';
 import { User } from '../user/user.types';
 
 export const CREATE_ROOM_START = 'CREATE_ROOM_START';

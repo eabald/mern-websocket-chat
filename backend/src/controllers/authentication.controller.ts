@@ -8,16 +8,10 @@ import Controller from '../interfaces/controller.interface';
 import validationMiddleware from '../middleware/validation.middleware';
 import CreateUserDto from '../dto/user.dto';
 import userModel from './../models/user.model';
-import refreshTokenModel from '../models/refreshToken.model';
 import LogInDto from '../dto/logIn.dto';
-import User from '../interfaces/user.interface';
 import TokenData from '../interfaces/token.interface';
-import DataStoredInToken from '../interfaces/dataStoredInToken.interface';
 import AuthenticationTokenMissingException from '../exceptions/AuthenticationTokenMissingException';
-import WrongAuthenticationTokenException from '../exceptions/WrongAuthenticationTokenException';
-import AuthenticationService from '../services/authentication.service';
 import InternalServerErrorException from '../exceptions/InternalServerErrorException';
-import RefreshTokenDto from '../dto/refreshToken.dto';
 import roomModel from '../models/room.model';
 import EmailService from '../services/email.service';
 import RegistrationEmailException from '../exceptions/RegistrationEmailException';
@@ -25,33 +19,67 @@ import VerificationTokenExpiredException from '../exceptions/VerificationTokenEx
 import DataStoredInVerificationToken from '../interfaces/dataStoredInVerificationToken';
 import DataStoredInResetPasswordToken from '../interfaces/dataStoredInResetPasswordToken';
 import EmailNotVerifiedException from '../exceptions/EmailNotVerifiedException';
-import { v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
+import passport from 'passport';
+import { Strategy } from 'passport-local';
 
 class AuthenticationController implements Controller {
   public path = '/auth';
   public router = express.Router();
   private user = userModel;
-  private refreshToken = refreshTokenModel;
   private room = roomModel;
-  private authService: AuthenticationService;
   private emailService: EmailService;
 
   constructor() {
     this.initializeRoutes();
-    this.authService = new AuthenticationService();
     this.emailService = new EmailService();
+    passport.use(
+      new Strategy(
+        {
+          usernameField: 'email',
+          session: true,
+        },
+        this.getAuth
+      )
+    );
+    passport.serializeUser((user, done) => {
+      done(null, user);
+    });
+    passport.deserializeUser((user, done) => {
+      done(null, user);
+    });
   }
+
+  private getAuth = async (
+    username: string,
+    password: string,
+    done: any
+  ): Promise<void> => {
+    const user = await this.user.findOne({ email: username });
+    if (user) {
+      if (!user.emailVerified) {
+        return done(new EmailNotVerifiedException());
+      }
+      const isPasswordMatching = await bcrypt.compare(
+        password,
+        user.get('password', null, { getters: false })
+      );
+      if (isPasswordMatching) {
+        user.password = undefined;
+        return done(null, user);
+      } else {
+        return done(new WrongCredentialsException());
+      }
+    } else {
+      return done(new WrongCredentialsException());
+    }
+  };
 
   private initializeRoutes() {
     this.router.post(
       `${this.path}/register`,
       validationMiddleware(CreateUserDto),
       this.registration
-    );
-    this.router.post(
-      `${this.path}/refresh-token`,
-      validationMiddleware(RefreshTokenDto),
-      this.refreshCookie
     );
     this.router.post(
       `${this.path}/login`,
@@ -62,33 +90,6 @@ class AuthenticationController implements Controller {
     this.router.get(`${this.path}/verify`, this.verifyEmail);
     this.router.post(`${this.path}/reset-password`, this.resetPasswordEmail);
     this.router.post(`${this.path}/change-password`, this.changePassword);
-  }
-
-  private createToken(user: User): TokenData {
-    const expiresIn = 3600000;
-    const secret = process.env.JWT_SECRET;
-    const dataStoredInToken: DataStoredInToken = {
-      _id: user._id,
-    };
-    return {
-      expiresIn,
-      token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
-    };
-  }
-
-  private async createRefreshToken(user: User): Promise<TokenData> {
-    const expiresIn = 3600000 * 24;
-    const secret = process.env.JWT_SECRET;
-    const dataStoredInToken: DataStoredInToken = {
-      _id: user._id,
-    };
-    const token = await this.refreshToken.create({
-      token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
-    });
-    return {
-      expiresIn,
-      token: token.token,
-    };
   }
 
   private createVerificationToken(email: string): TokenData {
@@ -214,7 +215,9 @@ class AuthenticationController implements Controller {
             process.env.EMAIL_TEMPLATE_RESET_PASSWORD,
             {
               subject: 'Reset password',
-              verifyUrl: `${process.env.DOMAIN}/change-password?token=${encodeURI(token)}`,
+              verifyUrl: `${
+                process.env.DOMAIN
+              }/change-password?token=${encodeURI(token)}`,
             }
           );
           response.json({
@@ -243,7 +246,10 @@ class AuthenticationController implements Controller {
       next(new WrongCredentialsException());
     } else {
       try {
-        const { email, resetToken } = jwt.verify(token, process.env.JWT_SECRET) as DataStoredInResetPasswordToken;
+        const { email, resetToken } = jwt.verify(
+          token,
+          process.env.JWT_SECRET
+        ) as DataStoredInResetPasswordToken;
         const user = await this.user.findOne({ email, resetToken });
         if (!user) {
           next(new WrongCredentialsException());
@@ -268,74 +274,24 @@ class AuthenticationController implements Controller {
     }
   };
 
-  private refreshCookie = async (
-    request: express.Request,
-    response: express.Response,
-    next: express.NextFunction
-  ): Promise<void> => {
-    try {
-      const { refreshToken } = request.body;
-      if (!refreshToken) {
-        next(new AuthenticationTokenMissingException());
-      } else {
-        const tokenDoc = await this.refreshToken.findOne({
-          token: refreshToken,
-        });
-        if (!tokenDoc) {
-          next(new WrongAuthenticationTokenException());
-        } else {
-          const user = await this.authService.findAndVerifyUser(tokenDoc.token);
-          const { token, expiresIn } = this.createToken(user);
-          response.cookie('Authorization', token, {
-            maxAge: expiresIn * 24,
-            httpOnly: true,
-          });
-          response.json({ token, user, refreshToken: tokenDoc.token });
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      next(new InternalServerErrorException());
-    }
-  };
-
   private loggingIn = async (
     request: express.Request,
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const logInData: LogInDto = request.body;
-    const user = await this.user.findOne({ email: logInData.email });
-    if (!user.emailVerified) {
-      next(new EmailNotVerifiedException());
-    }
-    if (user) {
-      const isPasswordMatching = await bcrypt.compare(
-        logInData.password,
-        user.get('password', null, { getters: false })
+    passport.authenticate('local', (err, user, info) => {
+      request.login(user, () =>
+        response.json({ user, token: request.sessionID })
       );
-      if (isPasswordMatching) {
-        user.password = undefined;
-        const { token, expiresIn } = this.createToken(user);
-        const refreshToken = await this.createRefreshToken(user);
-        response.cookie('Authorization', token, {
-          maxAge: expiresIn * 24,
-          httpOnly: true,
-        });
-        response.json({ token, user, refreshToken: refreshToken.token });
-      } else {
-        next(new WrongCredentialsException());
-      }
-    } else {
-      next(new WrongCredentialsException());
-    }
+    })(request, response, next);
   };
 
   private loggingOut = (
     request: express.Request,
     response: express.Response
   ): void => {
-    response.clearCookie('Authorization');
+    request.logout();
+    response.clearCookie('connect.sid');
     response.json({ status: 200 });
   };
 }
