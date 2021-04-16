@@ -9,6 +9,24 @@ export const MessageFormWrapper = styled.div`
   form {
     height: 100%;
     display: flex;
+    position: relative;
+  }
+`;
+
+export const MessageFromEmojiPicker = styled.div`
+  position: absolute;
+  bottom: 100%;
+  right: calc(5% - 15px);
+`;
+
+export const MessageFromEmojiPickerTrigger = styled.div`
+  position: absolute;
+  top: 5px;
+  right: calc(5% - 5px);
+  color: ${(props) => props.theme.navTextColor};
+  cursor: pointer;
+  &:hover {
+    color: ${(props) => props.theme.navBackground};
   }
 `;
 
