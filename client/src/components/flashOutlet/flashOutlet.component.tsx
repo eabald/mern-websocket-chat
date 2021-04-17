@@ -23,12 +23,14 @@ const FlashOutlet: React.FC<FlashOutletProps> = () => {
         <FlashMessage
           message={authError.message}
           onClickHandler={() => dispatch(clearAuthError())}
+          type='error'
         />
       ) : null}
       {userError ? (
         <FlashMessage
           message={userError.message ?? ''}
           onClickHandler={() => dispatch(clearAuthError())}
+          type='error'
         />
       ) : null}
       {flashMessages.map((flash, i) => (
@@ -36,6 +38,7 @@ const FlashOutlet: React.FC<FlashOutletProps> = () => {
           key={i}
           message={flash.message}
           onClickHandler={() => dispatch(unsetFlashMessage(flash))}
+          type={flash.status}
         />
       ))}
     </FlashOutletWrapper>
