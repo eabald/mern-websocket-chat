@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as socketio from 'socket.io';
 import { Server } from 'http';
 import { createAdapter } from 'socket.io-redis';
-import { RedisClient } from 'redis';
+import { RedisClient, createClient } from 'redis';
 import Controller from '../interfaces/controller.interface';
 import Message from '../interfaces/message.interface';
 import messageModel from '../models/message.model';
@@ -29,9 +29,11 @@ class MessageController implements Controller {
 
   public initializeWebsocket(server: Server): void {
     this.websocket = new socketio.Server(server, { cors: { origin: '*' } });
-    this.pubClient = new RedisClient({
+    this.pubClient = createClient({
       host: process.env.REDIS_HOST,
       port: Number(process.env.REDIS_PORT),
+      auth_pass: process.env.REDIS_PASSWORD,
+      no_ready_check: true,
     });
     this.subClient = this.pubClient.duplicate();
     this.websocket.adapter(
@@ -97,7 +99,6 @@ class MessageController implements Controller {
       socket.request.user.blockedBy.includes(user)
     );
     if (room.type === 'dm' && isBlocked) {
-      console.log('here');
       socket.emit('messageBlocked', {
         status: 'blocked',
         message: 'Sending message to this user has been blocked.',

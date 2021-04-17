@@ -6,7 +6,7 @@ import Controller from '../interfaces/controller.interface';
 import ErrorLogger from '../middleware/errorLogger.middleware';
 import connectRedis from 'connect-redis';
 import session from 'express-session';
-import { RedisClient } from 'redis';
+import { createClient } from 'redis';
 import passport from 'passport';
 
 class AppController {
@@ -48,14 +48,17 @@ class AppController {
 
   private initializeSession(): void {
     const RedisStore = connectRedis(session);
+    const redisClient = createClient({
+      host: process.env.REDIS_HOST,
+      port: Number(process.env.REDIS_PORT),
+      auth_pass: process.env.REDIS_PASSWORD,
+      no_ready_check: true,
+    });
     this.app.use(
       session({
         secret: process.env.SESSION_SECRET,
         store: new RedisStore({
-          client: new RedisClient({
-            host: process.env.REDIS_HOST,
-            port: Number(process.env.REDIS_PORT),
-          }),
+          client: redisClient,
           disableTouch: true,
         }),
         resave: false,
@@ -88,7 +91,7 @@ class AppController {
   }
 
   private connectToTheDatabase(): void {
-    mongoose.connect(`mongodb://${this.mongoUri}`, {
+    mongoose.connect(this.mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

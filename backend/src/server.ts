@@ -17,7 +17,7 @@ import EnvValidator from './validators/env.validator';
 
 dotenv.config({ path: process.env.NODE_ENV === 'development' ? '../.env' : '.env' });
 EnvValidator(process.env);
-const { BACKEND_PORT, MONGO_URI } = process.env;
+const { PORT, MONGO_URI } = process.env;
 const ROOT_PATH = path.join(__dirname, 'public');
 
 const authenticationController = new AuthenticationController();
@@ -27,7 +27,7 @@ const userController = new UserController();
 
 const app = new AppController(
   [authenticationController, roomController, messageController, userController],
-  Number(BACKEND_PORT),
+  Number(PORT),
   MONGO_URI,
   ROOT_PATH,
   [logger, cookieParser(), helmet()]
