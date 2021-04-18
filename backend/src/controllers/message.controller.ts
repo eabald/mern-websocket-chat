@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as socketio from 'socket.io';
 import { Server } from 'http';
 import { createAdapter } from 'socket.io-redis';
-import { RedisClient } from 'redis';
+import { RedisClient, createClient } from 'redis';
 import Controller from '../interfaces/controller.interface';
 import Message from '../interfaces/message.interface';
 import messageModel from '../models/message.model';
@@ -20,32 +20,28 @@ class MessageController implements Controller {
   private message = messageModel;
   private user = userModel;
   private room = roomModel;
-  private pubClient: RedisClient;
-  private subClient: RedisClient;
+  private redisClient: RedisClient;
+  private server: Server
 
-  constructor() {
-    //
+  constructor(server: Server, redisClient: RedisClient) {
+    this.server = server;
+    this.redisClient = redisClient;
+    this.initializeWebsocket();
   }
 
-  public initializeWebsocket(server: Server): void {
-    this.websocket = new socketio.Server(server, { cors: { origin: '*' } });
-    this.pubClient = new RedisClient({
-      host: process.env.REDIS_HOST,
-      port: Number(process.env.REDIS_PORT),
-    });
-    this.subClient = this.pubClient.duplicate();
+  private initializeWebsocket(): void {
+    this.websocket = new socketio.Server(this.server, { cors: { origin: '*' } });
+    const pubClient = this.redisClient;
+    const subClient = pubClient.duplicate();
     this.websocket.adapter(
-      createAdapter({ pubClient: this.pubClient, subClient: this.subClient })
+      createAdapter({ pubClient, subClient })
     );
     const RedisStore = connectRedis(session);
     this.websocket.use(
       passportSocketIo.authorize({
         secret: process.env.SESSION_SECRET,
         store: new RedisStore({
-          client: new RedisClient({
-            host: process.env.REDIS_HOST,
-            port: Number(process.env.REDIS_PORT),
-          }),
+          client: this.redisClient,
           disableTouch: true,
         }),
       })
@@ -97,7 +93,6 @@ class MessageController implements Controller {
       socket.request.user.blockedBy.includes(user)
     );
     if (room.type === 'dm' && isBlocked) {
-      console.log('here');
       socket.emit('messageBlocked', {
         status: 'blocked',
         message: 'Sending message to this user has been blocked.',

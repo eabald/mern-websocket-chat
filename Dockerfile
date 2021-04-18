@@ -25,7 +25,7 @@ COPY --chown=node:node backend/package.json backend/package-lock.json /usr/app/
 RUN npm i --only=prod
 COPY --from=BUILDER /usr/app/build /usr/app
 COPY --from=CLIENT /usr/app/build /usr/app/public
-COPY .env.example.prod .env
+# COPY .env.example.prod .env
 
 EXPOSE 8000
 

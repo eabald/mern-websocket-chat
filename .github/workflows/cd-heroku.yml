@@ -1,0 +1,17 @@
+name: Deploy on Heroku
+
+on:
+  schedule:
+    - cron:  '0 1 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "mern-ws-chat"
+          heroku_email: "maciejro.krawczyk@gmail.com"
+          usedocker: true

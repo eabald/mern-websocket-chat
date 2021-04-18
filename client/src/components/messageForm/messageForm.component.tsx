@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // External
 import { Formik, FormikHelpers, Form } from 'formik';
 // Utils
@@ -16,10 +16,15 @@ import {
   MessageFormWrapper,
   MessageFormTextArea,
   MessageFormSubmit,
+  MessageFromEmojiPicker,
+  MessageFromEmojiPickerTrigger,
 } from './messageForm.styles';
 // Components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faSmileWink } from '@fortawesome/free-solid-svg-icons';
+
+import 'emoji-mart/css/emoji-mart.css';
+import { Picker } from 'emoji-mart';
 
 type MessageFormProps = {};
 interface FormValues {
@@ -28,6 +33,17 @@ interface FormValues {
 
 const MessageForm: React.FC<MessageFormProps> = () => {
   const { sendMessage } = useWebsocket();
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const formRef = useRef<HTMLTextAreaElement>(null);
+  const pickerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    document.addEventListener('click', (e) =>
+      e.target !== pickerRef.current && e.target !== triggerRef.current
+        ? setPickerOpen(false)
+        : null
+    );
+  }, []);
   const submitHandler = async ({ msg }: FormValues): Promise<void> => {
     if (user && room && msg.trim().length) {
       const newMsg = {
@@ -35,7 +51,7 @@ const MessageForm: React.FC<MessageFormProps> = () => {
         user,
         room,
         timestamp: new Date(),
-      }
+      };
       sendMessage(newMsg);
     }
   };
@@ -63,9 +79,31 @@ const MessageForm: React.FC<MessageFormProps> = () => {
         actions.resetForm({ values: { msg: '' } });
       }}
     >
-      {({ isValid, handleChange, values, handleSubmit }) => (
+      {({ isValid, handleChange, values, handleSubmit, setFieldValue }) => (
         <MessageFormWrapper>
           <Form>
+            <MessageFromEmojiPickerTrigger
+              onClick={() => setPickerOpen(!pickerOpen)}
+              ref={triggerRef}
+            >
+              <FontAwesomeIcon icon={faSmileWink} />
+            </MessageFromEmojiPickerTrigger>
+            <MessageFromEmojiPicker ref={pickerRef}>
+              {pickerOpen ? (
+                <Picker
+                  theme='dark'
+                  title=''
+                  emoji=''
+                  onSelect={(emoji: any) => {
+                    setFieldValue('msg', `${values.msg}${emoji.native}`, true);
+                    setPickerOpen(false);
+                    formRef.current?.focus();
+                  }}
+                />
+              ) : (
+                ''
+              )}
+            </MessageFromEmojiPicker>
             <MessageFormTextArea
               name='msg'
               id='msg'
@@ -75,6 +113,7 @@ const MessageForm: React.FC<MessageFormProps> = () => {
               }}
               onKeyUp={(e) => onEnterPress(e, handleSubmit)}
               value={values.msg}
+              ref={formRef}
             />
             <MessageFormSubmit type='submit' disabled={!isValid}>
               <FontAwesomeIcon icon={faPaperPlane} />

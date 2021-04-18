@@ -6,8 +6,13 @@ import Controller from '../interfaces/controller.interface';
 import ErrorLogger from '../middleware/errorLogger.middleware';
 import connectRedis from 'connect-redis';
 import session from 'express-session';
-import { RedisClient } from 'redis';
+import { createClient, RedisClient } from 'redis';
 import passport from 'passport';
+// controllers
+import AuthenticationController from './authentication.controller';
+import RoomController from './room.controller';
+import MessageController from './message.controller';
+import UserController from './user.controller';
 
 class AppController {
   public app: express.Application;
@@ -16,9 +21,9 @@ class AppController {
   public middlewares: RequestHandler[];
   public mongoUri: string;
   private static: string;
+  public redisClient: RedisClient;
 
   constructor(
-    controllers: Controller[],
     port: number,
     mongoUri: string,
     staticPath: string,
@@ -35,7 +40,7 @@ class AppController {
     this.initializeMiddlewares();
     this.initializeSession();
     this.initializePassportSession();
-    this.initializeControllers(controllers);
+    this.initializeControllers();
     this.initializeStatic();
     this.initializeErrorMiddleware();
   }
@@ -48,14 +53,17 @@ class AppController {
 
   private initializeSession(): void {
     const RedisStore = connectRedis(session);
+    this.redisClient = createClient({
+      host: process.env.REDIS_HOST,
+      port: Number(process.env.REDIS_PORT),
+      auth_pass: process.env.REDIS_PASSWORD,
+      no_ready_check: true,
+    });
     this.app.use(
       session({
         secret: process.env.SESSION_SECRET,
         store: new RedisStore({
-          client: new RedisClient({
-            host: process.env.REDIS_HOST,
-            port: Number(process.env.REDIS_PORT),
-          }),
+          client: this.redisClient,
           disableTouch: true,
         }),
         resave: false,
@@ -69,7 +77,13 @@ class AppController {
     this.app.use(errorMiddleware);
   }
 
-  private initializeControllers(controllers: Controller[]): void {
+  private initializeControllers(): void {
+    const controllers = [
+      new AuthenticationController(),
+      new RoomController(),
+      new MessageController(this.server, this.redisClient),
+      new UserController(),
+    ];
     controllers.forEach((controller) => {
       this.app.use('/api', controller.router);
     });
@@ -88,7 +102,7 @@ class AppController {
   }
 
   private connectToTheDatabase(): void {
-    mongoose.connect(`mongodb://${this.mongoUri}`, {
+    mongoose.connect(this.mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
