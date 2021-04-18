@@ -20,34 +20,28 @@ class MessageController implements Controller {
   private message = messageModel;
   private user = userModel;
   private room = roomModel;
-  private pubClient: RedisClient;
-  private subClient: RedisClient;
+  private redisClient: RedisClient;
+  private server: Server
 
-  constructor() {
-    //
+  constructor(server: Server, redisClient: RedisClient) {
+    this.server = server;
+    this.redisClient = redisClient;
+    this.initializeWebsocket();
   }
 
-  public initializeWebsocket(server: Server): void {
-    this.websocket = new socketio.Server(server, { cors: { origin: '*' } });
-    this.pubClient = createClient({
-      host: process.env.REDIS_HOST,
-      port: Number(process.env.REDIS_PORT),
-      auth_pass: process.env.REDIS_PASSWORD,
-      no_ready_check: true,
-    });
-    this.subClient = this.pubClient.duplicate();
+  private initializeWebsocket(): void {
+    this.websocket = new socketio.Server(this.server, { cors: { origin: '*' } });
+    const pubClient = this.redisClient;
+    const subClient = pubClient.duplicate();
     this.websocket.adapter(
-      createAdapter({ pubClient: this.pubClient, subClient: this.subClient })
+      createAdapter({ pubClient, subClient })
     );
     const RedisStore = connectRedis(session);
     this.websocket.use(
       passportSocketIo.authorize({
         secret: process.env.SESSION_SECRET,
         store: new RedisStore({
-          client: new RedisClient({
-            host: process.env.REDIS_HOST,
-            port: Number(process.env.REDIS_PORT),
-          }),
+          client: this.redisClient,
           disableTouch: true,
         }),
       })

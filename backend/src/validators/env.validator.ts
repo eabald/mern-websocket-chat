@@ -7,7 +7,6 @@ const EnvValidator = (env: object) : void => {
     REDIS_PORT: str(),
     REDIS_HOST: str(),
     REDIS_PASSWORD: str(),
-    REDIS_DB: str(),
   });
 };
 
