@@ -8,6 +8,8 @@ import connectRedis from 'connect-redis';
 import session from 'express-session';
 import { createClient, RedisClient } from 'redis';
 import passport from 'passport';
+import i18next from 'i18next'
+import { handle as i18nHandle, LanguageDetector } from 'i18next-http-middleware'
 // controllers
 import AuthenticationController from './authentication.controller';
 import RoomController from './room.controller';
@@ -96,9 +98,20 @@ class AppController {
     );
   }
   private initializePassportSession(): void {
-
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+  }
+
+  private initializeI18N(): void {
+    i18next.use(LanguageDetector).init({
+      debug: true,
+      fallbackLng: 'en',
+      interpolation: {
+        escapeValue: false,
+      },
+      preload: ['en'],
+    });
+    this.app.use(i18nHandle(i18next));
   }
 
   private connectToTheDatabase(): void {
