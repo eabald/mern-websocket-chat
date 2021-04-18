@@ -10,6 +10,8 @@ import { store } from './redux/store'
 import reportWebVitals from './reportWebVitals';
 // SW
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+// I18N
+import './i18n';
 
 ReactDOM.render(
   <Provider store={store}>

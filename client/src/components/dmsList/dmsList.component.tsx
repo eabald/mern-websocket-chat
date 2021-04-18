@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
 import { Room } from '../../redux/room/room.types';
 import { setCurrentRoomStart } from '../../redux/room/room.actions';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Styled
 import { DmsListWrapper, DmsListItem, DmsListItemAdd } from './dmsList.styles';
 // Components
@@ -16,6 +18,7 @@ import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 type DmsListProps = {};
 
 const DmsList: React.FC<DmsListProps> = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const dms = useSelector((state: RootState) => state.room.rooms).filter(room => room.type === 'dm');
   const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
@@ -24,7 +27,7 @@ const DmsList: React.FC<DmsListProps> = () => {
   const location = useLocation();
   return (
     <>
-      <SectionHeader>Direct messages</SectionHeader>
+      <SectionHeader>{t('Direct messages')}</SectionHeader>
       <DmsListWrapper>
         {dms.map((dm: Room) => (
           <DmsListItem key={dm._id} onClick={() => setDm(dm)} active={currentRoom && currentRoom._id === dm._id}>
@@ -40,7 +43,7 @@ const DmsList: React.FC<DmsListProps> = () => {
             state: { background: location }
           }}
         >
-          Add new direct message
+          {t('Add new direct message')}
         </DmsListItemAdd>
       </DmsListWrapper>
     </>

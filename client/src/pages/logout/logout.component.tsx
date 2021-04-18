@@ -3,6 +3,8 @@ import React, { useEffect } from 'react';
 // Redux
 import { useDispatch } from 'react-redux';
 import { signOutStart } from '../../redux/auth/auth.actions';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Layout
 import MainLayout from '../../layout/main/main.layout';
 // Styled
@@ -21,8 +23,8 @@ import SmallHeader from '../../components/smallHeader/smallHeader.component';
 type LogoutProps = {};
 
 const Logout: React.FC<LogoutProps> = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(signOutStart());
   }, [dispatch]);
@@ -34,10 +36,10 @@ const Logout: React.FC<LogoutProps> = () => {
           <LogoutImage />
         </LogoutImageWrapper>
         <LogoutTextWrapper>
-          <SmallHeader>Logged out successfully</SmallHeader>
+          <SmallHeader>{t('Logged out successfully')}</SmallHeader>
         </LogoutTextWrapper>
         <LogoutLinkWrapper>
-          <LinkButton to='/login' type='block' text='Login again' />
+          <LinkButton to='/login' type='block' text={t('Login again')} />
         </LogoutLinkWrapper>
       </LogoutWrapper>
       <FreepikInfo />

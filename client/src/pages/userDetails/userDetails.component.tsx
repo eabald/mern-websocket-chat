@@ -6,6 +6,8 @@ import { User } from '../../redux/user/user.types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
 import { getUserDetailsStart } from '../../redux/user/user.actions';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Styled
 import {
   UserDetailsWrapper,
@@ -21,6 +23,7 @@ import BlockUser from '../../components/blockUser/blockUser.component';
 type UserDetailsProps = {};
 
 const UserDetails: React.FC<UserDetailsProps> = () => {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const usersAvailable = useSelector((state: RootState) => state.user.users);
   const [currentUserDetails, setCurrentUserDetails] = useState<User | null>(
@@ -41,26 +44,26 @@ const UserDetails: React.FC<UserDetailsProps> = () => {
     }
   }, [usersAvailable, dispatch, id]);
   return (
-    <Modal title='Details'>
+    <Modal title={t('User details')}>
       <UserDetailsWrapper>
         {loading ? (
           <Spinner />
         ) : (
           <>
             <UserDetailsItemWrapper>
-              <UserDetailsLabel>Username:</UserDetailsLabel>
+              <UserDetailsLabel>{t('Username')}:</UserDetailsLabel>
               <UserDetailsText>
                 {currentUserDetails?.username}
               </UserDetailsText>
             </UserDetailsItemWrapper>
             <UserDetailsItemWrapper>
-              <UserDetailsLabel>First name:</UserDetailsLabel>
+              <UserDetailsLabel>{t('First name')}:</UserDetailsLabel>
               <UserDetailsText>
                 {currentUserDetails?.firstName}
               </UserDetailsText>
             </UserDetailsItemWrapper>
             <UserDetailsItemWrapper>
-              <UserDetailsLabel>Last name:</UserDetailsLabel>
+              <UserDetailsLabel>{t('Last name')}:</UserDetailsLabel>
               <UserDetailsText>
                 {currentUserDetails?.lastName}
               </UserDetailsText>

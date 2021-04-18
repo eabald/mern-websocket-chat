@@ -4,6 +4,8 @@ import { useHistory } from 'react-router-dom';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Styled
 import {
   BlockUserWrapper,
@@ -22,6 +24,7 @@ type BlockUserProps = {
 };
 
 const BlockUser: React.FC<BlockUserProps> = ({ id, username }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const loading = useSelector((state: RootState) => state.utils.loading );
   const history = useHistory();
@@ -40,7 +43,7 @@ const BlockUser: React.FC<BlockUserProps> = ({ id, username }) => {
         ) : (
           <>
             <FontAwesomeIcon icon={faUserSlash} />
-            <BlockUserButtonText>Block {username}</BlockUserButtonText>
+            <BlockUserButtonText>{t('Block')} {username}</BlockUserButtonText>
           </>
         )}
       </BlockUserButton>

@@ -8,6 +8,8 @@ import { createRoomStart } from '../../redux/room/room.actions';
 import { User } from '../../redux/user/user.types';
 // External
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Api
 import { findUsersRequest } from '../../api/user.api';
 // Validators
@@ -26,6 +28,7 @@ interface FormValues {
   users: any;
 }
 const AddNewDm: React.FC<AddNewDmProps> = () => {
+  const { t } =useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
   const currentUser = useSelector((state: RootState) => state.user.user);
@@ -48,7 +51,7 @@ const AddNewDm: React.FC<AddNewDmProps> = () => {
     return returnData;
   };
   return (
-    <Modal title='Add new direct message'>
+    <Modal title={t('Add new direct message')}>
       <AddNewDmContent>
         <Formik
           initialValues={{ users: [] }}
@@ -65,7 +68,7 @@ const AddNewDm: React.FC<AddNewDmProps> = () => {
           {(props) => (
             <Form>
               <MultiSelect
-                label='Users'
+                label={t('Users')}
                 name='users'
                 id='users'
                 iid='users'
@@ -83,6 +86,7 @@ const AddNewDm: React.FC<AddNewDmProps> = () => {
                 <SubmitButton
                   disabled={!props.isValid || props.isSubmitting}
                   loading={props.isSubmitting}
+                  label={t('Add')}
                 />
               </FormGroup>
             </Form>

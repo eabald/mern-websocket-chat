@@ -7,6 +7,8 @@ import { RootState } from '../../redux/root-reducer';
 import { createRoomStart } from '../../redux/room/room.actions';
 // External
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Validators
 import CreateRoomValidationSchema from '../../validators/createRoom.validator';
 // Styled
@@ -29,6 +31,7 @@ interface FormValues {
 }
 
 const AddNewRoom: React.FC<AddNewRoomProps> = () => {
+  const { t } =useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
   const currentUserId = useSelector((state: RootState) => state.user.user?._id)
@@ -47,7 +50,7 @@ const AddNewRoom: React.FC<AddNewRoomProps> = () => {
     return returnData;
   }
   return (
-    <Modal title='Add new room'>
+    <Modal title={t('Add new room')}>
       <AddNewRoomContent>
         <Formik
           initialValues={{ users: [], name: '' }}
@@ -62,7 +65,7 @@ const AddNewRoom: React.FC<AddNewRoomProps> = () => {
           {(props) => (
             <Form>
               <FormGroup>
-                <Label htmlFor='name'>Room name</Label>
+                <Label htmlFor='name'>{t('Room name')}</Label>
                 <FormField
                   id='name'
                   name='name'
@@ -75,7 +78,7 @@ const AddNewRoom: React.FC<AddNewRoomProps> = () => {
                 />
               </FormGroup>
               <MultiSelect
-                label='Users'
+                label={t('Users')}
                 name='users'
                 id='users'
                 iid='users'
@@ -93,6 +96,7 @@ const AddNewRoom: React.FC<AddNewRoomProps> = () => {
                 <SubmitButton
                   disabled={!props.isValid || props.isSubmitting}
                   loading={props.isSubmitting}
+                  label={t('Add')}
                 />
               </FormGroup>
             </Form>
