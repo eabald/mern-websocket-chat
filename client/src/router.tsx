@@ -19,6 +19,7 @@ import UserDetails from './pages/userDetails/userDetails.component';
 import VerifyEmail from './pages/verifyEmail/verifyEmail.component';
 import ResetPassword from './pages/resetPassword/resetPassword.component';
 import ChangePassword from './pages/changePassword/changePassword.component';
+import LangPicker from './components/langPicker/langPicker.component';
 
 type RouterProps = {};
 
@@ -55,6 +56,7 @@ const Router: React.FC<RouterProps> = () => {
         <Route path='/terms-and-conditions' component={TermsAndConditions} />
         <Route><Redirect to='/' /></Route>
       </Switch>
+      <LangPicker />
       {background && <Route path='/profile' children={isLoggedIn ? <Profile /> : <Redirect to='/login' />} />}
       {background && <Route path='/modal/add-new-room' children={isLoggedIn ? <AddNewRoom /> : <Redirect to='/login' />} />}
       {background && <Route path='/modal/add-new-dm' children={isLoggedIn ? <AddNewDm /> : <Redirect to='/login' />} />}

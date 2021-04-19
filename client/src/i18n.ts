@@ -11,6 +11,7 @@ i18n
     interpolation: {
       escapeValue: false,
     },
+    preload: ['en', 'pl'],
     resources: {
       en: {
         translation: {
