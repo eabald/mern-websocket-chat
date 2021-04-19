@@ -39,7 +39,7 @@ const DmsList: React.FC<DmsListProps> = () => {
         ))}
         <DmsListItemAdd
           to={{
-            pathname: '/modal/add-new-dm',
+            pathname: `/modal/${t('add-new-dm')}`,
             state: { background: location }
           }}
         >

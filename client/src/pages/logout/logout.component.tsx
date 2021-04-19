@@ -39,7 +39,7 @@ const Logout: React.FC<LogoutProps> = () => {
           <SmallHeader>{t('Logged out successfully')}</SmallHeader>
         </LogoutTextWrapper>
         <LogoutLinkWrapper>
-          <LinkButton to='/login' type='block' text={t('Login again')} />
+          <LinkButton to={`/${t('login')}`} type='block' text={t('Login again')} />
         </LogoutLinkWrapper>
       </LogoutWrapper>
       <FreepikInfo />

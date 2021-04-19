@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from './redux/root-reducer';
 // External
 import { Location } from 'history';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Components
 import Profile from './pages/profile/profile.component';
 import Home from './pages/home/home.component';
@@ -28,6 +30,7 @@ interface StateType extends Location {
 }
 
 const Router: React.FC<RouterProps> = () => {
+  const { t } = useTranslation();
   const isLoggedIn = useSelector((state: RootState) => state.auth.token);
   const location = useLocation<StateType>();
   const background = location.state ? location.state.background : '';
@@ -35,32 +38,32 @@ const Router: React.FC<RouterProps> = () => {
     <>
       <Switch location={background || location}>
         <Route path='/' exact>
-          {isLoggedIn ? <Home /> : <Redirect to='/login' />}
+          {isLoggedIn ? <Home /> : <Redirect to={`/${t('login')}`} />}
         </Route>
-        <Route path='/login'>
+        <Route path={`/${t('login')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <Login />}
         </Route>
-        <Route path='/register'>
+        <Route path={`/${t('register')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <Register />}
         </Route>
-        <Route path='/verify'>
+        <Route path={`/${t('verify')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <VerifyEmail />}
         </Route>
-        <Route path='/reset-password'>
+        <Route path={`/${t('reset-password')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <ResetPassword />}
         </Route>
-        <Route path='/change-password'>
+        <Route path={`/${t('change-password')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <ChangePassword />}
         </Route>
-        <Route path='/logout' component={Logout} />
-        <Route path='/terms-and-conditions' component={TermsAndConditions} />
+        <Route path={`/${t('logout')}`} component={Logout} />
+        <Route path={`/${t('terms-and-conditions')}`} component={TermsAndConditions} />
         <Route><Redirect to='/' /></Route>
       </Switch>
       <LangPicker />
-      {background && <Route path='/profile' children={isLoggedIn ? <Profile /> : <Redirect to='/login' />} />}
-      {background && <Route path='/modal/add-new-room' children={isLoggedIn ? <AddNewRoom /> : <Redirect to='/login' />} />}
-      {background && <Route path='/modal/add-new-dm' children={isLoggedIn ? <AddNewDm /> : <Redirect to='/login' />} />}
-      {background && <Route path='/modal/user-details/:id' children={isLoggedIn ? <UserDetails /> : <Redirect to='/login' />} />}
+      {background && <Route path={`/${t('profile')}`} children={isLoggedIn ? <Profile /> : <Redirect to={`/${t('login')}`} />} />}
+      {background && <Route path={`/modal/${t('add-new-room')}`} children={isLoggedIn ? <AddNewRoom /> : <Redirect to={`/${t('login')}`} />} />}
+      {background && <Route path={`/modal/${t('add-new-dm')}`} children={isLoggedIn ? <AddNewDm /> : <Redirect to={`/${t('login')}`} />} />}
+      {background && <Route path={`/modal/${t('user-details')}/:id`} children={isLoggedIn ? <UserDetails /> : <Redirect to={`/${t('login')}`} />} />}
     </>
   );
 };

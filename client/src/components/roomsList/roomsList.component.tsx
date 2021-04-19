@@ -56,7 +56,7 @@ const RoomsList: React.FC<RoomsListProps> = () => {
         ))}
         <RoomsListItemAdd
           to={{
-            pathname: '/modal/add-new-room',
+            pathname: `/modal/${t('add-new-room')}`,
             state: { background: location }
           }}
         >

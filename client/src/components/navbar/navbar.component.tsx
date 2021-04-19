@@ -55,13 +55,13 @@ const Navbar: React.FC<NavbarProps> = () => {
         </NavbarCurrentRoom>
         <NavbarLink
           to={{
-            pathname: '/profile',
+            pathname: `/${t('profile')}`,
             state: { background: location },
           }}
         >
           <FontAwesomeIcon icon={faUser} />
         </NavbarLink>
-        <NavbarLink to='/logout'>
+        <NavbarLink to={`/${t('logout')}`}>
           <FontAwesomeIcon icon={faPowerOff} />
         </NavbarLink>
       </NavbarLinksWrapper>

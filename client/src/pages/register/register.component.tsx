@@ -163,7 +163,7 @@ const Register: React.FC<RegisterProps> = () => {
                 }
               >
                 {t('Accept')}{' '}
-                <InlineLink to='/terms-and-conditions'>
+                <InlineLink to={`/${t('terms-and-conditions')}`}>
                   {t('terms and conditions')}
                 </InlineLink>
               </Checkbox>
@@ -178,7 +178,7 @@ const Register: React.FC<RegisterProps> = () => {
           )}
         </Formik>
         <TextBlock>
-          {t('Have an account? Click')} <InlineLink to='/login'>{t('here')}</InlineLink> {t('to login.')}
+          {t('Have an account? Click')} <InlineLink to={`/${t('login')}`}>{t('here')}</InlineLink> {t('to login.')}
         </TextBlock>
       </RegisterWrapper>
     </MainLayout>

@@ -97,7 +97,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = () => {
           )}
         </Formik>
         <TextBlock>
-          {t('Want to login instead? Click')} <InlineLink to='/login'>{t('here')}</InlineLink>{' '}
+          {t('Want to login instead? Click')} <InlineLink to={`/${t('login')}`}>{t('here')}</InlineLink>{' '}
           {t('to login.')}
         </TextBlock>
       </ChangePasswordWrapper>

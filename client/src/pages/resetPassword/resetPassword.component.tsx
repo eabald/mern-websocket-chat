@@ -80,7 +80,7 @@ const ResetPassword:React.FC<ResetPasswordProps> = () => {
           )}
         </Formik>
         <TextBlock>
-          {t('Want to login instead? Click')} <InlineLink to='/login'>{t('here')}</InlineLink> {t('to login.')}
+          {t('Want to login instead? Click')} <InlineLink to={`/${t('login')}`}>{t('here')}</InlineLink> {t('to login.')}
         </TextBlock>
       </ResetPasswordWrapper>
     </MainLayout>

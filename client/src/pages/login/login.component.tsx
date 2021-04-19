@@ -80,7 +80,7 @@ const Login: React.FC<LoginProps> = () => {
                 />
               </FormGroup>
               <TextBlock>
-                <InlineLink to='/reset-password'>
+                <InlineLink to={`/${t('reset-password')}`}>
                   {t('Forgot your password?')}
                 </InlineLink>
               </TextBlock>
@@ -96,7 +96,7 @@ const Login: React.FC<LoginProps> = () => {
         </Formik>
         <TextBlock>
           {t('If you don\'t have an account, You can register')}{' '}
-          <InlineLink to='/register'>{t('here')}</InlineLink>
+          <InlineLink to={`/${t('register')}`}>{t('here')}</InlineLink>
         </TextBlock>
       </LoginWrapper>
     </MainLayout>
