@@ -38,12 +38,14 @@ const MessageForm: React.FC<MessageFormProps> = () => {
   const pickerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    document.addEventListener('click', (e) =>
-      e.target !== pickerRef.current && e.target !== triggerRef.current
-        ? setPickerOpen(false)
-        : null
-    );
+    document.addEventListener('click', clickHandler);
+    return () => {
+      document.removeEventListener('click', clickHandler);
+    }
   }, []);
+  const clickHandler = (e: MouseEvent) => e.target !== pickerRef.current && e.target !== triggerRef.current
+  ? setPickerOpen(false)
+  : null;
   const submitHandler = async ({ msg }: FormValues): Promise<void> => {
     if (user && room && msg.trim().length) {
       const newMsg = {
