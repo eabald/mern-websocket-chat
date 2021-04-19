@@ -140,10 +140,11 @@ class AuthenticationController implements Controller {
         response.json({
           status: 'success',
           message:
-            'Registration complete, check your inbox for verification email.',
+            request.t('Registration complete, check your inbox for verification email.'),
         });
       } catch (error) {
         await user.deleteOne();
+        console.log(error);
         next(new RegistrationEmailException());
       }
     }
@@ -170,7 +171,7 @@ class AuthenticationController implements Controller {
           if (user.verificationToken === '') {
             response.json({
               status: 'success',
-              message: 'Already verified, you can sign in now.',
+              message: request.t('Already verified, you can sign in now.'),
             });
           } else {
             user.verificationToken = '';
@@ -178,7 +179,7 @@ class AuthenticationController implements Controller {
             await user.save();
             response.json({
               status: 'success',
-              message: 'Email verified, you can sign in now.',
+              message: request.t('Email verified, you can sign in now.'),
             });
           }
         }
@@ -223,7 +224,7 @@ class AuthenticationController implements Controller {
           response.json({
             status: 'success',
             message:
-              'Reset password message sent, check your inbox for verification email.',
+              request.t('Reset password message sent, check your inbox for verification email.'),
           });
         }
       }
@@ -261,7 +262,7 @@ class AuthenticationController implements Controller {
           response.json({
             status: 'success',
             message:
-              'Password reset complete, you can log in now using new password.',
+              request.t('Password reset complete, you can log in now using new password.'),
           });
         }
       } catch (error) {

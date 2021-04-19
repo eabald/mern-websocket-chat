@@ -12,6 +12,7 @@ import roomModel from '../models/room.model';
 import passportSocketIo from 'passport.socketio';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
+import i18next from 'i18next';
 
 class MessageController implements Controller {
   public path = '/message';
@@ -95,7 +96,7 @@ class MessageController implements Controller {
     if (room.type === 'dm' && isBlocked) {
       socket.emit('messageBlocked', {
         status: 'blocked',
-        message: 'Sending message to this user has been blocked.',
+        message: i18next.t('Sending message to this user has been blocked.'),
       });
       return;
     }
