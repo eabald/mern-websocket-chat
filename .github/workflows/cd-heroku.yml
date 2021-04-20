@@ -3,6 +3,12 @@ name: Deploy on Heroku
 on:
   schedule:
     - cron:  '0 1 * * *'
+  push:
+    branches:
+      - master
+    path:
+      - 'client/**'
+      - 'backend/**'
 
   workflow_dispatch:
 
