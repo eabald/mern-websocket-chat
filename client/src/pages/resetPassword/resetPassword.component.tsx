@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { resetPasswordStart } from '../../redux/auth/auth.actions';
 // External
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Validators
 import ResetPasswordValidationSchema from '../../validators/resetPassword.validator';
 // Styled
@@ -28,6 +30,7 @@ interface ResetPasswordValues {
 };
 
 const ResetPassword:React.FC<ResetPasswordProps> = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const submitHandler = async (values: ResetPasswordValues): Promise<void> => {
     await dispatch(resetPasswordStart(values));
@@ -37,7 +40,7 @@ const ResetPassword:React.FC<ResetPasswordProps> = () => {
     <MainLayout>
       <BackButton />
       <ResetPasswordWrapper>
-        <SmallHeader>Reset password</SmallHeader>
+        <SmallHeader>{t('Reset password')}</SmallHeader>
         <Formik
           initialValues={{
             email: '',
@@ -53,7 +56,7 @@ const ResetPassword:React.FC<ResetPasswordProps> = () => {
           {({ touched, errors, isValid, isSubmitting }) => (
             <Form>
               <FormGroup>
-                <Label htmlFor='email'>Email</Label>
+                <Label htmlFor='email'>{t('Email')}</Label>
                 <FormField
                   id='email'
                   name='email'
@@ -70,14 +73,14 @@ const ResetPassword:React.FC<ResetPasswordProps> = () => {
                 <SubmitButton
                   disabled={!isValid || isSubmitting}
                   loading={isSubmitting}
+                  label={t('Submit')}
                 />
               </FormGroup>
             </Form>
           )}
         </Formik>
         <TextBlock>
-          Want to login instead? Click <InlineLink to='/login'>here</InlineLink> to
-          login.
+          {t('Want to login instead? Click')} <InlineLink to={`/${t('login')}`}>{t('here')}</InlineLink> {t('to login.')}
         </TextBlock>
       </ResetPasswordWrapper>
     </MainLayout>

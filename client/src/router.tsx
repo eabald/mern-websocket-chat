@@ -1,24 +1,27 @@
 // React
-import React from 'react';
+import React, { lazy } from 'react';
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
 // Redux
 import { useSelector } from 'react-redux';
 import { RootState } from './redux/root-reducer';
 // External
 import { Location } from 'history';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Components
-import Profile from './pages/profile/profile.component';
-import Home from './pages/home/home.component';
-import Login from './pages/login/login.component';
-import Logout from './pages/logout/logout.component';
-import Register from './pages/register/register.component';
-import TermsAndConditions from './pages/termsAndConditions/termsAndConditions.component';
-import AddNewRoom from './pages/addNewRoom/addNewRoom.component';
-import AddNewDm from './pages/addNewDm/addNewDm.component';
-import UserDetails from './pages/userDetails/userDetails.component';
-import VerifyEmail from './pages/verifyEmail/verifyEmail.component';
-import ResetPassword from './pages/resetPassword/resetPassword.component';
-import ChangePassword from './pages/changePassword/changePassword.component';
+const Profile = lazy(() => import('./pages/profile/profile.component'));
+const Home = lazy(() => import('./pages/home/home.component'));
+const Login = lazy(() => import('./pages/login/login.component'));
+const Logout = lazy(() => import('./pages/logout/logout.component'));
+const Register = lazy(() => import('./pages/register/register.component'));
+const TermsAndConditions = lazy(() => import('./pages/termsAndConditions/termsAndConditions.component'));
+const AddNewRoom = lazy(() => import('./pages/addNewRoom/addNewRoom.component'));
+const AddNewDm = lazy(() => import('./pages/addNewDm/addNewDm.component'));
+const UserDetails = lazy(() => import('./pages/userDetails/userDetails.component'));
+const VerifyEmail = lazy(() => import('./pages/verifyEmail/verifyEmail.component'));
+const ResetPassword = lazy(() => import('./pages/resetPassword/resetPassword.component'));
+const ChangePassword = lazy(() => import('./pages/changePassword/changePassword.component'));
+const LangPicker = lazy(() => import('./components/langPicker/langPicker.component'));
 
 type RouterProps = {};
 
@@ -27,6 +30,7 @@ interface StateType extends Location {
 }
 
 const Router: React.FC<RouterProps> = () => {
+  const { t } = useTranslation();
   const isLoggedIn = useSelector((state: RootState) => state.auth.token);
   const location = useLocation<StateType>();
   const background = location.state ? location.state.background : '';
@@ -34,31 +38,32 @@ const Router: React.FC<RouterProps> = () => {
     <>
       <Switch location={background || location}>
         <Route path='/' exact>
-          {isLoggedIn ? <Home /> : <Redirect to='/login' />}
+          {isLoggedIn ? <Home /> : <Redirect to={`/${t('login')}`} />}
         </Route>
-        <Route path='/login'>
+        <Route path={`/${t('login')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <Login />}
         </Route>
-        <Route path='/register'>
+        <Route path={`/${t('register')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <Register />}
         </Route>
         <Route path='/verify'>
           {isLoggedIn ? <Redirect to='/' /> : <VerifyEmail />}
         </Route>
-        <Route path='/reset-password'>
+        <Route path={`/${t('reset-password')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <ResetPassword />}
         </Route>
-        <Route path='/change-password'>
+        <Route path={`/${t('change-password')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <ChangePassword />}
         </Route>
-        <Route path='/logout' component={Logout} />
-        <Route path='/terms-and-conditions' component={TermsAndConditions} />
+        <Route path={`/${t('logout')}`} component={Logout} />
+        <Route path={`/${t('terms-and-conditions')}`} component={TermsAndConditions} />
         <Route><Redirect to='/' /></Route>
       </Switch>
-      {background && <Route path='/profile' children={isLoggedIn ? <Profile /> : <Redirect to='/login' />} />}
-      {background && <Route path='/modal/add-new-room' children={isLoggedIn ? <AddNewRoom /> : <Redirect to='/login' />} />}
-      {background && <Route path='/modal/add-new-dm' children={isLoggedIn ? <AddNewDm /> : <Redirect to='/login' />} />}
-      {background && <Route path='/modal/user-details/:id' children={isLoggedIn ? <UserDetails /> : <Redirect to='/login' />} />}
+      <LangPicker />
+      {background && <Route path={`/${t('profile')}`} children={isLoggedIn ? <Profile /> : <Redirect to={`/${t('login')}`} />} />}
+      {background && <Route path={`/modal/${t('add-new-room')}`} children={isLoggedIn ? <AddNewRoom /> : <Redirect to={`/${t('login')}`} />} />}
+      {background && <Route path={`/modal/${t('add-new-dm')}`} children={isLoggedIn ? <AddNewDm /> : <Redirect to={`/${t('login')}`} />} />}
+      {background && <Route path={`/modal/${t('user-details')}/:id`} children={isLoggedIn ? <UserDetails /> : <Redirect to={`/${t('login')}`} />} />}
     </>
   );
 };

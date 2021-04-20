@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { signUpStart } from '../../redux/auth/auth.actions';
 // External
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Validators
 import RegisterFormValidationSchema from '../../validators/registerForm.validator';
 // Layout
@@ -35,6 +37,7 @@ interface RegisterValues {
 }
 
 const Register: React.FC<RegisterProps> = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const submitHandler = async (values: RegisterValues): Promise<void> => {
     await dispatch(signUpStart(values));
@@ -44,7 +47,7 @@ const Register: React.FC<RegisterProps> = () => {
     <MainLayout>
       <BackButton />
       <RegisterWrapper>
-        <SmallHeader>Register</SmallHeader>
+        <SmallHeader>{t('Register')}</SmallHeader>
         <Formik
           initialValues={{
             email: '',
@@ -66,7 +69,7 @@ const Register: React.FC<RegisterProps> = () => {
           {({ touched, errors, isValid, isSubmitting, values }) => (
             <Form>
               <FormGroup>
-                <Label htmlFor='email'>Email</Label>
+                <Label htmlFor='email'>{t('Email')}</Label>
                 <FormField
                   id='email'
                   name='email'
@@ -80,7 +83,7 @@ const Register: React.FC<RegisterProps> = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor='username'>Username</Label>
+                <Label htmlFor='username'>{t('Username')}</Label>
                 <FormField
                   id='username'
                   name='username'
@@ -94,7 +97,7 @@ const Register: React.FC<RegisterProps> = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor='firstName'>First name</Label>
+                <Label htmlFor='firstName'>{t('First name')}</Label>
                 <FormField
                   id='firstName'
                   name='firstName'
@@ -108,7 +111,7 @@ const Register: React.FC<RegisterProps> = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor='lastName'>Last name</Label>
+                <Label htmlFor='lastName'>{t('Last name')}</Label>
                 <FormField
                   id='lastName'
                   name='lastName'
@@ -122,7 +125,7 @@ const Register: React.FC<RegisterProps> = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor='password'>Password</Label>
+                <Label htmlFor='password'>{t('Password')}</Label>
                 <FormField
                   id='password'
                   name='password'
@@ -135,7 +138,7 @@ const Register: React.FC<RegisterProps> = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor='passwordConfirm'>Confirm password</Label>
+                <Label htmlFor='passwordConfirm'>{t('Confirm password')}</Label>
                 <FormField
                   id='passwordConfirm'
                   name='passwordConfirm'
@@ -159,23 +162,23 @@ const Register: React.FC<RegisterProps> = () => {
                   />
                 }
               >
-                Accept{' '}
-                <InlineLink to='/terms-and-conditions'>
-                  terms and conditions
+                {t('Accept')}{' '}
+                <InlineLink to={`/${t('terms-and-conditions')}`}>
+                  {t('terms and conditions')}
                 </InlineLink>
               </Checkbox>
               <FormGroup>
                 <SubmitButton
                   disabled={!isValid || isSubmitting || !values.terms}
                   loading={isSubmitting}
+                  label={t('Register')}
                 />
               </FormGroup>
             </Form>
           )}
         </Formik>
         <TextBlock>
-          Have an account? Click <InlineLink to='/login'>here</InlineLink> to
-          login.
+          {t('Have an account? Click')} <InlineLink to={`/${t('login')}`}>{t('here')}</InlineLink> {t('to login.')}
         </TextBlock>
       </RegisterWrapper>
     </MainLayout>

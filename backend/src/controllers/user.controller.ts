@@ -95,7 +95,7 @@ class UserController implements Controller {
     const blockedBy = await this.user.findById(blockedById);
     user.blockedBy.push(blockedBy);
     await user.save();
-    response.json({ status:{ state: 'success', message: 'User blocked' } });
+    response.json({ status: { state: 'success', message: request.t('User blocked') } });
   }
 }
 

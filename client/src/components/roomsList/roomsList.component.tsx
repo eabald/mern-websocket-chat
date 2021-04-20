@@ -9,6 +9,8 @@ import {
 } from '../../redux/room/room.actions';
 import { Room } from '../../redux/room/room.types';
 import { RootState } from '../../redux/root-reducer';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Styled
 import {
   RoomsListWrapper,
@@ -23,6 +25,7 @@ import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 type RoomsListProps = {};
 
 const RoomsList: React.FC<RoomsListProps> = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.user.user?.id);
   const rooms = useSelector((state: RootState) => state.room.rooms).filter(room => room.type === 'room');
@@ -37,7 +40,7 @@ const RoomsList: React.FC<RoomsListProps> = () => {
 
   return (
     <>
-      <SectionHeader>Rooms</SectionHeader>
+      <SectionHeader>{t('Rooms')}</SectionHeader>
       <RoomsListWrapper>
         {rooms.map((room: Room) => (
           <RoomsListItem
@@ -53,11 +56,11 @@ const RoomsList: React.FC<RoomsListProps> = () => {
         ))}
         <RoomsListItemAdd
           to={{
-            pathname: '/modal/add-new-room',
+            pathname: `/modal/${t('add-new-room')}`,
             state: { background: location }
           }}
         >
-          Add new room
+          {t('Add new room')}
         </RoomsListItemAdd>
       </RoomsListWrapper>
     </>

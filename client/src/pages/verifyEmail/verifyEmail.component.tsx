@@ -3,6 +3,8 @@ import React, { useEffect } from 'react';
 // Redux
 import { useDispatch } from 'react-redux';
 import { verifyStart } from '../../redux/auth/auth.actions';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Hooks
 import useSearchParams from '../../hooks/useSearchParams';
 // Styled
@@ -15,6 +17,7 @@ import SmallHeader from '../../components/smallHeader/smallHeader.component';
 type VerifyEmailProps = {};
 
 const VerifyEmail: React.FC<VerifyEmailProps> = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const token = useSearchParams().get('token');
   useEffect(() => {
@@ -25,7 +28,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = () => {
   return (
     <MainLayout>
       <VerifyEmailWrapper>
-        <SmallHeader>Verifying email...</SmallHeader>
+        <SmallHeader>{t('Verifying email')}...</SmallHeader>
       </VerifyEmailWrapper>
     </MainLayout>
   );

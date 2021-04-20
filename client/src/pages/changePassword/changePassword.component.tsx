@@ -4,6 +4,8 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 // External
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Validators
 import ChangePasswordValidationSchema from '../../validators/changePassword.validator';
 // Hooks
@@ -31,6 +33,7 @@ interface ChangePasswordValues {
 }
 
 const ChangePassword: React.FC<ChangePasswordProps> = () => {
+  const { t } =useTranslation();
   const dispatch = useDispatch();
   const params = useSearchParams();
   const submitHandler = async (values: ChangePasswordValues): Promise<void> => {
@@ -41,7 +44,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = () => {
     <MainLayout>
       <BackButton />
       <ChangePasswordWrapper>
-        <SmallHeader>Change password</SmallHeader>
+        <SmallHeader>{t('Change password')}</SmallHeader>
         <Formik
           initialValues={{
             password: '',
@@ -58,7 +61,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = () => {
           {({ touched, errors, isValid, isSubmitting }) => (
             <Form>
               <FormGroup>
-                <Label htmlFor='password'>New password</Label>
+                <Label htmlFor='password'>{t('New password')}</Label>
                 <FormField
                   id='password'
                   name='password'
@@ -71,7 +74,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor='passwordConfirm'>Confirm password</Label>
+                <Label htmlFor='passwordConfirm'>{t('Confirm password')}</Label>
                 <FormField
                   id='passwordConfirm'
                   name='passwordConfirm'
@@ -87,14 +90,15 @@ const ChangePassword: React.FC<ChangePasswordProps> = () => {
                 <SubmitButton
                   disabled={!isValid || isSubmitting}
                   loading={isSubmitting}
+                  label={t('Change')}
                 />
               </FormGroup>
             </Form>
           )}
         </Formik>
         <TextBlock>
-          Want to login instead? Click <InlineLink to='/login'>here</InlineLink>{' '}
-          to login.
+          {t('Want to login instead? Click')} <InlineLink to={`/${t('login')}`}>{t('here')}</InlineLink>{' '}
+          {t('to login.')}
         </TextBlock>
       </ChangePasswordWrapper>
     </MainLayout>

@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Styled
 import {
   NavbarContainer,
@@ -22,6 +24,7 @@ import { updateMobileMenu } from '../../redux/utils/utils.actions';
 type NavbarProps = {};
 
 const Navbar: React.FC<NavbarProps> = () => {
+  const { t } = useTranslation();
   const hamburger = useRef<HTMLDivElement>(null);
   const username = useSelector((state: RootState) => state.user.user?.username);
   const isOpen = useSelector((state: RootState) => state.utils.mobileMenuOpen);
@@ -43,7 +46,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   return (
     <NavbarContainer onClick={clickNavHandler}>
       <NavbarLinksWrapper>
-        <NavbarGreetings>Hi {username}</NavbarGreetings>
+        <NavbarGreetings>{t('Hi')} {username}</NavbarGreetings>
         <NavbarHamburger ref={hamburger} onClick={clickHamburgerHandler}>
           <Hamburger />
         </NavbarHamburger>
@@ -52,13 +55,13 @@ const Navbar: React.FC<NavbarProps> = () => {
         </NavbarCurrentRoom>
         <NavbarLink
           to={{
-            pathname: '/profile',
+            pathname: `/${t('profile')}`,
             state: { background: location },
           }}
         >
           <FontAwesomeIcon icon={faUser} />
         </NavbarLink>
-        <NavbarLink to='/logout'>
+        <NavbarLink to={`/${t('logout')}`}>
           <FontAwesomeIcon icon={faPowerOff} />
         </NavbarLink>
       </NavbarLinksWrapper>

@@ -2,17 +2,21 @@ import express, { RequestHandler } from 'express';
 import errorMiddleware from '../middleware/error.middleware';
 import { createServer, Server } from 'http';
 import mongoose from 'mongoose';
-import Controller from '../interfaces/controller.interface';
 import ErrorLogger from '../middleware/errorLogger.middleware';
 import connectRedis from 'connect-redis';
 import session from 'express-session';
 import { createClient, RedisClient } from 'redis';
 import passport from 'passport';
+import i18next from 'i18next'
+import { handle as i18nHandle, LanguageDetector } from 'i18next-http-middleware'
+import Backend from 'i18next-fs-backend';
+import { join } from 'path';
 // controllers
 import AuthenticationController from './authentication.controller';
 import RoomController from './room.controller';
 import MessageController from './message.controller';
 import UserController from './user.controller';
+import LocaleController from './locale.controller';
 
 class AppController {
   public app: express.Application;
@@ -40,6 +44,7 @@ class AppController {
     this.initializeMiddlewares();
     this.initializeSession();
     this.initializePassportSession();
+    this.initializeI18N();
     this.initializeControllers();
     this.initializeStatic();
     this.initializeErrorMiddleware();
@@ -83,6 +88,7 @@ class AppController {
       new RoomController(),
       new MessageController(this.server, this.redisClient),
       new UserController(),
+      new LocaleController(),
     ];
     controllers.forEach((controller) => {
       this.app.use('/api', controller.router);
@@ -96,9 +102,28 @@ class AppController {
     );
   }
   private initializePassportSession(): void {
-
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+  }
+
+  private initializeI18N(): void {
+    i18next
+      .use(LanguageDetector)
+      .use(Backend)
+      .init({
+        debug: process.env.NODE_ENV !== 'production',
+        fallbackLng: 'en',
+        preload: ['en', 'pl'],
+        ns: ['translation'],
+        defaultNS: 'translation',
+        interpolation: {
+          escapeValue: false,
+        },
+        backend: {
+          loadPath: join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
+        },
+      });
+    this.app.use(i18nHandle(i18next));
   }
 
   private connectToTheDatabase(): void {

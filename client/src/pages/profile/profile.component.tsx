@@ -6,6 +6,8 @@ import { RootState } from '../../redux/root-reducer';
 import { updateUserStart } from '../../redux/user/user.actions';
 // External
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Validators
 import UpdateUserFormValidationSchema from '../../validators/updateUserForm.validator';
 // Styled
@@ -29,6 +31,7 @@ interface RegisterValues {
 }
 
 const Profile: React.FC<ProfileProps> = () => {
+  const { t } = useTranslation();
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch();
   const submitHandler = async (values: RegisterValues): Promise<void> => {
@@ -36,9 +39,9 @@ const Profile: React.FC<ProfileProps> = () => {
   };
 
   return (
-      <Modal title='Profile'>
+      <Modal title={t('Profile')}>
         <ProfileWrapper>
-          <TextBlock>Here you can edit your profile settings.</TextBlock>
+          <TextBlock>{t('Here you can edit your profile settings.')}</TextBlock>
           <Formik
             initialValues={{
               _id: user?._id ?? '',
@@ -59,7 +62,7 @@ const Profile: React.FC<ProfileProps> = () => {
               <Form>
                 <FormField id='_id' name='_id' type='hidden' />
                 <FormGroup>
-                  <Label htmlFor='email'>Email</Label>
+                  <Label htmlFor='email'>{t('Email')}</Label>
                   <FormField
                     id='email'
                     name='email'
@@ -73,7 +76,7 @@ const Profile: React.FC<ProfileProps> = () => {
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label htmlFor='username'>Username</Label>
+                  <Label htmlFor='username'>{t('Username')}</Label>
                   <FormField
                     id='username'
                     name='username'
@@ -87,7 +90,7 @@ const Profile: React.FC<ProfileProps> = () => {
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label htmlFor='firstName'>First name</Label>
+                  <Label htmlFor='firstName'>{t('First name')}</Label>
                   <FormField
                     id='firstName'
                     name='firstName'
@@ -101,7 +104,7 @@ const Profile: React.FC<ProfileProps> = () => {
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label htmlFor='lastName'>Last name</Label>
+                  <Label htmlFor='lastName'>{t('Last name')}</Label>
                   <FormField
                     id='lastName'
                     name='lastName'
@@ -118,6 +121,7 @@ const Profile: React.FC<ProfileProps> = () => {
                   <SubmitButton
                     disabled={!isValid || isSubmitting}
                     loading={isSubmitting}
+                    label={t('Save')}
                   />
                 </FormGroup>
               </Form>

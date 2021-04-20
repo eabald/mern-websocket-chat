@@ -8,7 +8,8 @@ function errorMiddleware(
   next: NextFunction
 ): void {
   const status = error.status || 500;
-  const message = error.message || 'Something went wrong';
+  const params = error.params
+  const message = request.t(error.message || 'Something went wrong', params);
   response.status(status).json({
     status,
     message,

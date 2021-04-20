@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { signInStart } from '../../redux/auth/auth.actions';
 // External
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
+// I18N
+import { useTranslation } from 'react-i18next';
 // Validators
 import LoginFormValidationSchema from '../../validators/loginForm.validator';
 // Styled
@@ -28,6 +30,7 @@ interface FormValues {
 }
 
 const Login: React.FC<LoginProps> = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const submitHandler = async (values: FormValues): Promise<void> => {
     await dispatch(signInStart(values));
@@ -36,7 +39,7 @@ const Login: React.FC<LoginProps> = () => {
   return (
     <MainLayout>
       <LoginWrapper>
-        <SmallHeader>Login</SmallHeader>
+        <SmallHeader>{t('Login')}</SmallHeader>
         <Formik
           initialValues={{ email: '', password: '' }}
           validationSchema={LoginFormValidationSchema}
@@ -47,10 +50,10 @@ const Login: React.FC<LoginProps> = () => {
             submitHandler(values).finally(() => actions.setSubmitting(false));
           }}
         >
-          {({touched, errors, isValid, isSubmitting}) => (
+          {({ touched, errors, isValid, isSubmitting }) => (
             <Form>
               <FormGroup>
-                <Label htmlFor='email'>Email</Label>
+                <Label htmlFor='email'>{t('Email')}</Label>
                 <FormField
                   id='email'
                   name='email'
@@ -58,21 +61,43 @@ const Login: React.FC<LoginProps> = () => {
                   type='email'
                   error={touched.email && errors.email}
                 />
-                <ErrorMessage name='email' render={error => <ValidationError>{error}</ValidationError>} />
+                <ErrorMessage
+                  name='email'
+                  render={(error) => <ValidationError>{error}</ValidationError>}
+                />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor='password'>Password</Label>
-                <FormField id='password' name='password' type='password' error={touched.password && errors.password} />
-                <ErrorMessage name='password' render={error => <ValidationError>{error}</ValidationError>} />
+                <Label htmlFor='password'>{t('Password')}</Label>
+                <FormField
+                  id='password'
+                  name='password'
+                  type='password'
+                  error={touched.password && errors.password}
+                />
+                <ErrorMessage
+                  name='password'
+                  render={(error) => <ValidationError>{error}</ValidationError>}
+                />
               </FormGroup>
-              <TextBlock><InlineLink to='/reset-password'>Forgot your password?</InlineLink></TextBlock>
+              <TextBlock>
+                <InlineLink to={`/${t('reset-password')}`}>
+                  {t('Forgot your password?')}
+                </InlineLink>
+              </TextBlock>
               <FormGroup>
-                <SubmitButton disabled={!isValid || isSubmitting} loading={isSubmitting}/>
+                <SubmitButton
+                  disabled={!isValid || isSubmitting}
+                  loading={isSubmitting}
+                  label={t('Login')}
+                />
               </FormGroup>
             </Form>
           )}
         </Formik>
-        <TextBlock>If you don't have an account, You can register <InlineLink to='/register'>here</InlineLink></TextBlock>
+        <TextBlock>
+          {t('If you don\'t have an account, You can register')}{' '}
+          <InlineLink to={`/${t('register')}`}>{t('here')}</InlineLink>
+        </TextBlock>
       </LoginWrapper>
     </MainLayout>
   );

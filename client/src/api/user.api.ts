@@ -1,5 +1,6 @@
-// External
-import axios, { AxiosResponse } from 'axios';
+// API
+import api from './api';// External
+import { AxiosResponse } from 'axios';
 // Types
 import { UpdateUser, User } from '../redux/user/user.types';
 
@@ -12,35 +13,35 @@ interface UsersResponse extends AxiosResponse {
 }
 
 export async function getUserRequest(id: string): Promise<UserResponse> {
-  const response = await axios.get(`/api/user/get/${id}`, {
+  const response = await api.get(`/user/get/${id}`, {
     withCredentials: true,
   });
   return response.data;
 }
 
 export async function updateUserRequest(updateUser: UpdateUser): Promise<UserResponse> {
-  const response = await axios.put(`/api/user/update`, updateUser, {
+  const response = await api.put(`/user/update`, updateUser, {
     withCredentials: true,
   });
   return response.data;
 }
 
 export async function findUsersRequest(query: string): Promise<UsersResponse> {
-  const response = await axios.post(`/api/user/find`, { query }, {
+  const response = await api.post(`/user/find`, { query }, {
     withCredentials: true,
   });
   return response.data;
 }
 
 export async function updateUnreadRequest(roomId: string): Promise<AxiosResponse> {
-  const response = await axios.post(`/api/user/update-unread/${roomId}`, {}, {
+  const response = await api.post(`/user/update-unread/${roomId}`, {}, {
     withCredentials: true,
   });
   return response.data;
 }
 
 export async function blockUserRequest(userId: string): Promise<AxiosResponse> {
-  const response = await axios.post(`/api/user/block/${userId}`, {}, {
+  const response = await api.post(`/user/block/${userId}`, {}, {
     withCredentials: true,
   });
   return response.data;
