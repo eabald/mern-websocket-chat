@@ -1,5 +1,7 @@
+// API
+import api from './api';
 // External
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 // Types
 import {
   ChangePasswordData,
@@ -22,8 +24,8 @@ interface RegisterResponse {
 export async function signInRequest(
   credentials: Credentials
 ): Promise<TokenResponse> {
-  const response: TokenResponse = await axios.post(
-    '/api/auth/login',
+  const response: TokenResponse = await api.post(
+    '/auth/login',
     credentials,
     { withCredentials: true }
   );
@@ -31,14 +33,14 @@ export async function signInRequest(
 }
 
 export async function signOutRequest(): Promise<void> {
-  return await axios.post('/api/auth/logout', {}, { withCredentials: true });
+  return await api.post('/auth/logout', {}, { withCredentials: true });
 }
 
 export async function signUpRequest(
   signUpCredentials: SignUpCredentials
 ): Promise<RegisterResponse> {
-  const response: AxiosResponse = await axios.post(
-    '/api/auth/register',
+  const response: AxiosResponse = await api.post(
+    '/auth/register',
     signUpCredentials,
     { withCredentials: true }
   );
@@ -48,7 +50,7 @@ export async function signUpRequest(
 export async function verifyEmailRequest(
   token: string
 ): Promise<RegisterResponse> {
-  const response: AxiosResponse = await axios.get(`/api/auth/verify`, {
+  const response: AxiosResponse = await api.get(`/auth/verify`, {
     params: {
       token,
     },
@@ -60,8 +62,8 @@ export async function verifyEmailRequest(
 export async function resetPasswordRequest(
   resetPasswordData: ResetPasswordData
 ): Promise<RegisterResponse> {
-  const response: AxiosResponse = await axios.post(
-    `/api/auth/reset-password`,
+  const response: AxiosResponse = await api.post(
+    `/auth/reset-password`,
     resetPasswordData,
     { withCredentials: true }
   );
@@ -71,8 +73,8 @@ export async function resetPasswordRequest(
 export async function changePasswordRequest(
   changePasswordData: ChangePasswordData
 ): Promise<RegisterResponse> {
-  const response: AxiosResponse = await axios.post(
-    `/api/auth/change-password`,
+  const response: AxiosResponse = await api.post(
+    `/auth/change-password`,
     changePasswordData,
     { withCredentials: true }
   );
