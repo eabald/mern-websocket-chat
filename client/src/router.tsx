@@ -46,7 +46,7 @@ const Router: React.FC<RouterProps> = () => {
         <Route path={`/${t('register')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <Register />}
         </Route>
-        <Route path={`/${t('verify')}`}>
+        <Route path='/verify'>
           {isLoggedIn ? <Redirect to='/' /> : <VerifyEmail />}
         </Route>
         <Route path={`/${t('reset-password')}`}>
