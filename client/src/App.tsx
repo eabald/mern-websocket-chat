@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Router as DomRouter } from 'react-router-dom';
 // Redux
 import { PersistGate } from 'redux-persist/integration/react';
@@ -17,9 +17,11 @@ const App: React.FC = () => (
   <PersistGate loading={<Loader />} persistor={persistor}>
     <ThemeProvider theme={MainTheme}>
       <FlashOutlet />
-      <DomRouter history={history}>
-        <Router />
-      </DomRouter>
+        <Suspense fallback={<Loader />}>
+          <DomRouter history={history}>
+            <Router />
+          </DomRouter>
+        </Suspense>
       <Loader />
     </ThemeProvider>
   </PersistGate>

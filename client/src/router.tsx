@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { lazy } from 'react';
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
 // Redux
 import { useSelector } from 'react-redux';
@@ -9,19 +9,19 @@ import { Location } from 'history';
 // I18N
 import { useTranslation } from 'react-i18next';
 // Components
-import Profile from './pages/profile/profile.component';
-import Home from './pages/home/home.component';
-import Login from './pages/login/login.component';
-import Logout from './pages/logout/logout.component';
-import Register from './pages/register/register.component';
-import TermsAndConditions from './pages/termsAndConditions/termsAndConditions.component';
-import AddNewRoom from './pages/addNewRoom/addNewRoom.component';
-import AddNewDm from './pages/addNewDm/addNewDm.component';
-import UserDetails from './pages/userDetails/userDetails.component';
-import VerifyEmail from './pages/verifyEmail/verifyEmail.component';
-import ResetPassword from './pages/resetPassword/resetPassword.component';
-import ChangePassword from './pages/changePassword/changePassword.component';
-import LangPicker from './components/langPicker/langPicker.component';
+const Profile = lazy(() => import('./pages/profile/profile.component'));
+const Home = lazy(() => import('./pages/home/home.component'));
+const Login = lazy(() => import('./pages/login/login.component'));
+const Logout = lazy(() => import('./pages/logout/logout.component'));
+const Register = lazy(() => import('./pages/register/register.component'));
+const TermsAndConditions = lazy(() => import('./pages/termsAndConditions/termsAndConditions.component'));
+const AddNewRoom = lazy(() => import('./pages/addNewRoom/addNewRoom.component'));
+const AddNewDm = lazy(() => import('./pages/addNewDm/addNewDm.component'));
+const UserDetails = lazy(() => import('./pages/userDetails/userDetails.component'));
+const VerifyEmail = lazy(() => import('./pages/verifyEmail/verifyEmail.component'));
+const ResetPassword = lazy(() => import('./pages/resetPassword/resetPassword.component'));
+const ChangePassword = lazy(() => import('./pages/changePassword/changePassword.component'));
+const LangPicker = lazy(() => import('./components/langPicker/langPicker.component'));
 
 type RouterProps = {};
 
