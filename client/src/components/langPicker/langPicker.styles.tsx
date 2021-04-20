@@ -7,6 +7,16 @@ export const LangPickerWrapper = styled.div`
   padding: 5px;
   background: ${props => props.theme.modalBackground};
   border-top-right-radius: 3px;
+  @media only screen and (max-width: 910px) {
+    position: absolute;
+    left: -100%;
+    transition: left 0.5s ease-in;
+    z-index: 1;
+    background: ${props => props.theme.mainBackground};
+    &.is-open {
+      left: 0;
+    }
+  }
 `;
 
 export const LangPickerFlag = styled.span`
