@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "CHOKIDAR_USEPOLLING=1 NODE_ENV=development nodemon src/server.ts",
-    "build": "tsc --project ./"
+    "build": "tsc --project ./ && cp -r src/locales build/locales"
   },
   "author": "Maciej Krawczyk",
   "license": "MIT",
