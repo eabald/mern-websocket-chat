@@ -108,9 +108,9 @@ class AuthenticationController implements Controller {
     next: express.NextFunction
   ): Promise<void> => {
     const userData: CreateUserDto = request.body;
-    if (await this.user.findOne({ email: userData.email })) {
+    if (await this.user.findOne({ email: { $eq: userData.email } })) {
       next(new UserWithThatEmailAlreadyExistsException(userData.email));
-    } else if (await this.user.findOne({ username: userData.username })) {
+    } else if (await this.user.findOne({ username: { $eq: userData.username } })) {
       next(new UserWithThatUsernameAlreadyExistsException(userData.username));
     } else {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -211,7 +211,7 @@ class AuthenticationController implements Controller {
       if (!email) {
         next(new WrongCredentialsException());
       } else {
-        const user = await this.user.findOne({ email });
+        const user = await this.user.findOne({ email: { $eq: email } });
         if (!user) {
           next(new WrongCredentialsException());
         } else {

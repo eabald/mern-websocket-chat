@@ -11,6 +11,9 @@ import i18next from 'i18next'
 import { handle as i18nHandle, LanguageDetector } from 'i18next-http-middleware'
 import Backend from 'i18next-fs-backend';
 import { join } from 'path';
+import isValidPath from 'is-valid-path';
+import rateLimit from 'express-rate-limit';
+import RedisStore from 'rate-limit-redis'
 // controllers
 import AuthenticationController from './authentication.controller';
 import RoomController from './room.controller';
@@ -45,6 +48,7 @@ class AppController {
     this.initializeSession();
     this.initializePassportSession();
     this.initializeI18N();
+    this.initializeLimiter();
     this.initializeControllers();
     this.initializeStatic();
     this.initializeErrorMiddleware();
@@ -57,7 +61,7 @@ class AppController {
   }
 
   private initializeSession(): void {
-    const RedisStore = connectRedis(session);
+    const RedisSessionStore = connectRedis(session);
     this.redisClient = createClient({
       host: process.env.REDIS_HOST,
       port: Number(process.env.REDIS_PORT),
@@ -67,7 +71,7 @@ class AppController {
     this.app.use(
       session({
         secret: process.env.SESSION_SECRET,
-        store: new RedisStore({
+        store: new RedisSessionStore({
           client: this.redisClient,
           disableTouch: true,
         }),
@@ -80,6 +84,17 @@ class AppController {
   private initializeErrorMiddleware(): void {
     this.app.use(ErrorLogger);
     this.app.use(errorMiddleware);
+  }
+
+  private initializeLimiter(): void {
+    const limiter = rateLimit({
+      store: new RedisStore({
+        client: this.redisClient
+      }),
+      windowMs: 1000,
+      max: 20,
+    });
+    this.app.use(limiter);
   }
 
   private initializeControllers(): void {
@@ -97,9 +112,11 @@ class AppController {
 
   private initializeStatic(): void {
     this.app.use(express.static(this.static));
-    this.app.get('*', (request: express.Request, response: express.Response) =>
-      response.sendFile('index.html', { root: this.static })
-    );
+    this.app.get('*', (request: express.Request, response: express.Response) => {
+      if (isValidPath(request.path)) {
+        response.sendFile('index.html', { root: this.static });
+      }
+    });
   }
   private initializePassportSession(): void {
     this.app.use(passport.initialize());
