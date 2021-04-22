@@ -9,10 +9,11 @@ class EmailService {
     this.sgMsg.setApiKey(this.apiKey);
   }
 
-  public sendEmail = async (to: string, templateId: string, dynamicTemplateData: any) => {
+  public sendEmail = async (to: string, subject: string, templateId: string, dynamicTemplateData: any) => {
     const msg: MailDataRequired = {
       to,
       from: process.env.EMAIL_FROM,
+      subject,
       templateId,
       dynamicTemplateData,
     }
