@@ -1,5 +1,4 @@
 import * as express from 'express';
-import mongoose from 'mongoose';
 import Controller from '../interfaces/controller.interface';
 import authMiddleware from '../middleware/auth.middleware';
 import RoomDto from '../dto/room.dto';
@@ -66,9 +65,9 @@ class RoomController implements Controller {
     const roomData: RoomDto = request.body;
     let currentRoom;
     if (roomData.type === 'room') {
-      currentRoom = await this.room.findOne({ name: roomData.name, type: roomData.type, users: { $all: roomData.users }});
+      currentRoom = await this.room.findOne({ name: { $eq: roomData.name }, type: { $eq: roomData.type }, users: { $all: roomData.users }});
     } else {
-      currentRoom = await this.room.findOne({ type: roomData.type, users: { $all: roomData.users }});
+      currentRoom = await this.room.findOne({ type: { $eq: roomData.type }, users: { $all: roomData.users }});
     }
     if (!currentRoom) {
       currentRoom = await this.room.create(roomData);
