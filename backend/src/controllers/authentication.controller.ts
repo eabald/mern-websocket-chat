@@ -131,10 +131,18 @@ class AuthenticationController implements Controller {
       try {
         await this.emailService.sendEmail(
           user.email,
+          request.t('Email verification'),
           process.env.EMAIL_TEMPLATE_EMAIL_VERIFICATION,
           {
-            subject: 'Email verification',
+            appName: process.env.APP_NAME,
+            domain: process.env.DOMAIN,
+            header: request.t('Verify email header'),
+            target: user.firstName,
+            mainText: request.t('Verify email content'),
+            ClickHereToVerify: request.t('Click here to verify'),
+            urlInfo: request.t('Copy url info'),
             verifyUrl: `${process.env.DOMAIN}/verify?token=${encodeURI(token)}`,
+            footerText: `© ${process.env.APP_NAME} ${new Date().getFullYear()}`,
           }
         );
         response.json({
@@ -213,12 +221,18 @@ class AuthenticationController implements Controller {
           await user.save();
           await this.emailService.sendEmail(
             user.email,
+            request.t('Reset password'),
             process.env.EMAIL_TEMPLATE_RESET_PASSWORD,
             {
-              subject: 'Reset password',
-              verifyUrl: `${
-                process.env.DOMAIN
-              }/change-password?token=${encodeURI(token)}`,
+              appName: process.env.APP_NAME,
+              domain: process.env.DOMAIN,
+              header: request.t('Verify email header'),
+              target: user.firstName,
+              mainText: request.t('Reset email content'),
+              ClickHereToReset: request.t('Click here to Reset'),
+              urlInfo: request.t('Copy url info'),
+              verifyUrl: `${process.env.DOMAIN}/change-password?token=${encodeURI(token)}`,
+              footerText: `© ${process.env.APP_NAME} ${new Date().getFullYear()}`,
             }
           );
           response.json({

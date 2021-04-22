@@ -64,5 +64,12 @@
   "profile": "profil",
   "add-new-room": "dodaj-nowy-pokoj",
   "add-new-dm": "dodaj-nowa-wiadomosc",
-  "user-details": "szczegoly-uzytkownika"
+  "user-details": "szczegoly-uzytkownika",
+  "Email verification": "Weryfikacja adresu email",
+  "Verify email header": "Cześć",
+  "Verify email content": "Kliknij przycisk poniżej, aby zweryfikować swój adres e-mail. Jeśli nie utworzyłeś konta, żadne dalsze działania nie są wymagane.",
+  "Click here to verify": "Kliknij tutaj aby zweryfikować",
+  "Copy url info": "Jeśli z jakiegoś powodu przycisk powyżej nie działa, użyj linku poniżej. Po prostu skopiuj go i wklej w pasku adresu przeglądarki.",
+  "Reset email content": "Otrzymujesz tę wiadomość e-mail, ponieważ otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta. Ten link do resetowania hasła wygaśnie za 24 godziny. Jeśli nie prosiłeś o zresetowanie hasła, nie są wymagane żadne dalsze działania.",
+  "Click here to Reset": "Kliknij tutaj, aby zresetować"
 }
