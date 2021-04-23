@@ -71,5 +71,9 @@
   "Click here to verify": "Click here to verify",
   "Copy url info": "If for some reason button above it is not working use link below. Just copy it and paste in browser address bar.",
   "Reset email content": "You are receiving this email because we received a password reset request for your account. This password reset link will expire in 24 hours. If you did not request a password reset, no further action is required.",
-  "Click here to Reset": "Click here to Reset"
+  "Click here to Reset": "Click here to Reset",
+  "Decline": "Decline",
+  "Do you like to receive chat notifications?": "Do you like to receive chat notifications?",
+  "Don't ask again.": "Don't ask again.",
+  "New message from {{user}}": "New message from {{user}}."
 }

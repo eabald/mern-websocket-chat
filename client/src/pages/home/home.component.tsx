@@ -19,6 +19,7 @@ import RoomsList from '../../components/roomsList/roomsList.component';
 import DmsList from '../../components/dmsList/dmsList.component';
 import MessageForm from '../../components/messageForm/messageForm.component';
 import MessagesOutlet from '../../components/messagesOutlet/messagesOutlet.component';
+import DesktopNotificationsConsent from '../../components/desktopNotificationsConsent/desktopNotificationsConsent.component';
 
 type HomeProps = {};
 
@@ -55,6 +56,7 @@ const Home: React.FC<HomeProps> = () => {
           <Navbar />
         </HomeNavArea>
       </HomeWrapper>
+      <DesktopNotificationsConsent />
     </>
   );
 };

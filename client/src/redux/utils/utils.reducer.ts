@@ -9,12 +9,17 @@ import {
   UPDATE_LOADING,
   UPDATE_MOBILE_MENU,
   RESET,
+  SET_NOTIFICATIONS_ASKING_BLOCKED,
+  SET_NOTIFICATIONS_WAITING,
+  SET_LAST_ASKED_TS,
 } from './utils.types';
 
 const INITIAL_STATE: UtilsState = {
   loading: false,
   messages: [],
   mobileMenuOpen: false,
+  notificationsAskingBlocked: false,
+  notificationsWaiting: false,
 };
 
 const utilsReducer: Reducer<UtilsState, UtilsAction> = (
@@ -45,6 +50,21 @@ const utilsReducer: Reducer<UtilsState, UtilsAction> = (
       return {
         ...state,
         mobileMenuOpen: action.payload,
+      }
+    case SET_NOTIFICATIONS_ASKING_BLOCKED:
+      return {
+        ...state,
+        notificationsAskingBlocked: action.payload,
+      }
+    case SET_NOTIFICATIONS_WAITING:
+      return {
+        ...state,
+        notificationsWaiting: action.payload,
+      }
+    case SET_LAST_ASKED_TS:
+      return {
+        ...state,
+        lastAskedTs: action.payload,
       }
     case RESET:
       return INITIAL_STATE;

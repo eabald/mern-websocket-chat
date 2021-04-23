@@ -9,6 +9,12 @@ export const UNSET_FLASH_MESSAGE = 'UNSET_FLASH_MESSAGE';
 
 export const UPDATE_MOBILE_MENU = 'UPDATE_MOBILE_MENU';
 
+export const SET_NOTIFICATIONS_ASKING_BLOCKED = 'SET_NOTIFICATIONS_ASKING_BLOCKED';
+
+export const SET_NOTIFICATIONS_WAITING = 'SET_NOTIFICATIONS_WAITING';
+
+export const SET_LAST_ASKED_TS = 'SET_LAST_ASKED_TS';
+
 export const RESET = 'RESET';
 
 export interface ResetAction extends Action {
@@ -35,11 +41,29 @@ export interface UpdateMobileMenuAction extends Action {
   payload: boolean;
 }
 
+export interface SetNotificationsAskingBlockedAction extends Action {
+  type: typeof SET_NOTIFICATIONS_ASKING_BLOCKED;
+  payload: boolean;
+}
+
+export interface SetNotificationsWaitingAction extends Action {
+  type: typeof SET_NOTIFICATIONS_WAITING;
+  payload: boolean;
+}
+
+export interface SetLastAskedTsAction extends Action {
+  type: typeof SET_LAST_ASKED_TS;
+  payload: number;
+}
+
 export type UtilsAction =
   | UpdateLoadingAction
   | SetFlashMessageAction
   | UnsetFlashMessageAction
   | UpdateMobileMenuAction
+  | SetNotificationsAskingBlockedAction
+  | SetNotificationsWaitingAction
+  | SetLastAskedTsAction
   | ResetAction;
 
 export interface FlashMessage {
@@ -51,4 +75,7 @@ export interface UtilsState {
   loading: boolean;
   messages: FlashMessage[];
   mobileMenuOpen: boolean;
+  notificationsAskingBlocked: boolean;
+  notificationsWaiting: boolean;
+  lastAskedTs?: number;
 }

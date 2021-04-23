@@ -6,6 +6,9 @@ import {
   UNSET_FLASH_MESSAGE,
   UPDATE_MOBILE_MENU,
   RESET,
+  SET_NOTIFICATIONS_ASKING_BLOCKED,
+  SET_NOTIFICATIONS_WAITING,
+  SET_LAST_ASKED_TS,
 } from './utils.types';
 
 export const updateLoading = (isLoading: boolean): UtilsAction => ({
@@ -26,6 +29,21 @@ export const unsetFlashMessage = (message: FlashMessage): UtilsAction => ({
 export const updateMobileMenu = (isOpen: boolean): UtilsAction => ({
   type: UPDATE_MOBILE_MENU,
   payload: isOpen,
+})
+
+export const setNotificationsAskingBlock = (isBlocked: boolean): UtilsAction => ({
+  type: SET_NOTIFICATIONS_ASKING_BLOCKED,
+  payload: isBlocked,
+})
+
+export const setNotificationsWaiting = (shouldWait: boolean): UtilsAction => ({
+  type: SET_NOTIFICATIONS_WAITING,
+  payload: shouldWait,
+})
+
+export const setLastAskedTs = (timestamp: number): UtilsAction => ({
+  type: SET_LAST_ASKED_TS,
+  payload: timestamp,
 })
 
 export const reset = () => ({
