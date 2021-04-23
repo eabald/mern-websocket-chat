@@ -1,5 +1,5 @@
 // React
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 // Socket.io
 import { io, Socket } from 'socket.io-client';
 // Redux
@@ -15,6 +15,7 @@ import {
 import { updateUnread } from '../redux/user/user.actions';
 import { FlashMessage } from '../redux/utils/utils.types';
 import { setFlashMessage } from '../redux/utils/utils.actions';
+import { useTranslation } from 'react-i18next';
 
 const SOCKET_SERVER_URL = '/';
 
@@ -36,9 +37,11 @@ interface MsgReceived extends Msg {
 const useWebsocket = () => {
   const socketRef = useRef<Socket>();
   const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
+  const currenUser = useSelector((state: RootState) => state.user.user);
   const rooms = useSelector((state: RootState) => state.room.rooms);
   const unread = useSelector((state: RootState) => state.user.unread);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   useEffect(() => {
     socketRef.current = io(SOCKET_SERVER_URL);
@@ -59,12 +62,25 @@ const useWebsocket = () => {
       }
     });
     socketRef.current.on('messageBlocked', (statusData: FlashMessage) => {
-      dispatch(setFlashMessage(statusData))
-    })
+      dispatch(setFlashMessage(statusData));
+    });
     return () => {
       socketRef.current?.disconnect();
     };
   });
+
+  const newMessageNotification = useCallback(
+    (user: string) => {
+      if (!document.hasFocus()) {
+        return new Notification(t('New message'), {
+          body: t('New message from {{user}}', { user }),
+          requireInteraction: true,
+          vibrate: [200, 100, 200],
+        });
+      }
+    },
+    [t]
+  );
 
   useEffect(() => {
     let changed = false;
@@ -80,8 +96,22 @@ const useWebsocket = () => {
     });
     if (changed) {
       dispatch(setUnreadMessages(taggedRooms));
+      if ('Notification' in window && Notification.permission === 'granted') {
+        const lastUnreadId = unread[unread.length - 1];
+        let messages = rooms.find((room) => room._id === lastUnreadId)
+          ?.messages;
+        messages = messages?.filter(
+          (message) => message.user._id !== currenUser?._id
+        );
+        const lastMessage = messages?.length
+          ? messages[messages?.length - 1]
+          : '';
+        if (lastMessage) {
+          newMessageNotification(lastMessage.user.username);
+        }
+      }
     }
-  }, [unread, rooms, dispatch]);
+  }, [unread, rooms, dispatch, newMessageNotification, currenUser]);
 
   const sendMessage = (msg: MsgToSend) => {
     socketRef.current?.emit('messageSent', msg);
