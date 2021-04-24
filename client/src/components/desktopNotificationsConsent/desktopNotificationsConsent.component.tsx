@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
-import { setLastAskedTs, setNotificationsAskingBlock, setNotificationsWaiting } from '../../redux/utils/utils.actions';
+import { setLastAskedTs, setNotificationsAskingBlock, setNotificationsWaiting, subscribeToPushNotifications } from '../../redux/utils/utils.actions';
 import TextBlock from '../textBlock/textBlock.component';
 import {
   DesktopNotificationsConsentWrapper,
@@ -46,8 +46,38 @@ const DesktopNotificationsConsent: React.FC<DesktopNotificationsConsentProps> = 
     }
   }, [waiting, lastTS, dispatch, blocked])
 
-  const handleAccept = () => {
-    Notification.requestPermission();
+  const urlBase64ToUint8Array = (base64String: string | undefined) => {
+    if (!base64String) {
+      return '';
+    }
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  };
+
+
+  const handleAccept = async () => {
+    // Notification.requestPermission();
+    if ('service worker' in navigator) {
+      const createNotificationSubscription = async (): Promise<PushSubscription> => {
+        const serviceWorker = await navigator.serviceWorker.ready;
+        return await serviceWorker.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(process.env.PUBLIC_VAPID_KEY),
+        });
+      }
+      const subscription = await createNotificationSubscription();
+      dispatch(subscribeToPushNotifications(subscription));
+    }
     dispatch(setNotificationsAskingBlock(true));
     setVisible(false);
   };

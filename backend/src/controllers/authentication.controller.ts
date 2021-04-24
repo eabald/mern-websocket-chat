@@ -57,9 +57,9 @@ class AuthenticationController implements Controller {
   ): Promise<void> => {
     const user = await this.user.findOne({ email: username });
     if (user) {
-      // if (!user.emailVerified) {
-      //   return done(new EmailNotVerifiedException());
-      // }
+      if (!user.emailVerified) {
+        return done(new EmailNotVerifiedException());
+      }
       const isPasswordMatching = await bcrypt.compare(
         password,
         user.get('password', null, { getters: false })

@@ -20,6 +20,7 @@ import RoomController from './room.controller';
 import MessageController from './message.controller';
 import UserController from './user.controller';
 import LocaleController from './locale.controller';
+import NotificationsController from './notifications.controller';
 
 class AppController {
   public app: express.Application;
@@ -92,7 +93,7 @@ class AppController {
         client: this.redisClient
       }),
       windowMs: 1000,
-      max: 20,
+      max: 500,
     });
     this.app.use(limiter);
   }
@@ -104,6 +105,7 @@ class AppController {
       new MessageController(this.server, this.redisClient),
       new UserController(),
       new LocaleController(),
+      new NotificationsController(),
     ];
     controllers.forEach((controller) => {
       this.app.use('/api', controller.router);
