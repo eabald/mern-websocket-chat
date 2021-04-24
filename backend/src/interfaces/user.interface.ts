@@ -1,4 +1,5 @@
 import Room from './room.interface';
+import Subscription from './subscription.interface';
 
 interface User {
   id: string;
@@ -16,6 +17,7 @@ interface User {
   verificationToken: string;
   emailVerified: boolean;
   resetToken: string;
+  subscription?: Subscription;
 }
 
 export default User;

@@ -1,6 +1,15 @@
 import * as mongoose from 'mongoose';
 import User from '../interfaces/user.interface';
 
+const subscriptionSchema = new mongoose.Schema({
+  endpoint: { type: String, unique: true, required: true },
+  expirationTime: { type: Number, required: false },
+  keys: {
+    auth: String,
+    p256dh: String,
+  },
+});
+
 const userSchema = new mongoose.Schema(
   {
     email: String,
@@ -36,7 +45,8 @@ const userSchema = new mongoose.Schema(
         ref: 'Room',
         type: mongoose.Schema.Types.ObjectId,
       },
-    ]
+    ],
+    subscription: subscriptionSchema,
   },
   {
     toJSON: {

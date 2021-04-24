@@ -15,6 +15,8 @@ export const SET_NOTIFICATIONS_WAITING = 'SET_NOTIFICATIONS_WAITING';
 
 export const SET_LAST_ASKED_TS = 'SET_LAST_ASKED_TS';
 
+export const SUBSCRIBE_TO_PUSH_NOTIFICATIONS = 'SUBSCRIBE_TO_PUSH_NOTIFICATIONS';
+
 export const RESET = 'RESET';
 
 export interface ResetAction extends Action {
@@ -56,6 +58,11 @@ export interface SetLastAskedTsAction extends Action {
   payload: number;
 }
 
+export interface SubscribeToPushNotificationsAction extends Action {
+  type: typeof SUBSCRIBE_TO_PUSH_NOTIFICATIONS;
+  payload: PushSubscription;
+}
+
 export type UtilsAction =
   | UpdateLoadingAction
   | SetFlashMessageAction
@@ -64,6 +71,7 @@ export type UtilsAction =
   | SetNotificationsAskingBlockedAction
   | SetNotificationsWaitingAction
   | SetLastAskedTsAction
+  | SubscribeToPushNotificationsAction
   | ResetAction;
 
 export interface FlashMessage {
