@@ -9,7 +9,6 @@ import {
   SET_NOTIFICATIONS_ASKING_BLOCKED,
   SET_NOTIFICATIONS_WAITING,
   SET_LAST_ASKED_TS,
-  SUBSCRIBE_TO_PUSH_NOTIFICATIONS,
 } from './utils.types';
 
 export const updateLoading = (isLoading: boolean): UtilsAction => ({
@@ -45,11 +44,6 @@ export const setNotificationsWaiting = (shouldWait: boolean): UtilsAction => ({
 export const setLastAskedTs = (timestamp: number): UtilsAction => ({
   type: SET_LAST_ASKED_TS,
   payload: timestamp,
-})
-
-export const subscribeToPushNotifications = (subscription: PushSubscription): UtilsAction => ({
-  type: SUBSCRIBE_TO_PUSH_NOTIFICATIONS,
-  payload: subscription,
 })
 
 export const reset = () => ({

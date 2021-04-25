@@ -4,6 +4,7 @@ WORKDIR /usr/app
 RUN chown node:node /usr/app
 USER node
 COPY --chown=node:node ./client .
+# COPY .env.example.prod .env
 RUN npm i
 RUN npm run build
 
