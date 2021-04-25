@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
-import { setLastAskedTs, setNotificationsAskingBlock, setNotificationsWaiting, subscribeToPushNotifications } from '../../redux/utils/utils.actions';
+import { setLastAskedTs, setNotificationsAskingBlock, setNotificationsWaiting } from '../../redux/utils/utils.actions';
 import TextBlock from '../textBlock/textBlock.component';
 import {
   DesktopNotificationsConsentWrapper,
@@ -66,18 +66,21 @@ const DesktopNotificationsConsent: React.FC<DesktopNotificationsConsentProps> = 
 
 
   const handleAccept = async () => {
-    // Notification.requestPermission();
-    if ('service worker' in navigator) {
-      const createNotificationSubscription = async (): Promise<PushSubscription> => {
-        const serviceWorker = await navigator.serviceWorker.ready;
-        return await serviceWorker.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(process.env.PUBLIC_VAPID_KEY),
-        });
-      }
-      const subscription = await createNotificationSubscription();
-      dispatch(subscribeToPushNotifications(subscription));
+    const createNotificationSubscription = async (): Promise<PushSubscription> => {
+      const serviceWorker = await navigator.serviceWorker.ready;
+      return await serviceWorker.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(process.env.REACT_APP_PUBLIC_VAPID_KEY),
+      });
     }
+    const subscription = await createNotificationSubscription();
+    await fetch('/api/notifications/subscribe', {
+      method: 'POST',
+      body: JSON.stringify(subscription),
+      headers: {
+        'content-type': 'application/json',
+      },
+    });
     dispatch(setNotificationsAskingBlock(true));
     setVisible(false);
   };
