@@ -12,15 +12,18 @@ import { MainTheme } from './themes/main.theme';
 import Router from './router';
 import FlashOutlet from './components/flashOutlet/flashOutlet.component';
 import Loader from './components/loader/loader.component';
+import ErrorBoundary from './components/errorBoundary/errorBoundary.component';
 
 const App: React.FC = () => (
   <PersistGate loading={<Loader />} persistor={persistor}>
     <ThemeProvider theme={MainTheme}>
       <FlashOutlet />
         <Suspense fallback={<Loader />}>
-          <DomRouter history={history}>
-            <Router />
-          </DomRouter>
+            <DomRouter history={history}>
+              <ErrorBoundary>
+                <Router />
+              </ErrorBoundary>
+            </DomRouter>
         </Suspense>
       <Loader />
     </ThemeProvider>
