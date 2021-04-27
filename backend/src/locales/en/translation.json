@@ -75,5 +75,8 @@
   "Decline": "Decline",
   "Do you like to receive chat notifications?": "Do you like to receive chat notifications?",
   "Don't ask again.": "Don't ask again.",
-  "New message from {{user}}": "New message from {{user}}."
+  "New message from {{user}}": "New message from {{user}}.",
+  "App Crashed": "App Crashed",
+  "Something has went horribly wrong.": "Something has went horribly wrong.",
+  "Back to homepage": "Back to homepage"
 }
