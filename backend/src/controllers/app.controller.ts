@@ -21,6 +21,7 @@ import MessageController from './message.controller';
 import UserController from './user.controller';
 import LocaleController from './locale.controller';
 import NotificationsController from './notifications.controller';
+import InvitationController from './invitation.controller';
 
 class AppController {
   public app: express.Application;
@@ -106,6 +107,7 @@ class AppController {
       new UserController(),
       new LocaleController(),
       new NotificationsController(),
+      new InvitationController(),
     ];
     controllers.forEach((controller) => {
       this.app.use('/api', controller.router);

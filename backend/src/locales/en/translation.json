@@ -78,5 +78,12 @@
   "New message from {{user}}": "New message from {{user}}.",
   "App Crashed": "App Crashed",
   "Something has went horribly wrong.": "Something has went horribly wrong.",
-  "Back to homepage": "Back to homepage"
+  "Back to homepage": "Back to homepage",
+  "Invitation to app": "Invitation to app",
+  "Invite email header": "You received the invitation to join app!",
+  "Invite email content": "If you want to join our awesome chat app use link below. But remember this invitation is valid only for one week and your friend who invited you is already there.",
+  "Click here to register": "Click here to register",
+  "Invitation sent": "Invitation sent",
+  "Invitation already sent to this email.": "Invitation already sent to this email.",
+  "Email to invite missing.": "Email to invite missing."
 }

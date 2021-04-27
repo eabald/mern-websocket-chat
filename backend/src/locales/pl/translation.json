@@ -78,5 +78,12 @@
   "New message from {{user}}": "{{user}} przesyła nową wiadomość.",
   "App Crashed": "Niestety mamy awarię",
   "Something has went horribly wrong.": "Coś poszło bardzo źle.",
-  "Back to homepage": "Wróć na stronę główną"
+  "Back to homepage": "Wróć na stronę główną",
+  "Invitation to app": "Invitation to app",
+  "Invite email header": "Otrzymałeś zaproszenie do dołączenia do aplikacji!",
+  "Invite email content": "Jeśli chcesz dołączyć do naszej niesamowitej aplikacji do czatu, użyj linku poniżej. Pamiętaj jednak, że to zaproszenie jest ważne tylko przez tydzień, a Twój znajomy, który Cię zaprosił, już tam jest.",
+  "Click here to register": "Kliknij tutaj aby zarejestrować",
+  "Invitation sent": "Zaproszenie wysłane",
+  "Invitation already sent to this email.": "Zaproszenie zostało już wysłane na ten e-mail.",
+  "Email to invite missing.": "Brak adresu email do zaproszenia."
 }
