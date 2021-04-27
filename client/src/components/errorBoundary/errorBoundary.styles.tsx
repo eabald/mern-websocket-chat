@@ -11,6 +11,14 @@ export const ErrorBoundaryWrapper = styled.div`
   grid-template-areas:
     'img info'
     'img subinfo';
+  @media only screen and (max-width: 768px) {
+  grid-template-columns: 100%;
+  grid-template-rows: auto;
+  grid-template-areas:
+    'img'
+    'info'
+    'subinfo';
+  }
 `;
 
 export const ErrorBoundaryImageWrapper = styled.div`

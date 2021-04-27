@@ -11,6 +11,14 @@ export const LogoutWrapper = styled.div`
   background: ${props => props.theme.modalBackground};
   border-radius: 5px;
   padding: 20px;
+  @media only screen and (max-width: 768px) {
+    grid-template-columns: 100%;
+    grid-template-rows: auto;
+    grid-template-areas:
+      'img'
+      'info'
+      'link';
+  }
 `;
 
 export const LogoutImageWrapper = styled.div`

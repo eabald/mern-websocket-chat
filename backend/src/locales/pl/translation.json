@@ -75,5 +75,8 @@
   "Decline": "Odrzuć",
   "Do you like to receive chat notifications?": "Czy chcesz otrzymywać powiadomienia z czatu?",
   "Don't ask again.": "Nie pytaj ponownie.",
-  "New message from {{user}}": "{{user}} przesyła nową wiadomość."
+  "New message from {{user}}": "{{user}} przesyła nową wiadomość.",
+  "App Crashed": "Niestety mamy awarię",
+  "Something has went horribly wrong.": "Coś poszło bardzo źle.",
+  "Back to homepage": "Wróć na stronę główną"
 }
