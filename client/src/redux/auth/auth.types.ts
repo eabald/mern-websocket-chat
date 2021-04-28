@@ -144,7 +144,6 @@ export type AuthAction =
   | ResetAction;
 
 export interface Credentials {
-  email: string;
   password: string;
 }
 

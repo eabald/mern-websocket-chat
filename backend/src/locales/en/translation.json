@@ -85,5 +85,9 @@
   "Click here to register": "Click here to register",
   "Invitation sent": "Invitation sent",
   "Invitation already sent to this email.": "Invitation already sent to this email.",
-  "Email to invite missing.": "Email to invite missing."
+  "Email to invite missing.": "Email to invite missing.",
+  "Invitation not found.": "Invitation not found.",
+  "missing-invitation": "missing-invitation",
+  "Shame": "Shame",
+  "Looks like you are missing your invitation. Unfortunately you need one to register.": "Looks like you are missing your invitation. Unfortunately you need one to register."
 }
