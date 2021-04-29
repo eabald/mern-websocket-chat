@@ -30,6 +30,9 @@ const DesktopNotificationsConsent: React.FC<DesktopNotificationsConsentProps> = 
         setVisible(Notification.permission === 'default' && !blocked);
       }, 30000);
     }
+    return () => {
+      clearTimeout();
+    }
   }, [blocked, dispatch]);
 
   useEffect(() => {
