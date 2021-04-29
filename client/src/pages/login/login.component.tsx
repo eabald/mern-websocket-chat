@@ -25,7 +25,7 @@ import InlineLink from '../../components/inlineLink/inlineLink.component';
 
 type LoginProps = {};
 interface FormValues {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -41,7 +41,7 @@ const Login: React.FC<LoginProps> = () => {
       <LoginWrapper>
         <SmallHeader>{t('Login')}</SmallHeader>
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ username: '', password: '' }}
           validationSchema={LoginFormValidationSchema}
           onSubmit={(
             values: FormValues,
@@ -53,16 +53,16 @@ const Login: React.FC<LoginProps> = () => {
           {({ touched, errors, isValid, isSubmitting }) => (
             <Form>
               <FormGroup>
-                <Label htmlFor='email'>{t('Email')}</Label>
+                <Label htmlFor='username'>{t('Username')}</Label>
                 <FormField
-                  id='email'
-                  name='email'
-                  placeholder='awesome@person.com'
-                  type='email'
-                  error={touched.email && errors.email}
+                  id='username'
+                  name='username'
+                  placeholder='awesome-person'
+                  type='text'
+                  error={touched.username && errors.username}
                 />
                 <ErrorMessage
-                  name='email'
+                  name='username'
                   render={(error) => <ValidationError>{error}</ValidationError>}
                 />
               </FormGroup>
@@ -94,10 +94,6 @@ const Login: React.FC<LoginProps> = () => {
             </Form>
           )}
         </Formik>
-        <TextBlock>
-          {t('If you don\'t have an account, You can register')}{' '}
-          <InlineLink to={`/${t('register')}`}>{t('here')}</InlineLink>
-        </TextBlock>
       </LoginWrapper>
     </MainLayout>
   );

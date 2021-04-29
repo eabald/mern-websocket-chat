@@ -30,12 +30,15 @@ const DesktopNotificationsConsent: React.FC<DesktopNotificationsConsentProps> = 
         setVisible(Notification.permission === 'default' && !blocked);
       }, 30000);
     }
+    return () => {
+      clearTimeout();
+    }
   }, [blocked, dispatch]);
 
   useEffect(() => {
     if ('Notification' in window && !blocked && waiting) {
       setInterval(() => {
-        if ((lastTS ?? 0) + 90000 > Date.now()) {
+        if ((lastTS ?? 0) + 900000 < Date.now()) {
           dispatch(setNotificationsWaiting(false));
           setVisible(true);
         }

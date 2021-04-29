@@ -144,12 +144,11 @@ export type AuthAction =
   | ResetAction;
 
 export interface Credentials {
-  email: string;
+  username: string;
   password: string;
 }
 
 export interface SignUpCredentials extends Credentials {
-  username: string;
   firstName: string;
   lastName: string;
 }

@@ -46,3 +46,10 @@ export async function blockUserRequest(userId: string): Promise<AxiosResponse> {
   });
   return response.data;
 }
+
+export async function inviteNewUserRequest(email: string): Promise<AxiosResponse> {
+  const response = await api.post(`/invitation/send`, { email }, {
+    withCredentials: true,
+  });
+  return response.data;
+}

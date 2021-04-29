@@ -1,173 +1,35 @@
 [
   {
+    "_id": {
+      "$oid": "607b2d171a86891c1053537c"
+    },
+    "emailVerified": true,
+    "blockedBy": [],
     "rooms": [
-      "60355f343c1a6f1dd909928c",
-      "60355f3e3c1a6f1dd909928d",
-      "60355f433c1a6f1dd909928e",
-      "60355f463c1a6f1dd909928f",
-      "60355f4a3c1a6f1dd9099290"
+      {
+        "$oid": "607b16c111b77c176634b8f9"
+      },
+      {
+        "$oid": "607b16c111b77c176634b8fa"
+      }
     ],
-    "username": "user1",
-    "firstName": "test",
-    "lastName": "test",
-    "email": "user1@test.com",
-    "password": "$2b$10$OwdDS7tG49mVQYpAiQX4iu1lQI4Ysd.k9BSQbufTyWG9CVz/CLK3a",
-    "__v": 5,
-    "socketId": "x09BMUXd9C3EzuoSAAAB",
-    "fullName": "test test",
-    "id": "6035379b8f3d441175911ae1"
-  },
-  {
-    "rooms": [
-      "60355f343c1a6f1dd909928c",
-      "60355f3e3c1a6f1dd909928d",
-      "60355f433c1a6f1dd909928e",
-      "60355f463c1a6f1dd909928f",
-      "60355f4a3c1a6f1dd9099290"
-    ],
-    "username": "user2",
-    "firstName": "test",
-    "lastName": "test",
-    "email": "user2@test.com",
-    "password": "$2b$10$OwdDS7tG49mVQYpAiQX4iu1lQI4Ysd.k9BSQbufTyWG9CVz/CLK3a",
-    "__v": 5,
-    "fullName": "test test",
-    "id": "60355bc02a2af01c4747c04c"
-  },
-  {
-    "rooms": [
-      "60355f343c1a6f1dd909928c",
-      "60355f3e3c1a6f1dd909928d",
-      "60355f433c1a6f1dd909928e",
-      "60355f463c1a6f1dd909928f",
-      "60355f4a3c1a6f1dd9099290"
-    ],
-    "username": "user3",
-    "firstName": "test",
-    "lastName": "test",
-    "email": "user3@test.com",
-    "password": "$2b$10$OwdDS7tG49mVQYpAiQX4iu1lQI4Ysd.k9BSQbufTyWG9CVz/CLK3a",
-    "__v": 5,
-    "fullName": "test test",
-    "id": "60355bc72a2af01c4747c04d"
-  },
-  {
-    "rooms": [
-      "60355f343c1a6f1dd909928c",
-      "60355f3e3c1a6f1dd909928d",
-      "60355f433c1a6f1dd909928e",
-      "60355f463c1a6f1dd909928f",
-      "60355f4a3c1a6f1dd9099290"
-    ],
-    "username": "user4",
-    "firstName": "test",
-    "lastName": "test",
-    "email": "user4@test.com",
-    "password": "$2b$10$OwdDS7tG49mVQYpAiQX4iu1lQI4Ysd.k9BSQbufTyWG9CVz/CLK3a",
-    "__v": 5,
-    "fullName": "test test",
-    "id": "60355bcb2a2af01c4747c04e"
-  },
-  {
-    "rooms": [
-      "60355f343c1a6f1dd909928c",
-      "60355f3e3c1a6f1dd909928d",
-      "60355f433c1a6f1dd909928e",
-      "60355f463c1a6f1dd909928f",
-      "60355f4a3c1a6f1dd9099290"
-    ],
-    "username": "user5",
-    "firstName": "test",
-    "lastName": "test",
-    "email": "user5@test.com",
-    "password": "$2b$10$OwdDS7tG49mVQYpAiQX4iu1lQI4Ysd.k9BSQbufTyWG9CVz/CLK3a",
-    "__v": 5,
-    "fullName": "test test",
-    "id": "60355bd12a2af01c4747c04f"
-  },
-  {
-    "rooms": [
-      "60355f343c1a6f1dd909928c",
-      "60355f3e3c1a6f1dd909928d",
-      "60355f433c1a6f1dd909928e",
-      "60355f463c1a6f1dd909928f",
-      "60355f4a3c1a6f1dd9099290"
-    ],
-    "username": "user6",
-    "firstName": "test",
-    "lastName": "test",
-    "email": "user6@test.com",
-    "password": "$2b$10$OwdDS7tG49mVQYpAiQX4iu1lQI4Ysd.k9BSQbufTyWG9CVz/CLK3a",
-    "__v": 5,
-    "fullName": "test test",
-    "id": "60355bdb2a2af01c4747c050"
-  },
-  {
-    "rooms": [
-      "60355f343c1a6f1dd909928c",
-      "60355f3e3c1a6f1dd909928d",
-      "60355f433c1a6f1dd909928e",
-      "60355f463c1a6f1dd909928f",
-      "60355f4a3c1a6f1dd9099290"
-    ],
-    "username": "user7",
-    "firstName": "test",
-    "lastName": "test",
-    "email": "user7@test.com",
-    "password": "$2b$10$OwdDS7tG49mVQYpAiQX4iu1lQI4Ysd.k9BSQbufTyWG9CVz/CLK3a",
-    "__v": 5,
-    "fullName": "test test",
-    "id": "60355be52a2af01c4747c051"
-  },
-  {
-    "rooms": [
-      "60355f343c1a6f1dd909928c",
-      "60355f3e3c1a6f1dd909928d",
-      "60355f433c1a6f1dd909928e",
-      "60355f463c1a6f1dd909928f",
-      "60355f4a3c1a6f1dd9099290"
-    ],
-    "username": "user8",
-    "firstName": "test",
-    "lastName": "test",
-    "email": "user8@test.com",
-    "password": "$2b$10$OwdDS7tG49mVQYpAiQX4iu1lQI4Ysd.k9BSQbufTyWG9CVz/CLK3a",
-    "__v": 5,
-    "fullName": "test test",
-    "id": "60355bf12a2af01c4747c052"
-  },
-  {
-    "rooms": [
-      "60355f343c1a6f1dd909928c",
-      "60355f3e3c1a6f1dd909928d",
-      "60355f433c1a6f1dd909928e",
-      "60355f463c1a6f1dd909928f",
-      "60355f4a3c1a6f1dd9099290"
-    ],
-    "username": "user9",
-    "firstName": "test",
-    "lastName": "test",
-    "email": "user9@test.com",
-    "password": "$2b$10$OwdDS7tG49mVQYpAiQX4iu1lQI4Ysd.k9BSQbufTyWG9CVz/CLK3a",
-    "__v": 5,
-    "fullName": "test test",
-    "id": "60355bf82a2af01c4747c053"
-  },
-  {
-    "rooms": [
-      "60355f343c1a6f1dd909928c",
-      "60355f3e3c1a6f1dd909928d",
-      "60355f433c1a6f1dd909928e",
-      "60355f463c1a6f1dd909928f",
-      "60355f4a3c1a6f1dd9099290"
-    ],
-    "username": "user0",
-    "firstName": "test",
-    "lastName": "test",
-    "email": "user0@test.com",
-    "password": "$2b$10$OwdDS7tG49mVQYpAiQX4iu1lQI4Ysd.k9BSQbufTyWG9CVz/CLK3a",
-    "__v": 5,
-    "fullName": "test test",
-    "id": "60355bff2a2af01c4747c054"
+    "unread": [],
+    "email": "john.doe@gmail.com",
+    "password": "$2b$10$1BXhFfSZBYIy3MRdyO94/ua.7qVV0NCexqmIwdlsariYh3RAiVT5m",
+    "username": "test",
+    "firstName": "Maciej",
+    "lastName": "Krawczyk",
+    "terms": true,
+    "verificationToken": "",
+    "__v": {
+      "$numberInt": "0"
+    },
+    "socketId": "2GiE0A8xmZZMrBIEAAAU",
+    "fomo":  {
+      "invitations": 3,
+      "invitationsFulfilled": 0,
+      "refreshDate": 1619722294094,
+      "roomsLimit": 3
+    }
   }
 ]

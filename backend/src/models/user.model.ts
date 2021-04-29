@@ -10,6 +10,16 @@ const subscriptionSchema = new mongoose.Schema({
   },
 });
 
+const fomoSchema = new mongoose.Schema({
+  invitations: Number,
+  invitationsFulfilled: Number,
+  refreshDate: {
+    type: Date,
+    required: true,
+  },
+  roomsLimit: Number,
+})
+
 const userSchema = new mongoose.Schema(
   {
     email: String,
@@ -47,6 +57,7 @@ const userSchema = new mongoose.Schema(
       },
     ],
     subscription: subscriptionSchema,
+    fomo: fomoSchema,
   },
   {
     toJSON: {

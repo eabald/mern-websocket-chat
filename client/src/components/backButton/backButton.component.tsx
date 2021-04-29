@@ -8,12 +8,14 @@ import { BackButtonElement } from './backButton.styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-type BackButtonProps = {};
+type BackButtonProps = {
+  to?: string
+};
 
-const BackButton:React.FC<BackButtonProps> = () => {
+const BackButton:React.FC<BackButtonProps> = ({ to }) => {
   const history = useHistory();
   return (
-    <BackButtonElement onClick={() => history.goBack()}>
+    <BackButtonElement onClick={() => to ? history.push(to) : history.goBack()}>
       <FontAwesomeIcon icon={faArrowLeft} />
     </BackButtonElement>
   )

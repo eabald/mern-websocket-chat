@@ -1,5 +1,8 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router';
+// Hooks
+import useSearchParams from '../../hooks/useSearchParams';
 // Redux
 import { useDispatch } from 'react-redux';
 import { signUpStart } from '../../redux/auth/auth.actions';
@@ -27,7 +30,6 @@ import TextBlock from '../../components/textBlock/textBlock.component';
 
 type RegisterProps = {};
 interface RegisterValues {
-  email: string;
   password: string;
   passwordConfirm: string;
   username: string;
@@ -39,6 +41,14 @@ interface RegisterValues {
 const Register: React.FC<RegisterProps> = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const token = useSearchParams().get('token');
+  const location = useLocation();
+  useEffect(() => {
+    if (!token) {
+      history.push(t('/missing-invitation'))
+    }
+  }, [token, history, t, location])
   const submitHandler = async (values: RegisterValues): Promise<void> => {
     await dispatch(signUpStart(values));
   };
@@ -50,7 +60,6 @@ const Register: React.FC<RegisterProps> = () => {
         <SmallHeader>{t('Register')}</SmallHeader>
         <Formik
           initialValues={{
-            email: '',
             password: '',
             passwordConfirm: '',
             username: '',
@@ -68,20 +77,6 @@ const Register: React.FC<RegisterProps> = () => {
         >
           {({ touched, errors, isValid, isSubmitting, values }) => (
             <Form>
-              <FormGroup>
-                <Label htmlFor='email'>{t('Email')}</Label>
-                <FormField
-                  id='email'
-                  name='email'
-                  type='email'
-                  placeholder='awesome@person.com'
-                  error={touched.email && errors.email}
-                />
-                <ErrorMessage
-                  name='email'
-                  render={(error) => <ValidationError>{error}</ValidationError>}
-                />
-              </FormGroup>
               <FormGroup>
                 <Label htmlFor='username'>{t('Username')}</Label>
                 <FormField

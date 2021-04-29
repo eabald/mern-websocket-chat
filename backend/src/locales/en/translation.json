@@ -78,5 +78,22 @@
   "New message from {{user}}": "New message from {{user}}.",
   "App Crashed": "App Crashed",
   "Something has went horribly wrong.": "Something has went horribly wrong.",
-  "Back to homepage": "Back to homepage"
+  "Back to homepage": "Back to homepage",
+  "Invitation to app": "Invitation to app",
+  "Invite email header": "You received the invitation to join app!",
+  "Invite email content": "If you want to join our awesome chat app use link below. But remember this invitation is valid only for one week and your friend who invited you is already there.",
+  "Click here to register": "Click here to register",
+  "Invitation sent": "Invitation sent",
+  "Invitation already sent to this email.": "Invitation already sent to this email.",
+  "Email to invite missing.": "Email to invite missing.",
+  "Invitation not found.": "Invitation not found.",
+  "missing-invitation": "missing-invitation",
+  "Shame": "Shame",
+  "Looks like you are missing your invitation. Unfortunately you need one to register.": "Looks like you are missing your invitation. Unfortunately you need one to register.",
+  "invitation info": "Here you can invite new user to join you. But remember you have only {{invitations}} left and once send the invitation is valid only for 7 days so be sure to invite right person. Also don't forget to ask for permission to use their email.",
+  "invite-user": "invite-user",
+  "Here you can invite new user!": "Here you can invite new user!",
+  "Invite new user": "Invite new user",
+  "New user email": "New user email",
+  "Send": "Send"
 }

@@ -22,6 +22,7 @@ import EmailNotVerifiedException from '../exceptions/EmailNotVerifiedException';
 import { v4 as uuidv4 } from 'uuid';
 import passport from 'passport';
 import { Strategy } from 'passport-local';
+import InvitationTokenMissingException from '../exceptions/InvitationTokenMissingException';
 
 class AuthenticationController implements Controller {
   public path = '/auth';
@@ -36,7 +37,6 @@ class AuthenticationController implements Controller {
     passport.use(
       new Strategy(
         {
-          usernameField: 'email',
           session: true,
         },
         this.getAuth
@@ -55,7 +55,7 @@ class AuthenticationController implements Controller {
     password: string,
     done: any
   ): Promise<void> => {
-    const user = await this.user.findOne({ email: username });
+    const user = await this.user.findOne({ username });
     if (user) {
       if (!user.emailVerified) {
         return done(new EmailNotVerifiedException());
@@ -107,53 +107,79 @@ class AuthenticationController implements Controller {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const userData: CreateUserDto = request.body;
-    if (await this.user.findOne({ email: { $eq: userData.email } })) {
-      next(new UserWithThatEmailAlreadyExistsException(userData.email));
-    } else if (await this.user.findOne({ username: { $eq: userData.username } })) {
-      next(new UserWithThatUsernameAlreadyExistsException(userData.username));
+    const invitationToken = request.params.token;
+    if (!invitationToken) {
+      next(new InvitationTokenMissingException());
     } else {
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
-      const defaultRooms = await this.room.find({
-        $or: [{ name: 'general' }, { name: 'random' }],
-      });
-      const { token } = this.createVerificationToken(userData.email);
-      const user = await this.user.create({
-        ...userData,
-        password: hashedPassword,
-        rooms: defaultRooms,
-        verificationToken: token,
-      });
-      defaultRooms.forEach(async (room) => {
-        room.users.push(user._id);
-        await room.save();
-      });
       try {
-        await this.emailService.sendEmail(
-          user.email,
-          request.t('Email verification'),
-          process.env.EMAIL_TEMPLATE_EMAIL_VERIFICATION,
-          {
-            appName: process.env.APP_NAME,
-            domain: process.env.DOMAIN,
-            header: request.t('Verify email header'),
-            target: user.firstName,
-            mainText: request.t('Verify email content'),
-            ClickHereToVerify: request.t('Click here to verify'),
-            urlInfo: request.t('Copy url info'),
-            verifyUrl: `${process.env.DOMAIN}/verify?token=${encodeURI(token)}`,
-            footerText: `© ${process.env.APP_NAME} ${new Date().getFullYear()}`,
+        const { email } = jwt.verify(
+          invitationToken,
+          process.env.JWT_SECRET
+        ) as DataStoredInVerificationToken;
+        const userData: CreateUserDto = request.body;
+        if (await this.user.findOne({ email: { $eq: email } })) {
+          next(new UserWithThatEmailAlreadyExistsException(email));
+        } else if (
+          await this.user.findOne({ username: { $eq: userData.username } })
+        ) {
+          next(
+            new UserWithThatUsernameAlreadyExistsException(userData.username)
+          );
+        } else {
+          const hashedPassword = await bcrypt.hash(userData.password, 10);
+          const defaultRooms = await this.room.find({
+            $or: [{ name: 'general' }, { name: 'random' }],
+          });
+          const { token } = this.createVerificationToken(email);
+          const user = await this.user.create({
+            ...userData,
+            password: hashedPassword,
+            rooms: defaultRooms,
+            verificationToken: token,
+          });
+          defaultRooms.forEach(async (room) => {
+            room.users.push(user._id);
+            await room.save();
+          });
+          try {
+            await this.emailService.sendEmail(
+              user.email,
+              request.t('Email verification'),
+              process.env.EMAIL_TEMPLATE_EMAIL_VERIFICATION,
+              {
+                appName: process.env.APP_NAME,
+                domain: process.env.DOMAIN,
+                header: request.t('Verify email header'),
+                target: user.firstName,
+                mainText: request.t('Verify email content'),
+                ClickHereToVerify: request.t('Click here to verify'),
+                urlInfo: request.t('Copy url info'),
+                verifyUrl: `${process.env.DOMAIN}/verify?token=${encodeURI(
+                  token
+                )}`,
+                footerText: `© ${
+                  process.env.APP_NAME
+                } ${new Date().getFullYear()}`,
+              }
+            );
+            response.json({
+              status: 'success',
+              message: request.t(
+                'Registration complete, check your inbox for verification email.'
+              ),
+            });
+          } catch (error) {
+            await user.deleteOne();
+            console.log(error);
+            next(new RegistrationEmailException());
           }
-        );
-        response.json({
-          status: 'success',
-          message:
-            request.t('Registration complete, check your inbox for verification email.'),
-        });
+        }
       } catch (error) {
-        await user.deleteOne();
-        console.log(error);
-        next(new RegistrationEmailException());
+        if (error.name === 'TokenExpiredError') {
+          next(new VerificationTokenExpiredException());
+        } else {
+          next(new InternalServerErrorException());
+        }
       }
     }
   };
@@ -231,14 +257,19 @@ class AuthenticationController implements Controller {
               mainText: request.t('Reset email content'),
               ClickHereToReset: request.t('Click here to Reset'),
               urlInfo: request.t('Copy url info'),
-              verifyUrl: `${process.env.DOMAIN}/change-password?token=${encodeURI(token)}`,
-              footerText: `© ${process.env.APP_NAME} ${new Date().getFullYear()}`,
+              verifyUrl: `${
+                process.env.DOMAIN
+              }/change-password?token=${encodeURI(token)}`,
+              footerText: `© ${
+                process.env.APP_NAME
+              } ${new Date().getFullYear()}`,
             }
           );
           response.json({
             status: 'success',
-            message:
-              request.t('Reset password message sent, check your inbox for verification email.'),
+            message: request.t(
+              'Reset password message sent, check your inbox for verification email.'
+            ),
           });
         }
       }
@@ -275,8 +306,9 @@ class AuthenticationController implements Controller {
           user.save();
           response.json({
             status: 'success',
-            message:
-              request.t('Password reset complete, you can log in now using new password.'),
+            message: request.t(
+              'Password reset complete, you can log in now using new password.'
+            ),
           });
         }
       } catch (error) {

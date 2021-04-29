@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
 import { clearAuthError } from '../../redux/auth/auth.actions';
 import { unsetFlashMessage } from '../../redux/utils/utils.actions';
+import { clearUserError } from '../../redux/user/user.actions';
 // Styled
 import { FlashOutletWrapper } from './flashOutlet.styles';
 // Components
@@ -29,7 +30,7 @@ const FlashOutlet: React.FC<FlashOutletProps> = () => {
       {userError ? (
         <FlashMessage
           message={userError.message ?? ''}
-          onClickHandler={() => dispatch(clearAuthError())}
+          onClickHandler={() => dispatch(clearUserError())}
           type='error'
         />
       ) : null}

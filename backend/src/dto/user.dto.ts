@@ -11,9 +11,6 @@ class CreateUserDto {
   public lastName: string;
 
   @IsString()
-  public email: string;
-
-  @IsString()
   public password: string;
 
   @IsBoolean()
