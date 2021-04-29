@@ -37,7 +37,6 @@ class AuthenticationController implements Controller {
     passport.use(
       new Strategy(
         {
-          usernameField: 'email',
           session: true,
         },
         this.getAuth
@@ -56,7 +55,7 @@ class AuthenticationController implements Controller {
     password: string,
     done: any
   ): Promise<void> => {
-    const user = await this.user.findOne({ email: username });
+    const user = await this.user.findOne({ username });
     if (user) {
       if (!user.emailVerified) {
         return done(new EmailNotVerifiedException());
