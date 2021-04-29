@@ -18,6 +18,10 @@ import {
   BLOCK_USER_SUCCESS,
   BLOCK_USER_ERROR,
   UserStatus,
+  INVITE_USER_START,
+  INVITE_USER_SUCCESS,
+  INVITE_USER_ERROR,
+  CLEAR_USER_ERROR,
 } from './user.types';
 
 export const getUserStart = (id: string) => ({
@@ -83,9 +87,28 @@ export const blockUserStart = (userId: string) => ({
 export const blockUserSuccess = (userStatus: UserStatus) => ({
   type: BLOCK_USER_SUCCESS,
   payload: userStatus,
-})
+});
 
 export const blockUserError = (error: UserError) => ({
   type: BLOCK_USER_ERROR,
   payload: error,
+});
+
+export const inviteUserStart = (email: string) => ({
+  type: INVITE_USER_START,
+  payload: email,
+});
+
+export const inviteUserSuccess = (userStatus: UserStatus) => ({
+  type: INVITE_USER_SUCCESS,
+  payload: userStatus,
+});
+
+export const inviteUserError = (error: UserError) => ({
+  type: INVITE_USER_ERROR,
+  payload: error,
+});
+
+export const clearUserError = () => ({
+  type: CLEAR_USER_ERROR,
 })

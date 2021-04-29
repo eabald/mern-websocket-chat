@@ -22,6 +22,12 @@ export const BLOCK_USER_ERROR = 'BLOCK_USER_ERROR';
 export const UPDATE_UNREAD = 'UPDATE_UNREAD';
 export const UPDATE_READ = 'UPDATE_READ';
 
+export const INVITE_USER_START = 'INVITE_USER_START';
+export const INVITE_USER_SUCCESS = 'INVITE_USER_SUCCESS';
+export const INVITE_USER_ERROR = 'INVITE_USER_ERROR';
+
+export const CLEAR_USER_ERROR = 'CLEAR_USER_ERROR';
+
 export interface GetUserStartAction extends Action {
   type: typeof GET_USER_START;
   payload: string;
@@ -92,6 +98,25 @@ export interface BlockUserErrorAction extends Action {
   payload: UserError;
 }
 
+export interface InviteUserStartAction extends Action {
+  type: typeof INVITE_USER_START;
+  payload: string;
+}
+
+export interface InviteUserSuccessAction extends Action {
+  type: typeof INVITE_USER_SUCCESS;
+  payload: User;
+}
+
+export interface InviteUserErrorAction extends Action {
+  type: typeof INVITE_USER_ERROR;
+  payload: UserError;
+}
+
+export interface ClearAuthErrorAction extends Action {
+  type: typeof CLEAR_USER_ERROR;
+}
+
 export type UserAction =
   | GetUserStartAction
   | GetUserSuccessAction
@@ -107,6 +132,10 @@ export type UserAction =
   | BlockUserStartAction
   | BlockUserSuccessAction
   | BlockUserErrorAction
+  | InviteUserStartAction
+  | InviteUserSuccessAction
+  | InviteUserErrorAction
+  | ClearAuthErrorAction
   | ResetAction;
 
 export interface UserState {
@@ -126,6 +155,12 @@ export interface UserStatus {
   message: string;
 }
 
+export interface FOMO {
+  invitations: number;
+  invitationsFulfilled: number;
+  roomsLimit: number;
+}
+
 export interface User {
   _id: string;
   id: string;
@@ -136,6 +171,7 @@ export interface User {
   password: string;
   socketId: string;
   rooms: any[];
+  fomo: FOMO;
 }
 
 export interface UpdateUser {

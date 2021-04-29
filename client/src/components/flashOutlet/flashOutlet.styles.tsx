@@ -4,7 +4,7 @@ export const FlashOutletWrapper = styled.div`
   position: fixed;
   top: 100px;
   width: 70%;
-  z-index: 10;
+  z-index: 1000;
   padding: 0 15%;
   @media only screen and (max-width: 768px) {
     width: calc(100vw - 20px);

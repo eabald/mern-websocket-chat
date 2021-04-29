@@ -24,6 +24,12 @@
     "__v": {
       "$numberInt": "0"
     },
-    "socketId": "2GiE0A8xmZZMrBIEAAAU"
+    "socketId": "2GiE0A8xmZZMrBIEAAAU",
+    "fomo":  {
+      "invitations": 3,
+      "invitationsFulfilled": 0,
+      "refreshDate": 1619722294094,
+      "roomsLimit": 3
+    }
   }
 ]

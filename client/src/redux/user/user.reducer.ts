@@ -15,6 +15,9 @@ import {
   UPDATE_READ,
   BLOCK_USER_SUCCESS,
   BLOCK_USER_ERROR,
+  INVITE_USER_SUCCESS,
+  INVITE_USER_ERROR,
+  CLEAR_USER_ERROR,
 } from './user.types';
 
 const INITIAL_STATE: UserState = {
@@ -75,6 +78,18 @@ const userReducer: Reducer<UserState, UserAction> = (
       return {
         ...state,
         error: action.payload,
+      }
+    case INVITE_USER_SUCCESS:
+      return {...state};
+    case INVITE_USER_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      }
+    case CLEAR_USER_ERROR:
+      return {
+        ...state,
+        error: null,
       }
     case RESET:
       return INITIAL_STATE;

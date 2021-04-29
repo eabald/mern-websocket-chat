@@ -23,6 +23,7 @@ const ResetPassword = lazy(() => import('./pages/resetPassword/resetPassword.com
 const ChangePassword = lazy(() => import('./pages/changePassword/changePassword.component'));
 const LangPicker = lazy(() => import('./components/langPicker/langPicker.component'));
 const MissingInvitation = lazy(() => import('./pages/missingInvitation/missingInvitation.component'));
+const InviteNewUser = lazy(() => import('./pages/inviteNewUser/inviteNewUser.component'));
 
 type RouterProps = {};
 
@@ -44,7 +45,7 @@ const Router: React.FC<RouterProps> = () => {
         <Route path={`/${t('login')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <Login />}
         </Route>
-        <Route path={`/${t('register')}`}>
+        <Route path='/register'>
           {isLoggedIn ? <Redirect to='/' /> : <Register />}
         </Route>
         <Route path='/verify'>
@@ -67,6 +68,7 @@ const Router: React.FC<RouterProps> = () => {
       {background && <Route path={`/modal/${t('add-new-room')}`} children={isLoggedIn ? <AddNewRoom /> : <Redirect to={`/${t('login')}`} />} />}
       {background && <Route path={`/modal/${t('add-new-dm')}`} children={isLoggedIn ? <AddNewDm /> : <Redirect to={`/${t('login')}`} />} />}
       {background && <Route path={`/modal/${t('user-details')}/:id`} children={isLoggedIn ? <UserDetails /> : <Redirect to={`/${t('login')}`} />} />}
+      {background && <Route path={`/modal/${t('invite-user')}`} children={isLoggedIn ? <InviteNewUser /> : <Redirect to={`/${t('login')}`} />} />}
       <LangPicker />
     </>
   );

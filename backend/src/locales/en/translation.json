@@ -89,5 +89,11 @@
   "Invitation not found.": "Invitation not found.",
   "missing-invitation": "missing-invitation",
   "Shame": "Shame",
-  "Looks like you are missing your invitation. Unfortunately you need one to register.": "Looks like you are missing your invitation. Unfortunately you need one to register."
+  "Looks like you are missing your invitation. Unfortunately you need one to register.": "Looks like you are missing your invitation. Unfortunately you need one to register.",
+  "invitation info": "Here you can invite new user to join you. But remember you have only {{invitations}} left and once send the invitation is valid only for 7 days so be sure to invite right person. Also don't forget to ask for permission to use their email.",
+  "invite-user": "invite-user",
+  "Here you can invite new user!": "Here you can invite new user!",
+  "Invite new user": "Invite new user",
+  "New user email": "New user email",
+  "Send": "Send"
 }

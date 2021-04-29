@@ -4,6 +4,9 @@ import { useLocation } from 'react-router-dom';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
+import { updateMobileMenu } from '../../redux/utils/utils.actions';
+// External
+import ReactTooltip from 'react-tooltip';
 // I18N
 import { useTranslation } from 'react-i18next';
 // Styled
@@ -13,13 +16,16 @@ import {
   NavbarLink,
   NavbarGreetings,
   NavbarCurrentRoom,
-  NavbarHamburger
+  NavbarHamburger,
 } from './navbar.styles';
 // Components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPowerOff, faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPowerOff,
+  faUser,
+  faUserPlus,
+} from '@fortawesome/free-solid-svg-icons';
 import Hamburger from '../hamburger/hamburger.component';
-import { updateMobileMenu } from '../../redux/utils/utils.actions';
 
 type NavbarProps = {};
 
@@ -37,16 +43,18 @@ const Navbar: React.FC<NavbarProps> = () => {
     if (e.target !== hamburger.current) {
       dispatch(updateMobileMenu(false));
     }
-  }
+  };
   const clickHamburgerHandler = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    dispatch(updateMobileMenu(!isOpen))
+    dispatch(updateMobileMenu(!isOpen));
   };
 
   return (
     <NavbarContainer onClick={clickNavHandler}>
       <NavbarLinksWrapper>
-        <NavbarGreetings>{t('Hi')} {username}</NavbarGreetings>
+        <NavbarGreetings>
+          {t('Hi')} {username}
+        </NavbarGreetings>
         <NavbarHamburger ref={hamburger} onClick={clickHamburgerHandler}>
           <Hamburger />
         </NavbarHamburger>
@@ -55,16 +63,27 @@ const Navbar: React.FC<NavbarProps> = () => {
         </NavbarCurrentRoom>
         <NavbarLink
           to={{
+            pathname: `/modal/${t('invite-user')}`,
+            state: { background: location },
+          }}
+          data-tip={t('Here you can invite new user!')}
+        >
+          <FontAwesomeIcon icon={faUserPlus} />
+        </NavbarLink>
+        <NavbarLink
+          to={{
             pathname: `/${t('profile')}`,
             state: { background: location },
           }}
+          data-tip={t('Profile')}
         >
           <FontAwesomeIcon icon={faUser} />
         </NavbarLink>
-        <NavbarLink to={`/${t('logout')}`}>
+        <NavbarLink to={`/${t('logout')}`} data-tip={t('Logout')}>
           <FontAwesomeIcon icon={faPowerOff} />
         </NavbarLink>
       </NavbarLinksWrapper>
+      <ReactTooltip effect='solid' />
     </NavbarContainer>
   );
 };

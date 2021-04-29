@@ -5,6 +5,7 @@ import {
   getUserRequest,
   updateUserRequest,
   blockUserRequest,
+  inviteNewUserRequest,
 } from '../../api/user.api';
 // Types
 import {
@@ -12,6 +13,8 @@ import {
   blockUserSuccess,
   getUserDetailsError,
   getUserDetailsSuccess,
+  inviteUserError,
+  inviteUserSuccess,
   updateUserError,
   updateUserSuccess,
 } from './user.actions';
@@ -20,6 +23,8 @@ import {
   BLOCK_USER_START,
   GetUserDetailsStartAction,
   GET_USER_DETAILS_START,
+  InviteUserStartAction,
+  INVITE_USER_START,
   UpdateUserStartAction,
   UPDATE_USER_START,
 } from './user.types';
@@ -67,6 +72,20 @@ export function* blockUser({ payload }: BlockUserStartAction) {
   }
 }
 
+export function* inviteNewUser({ payload }: InviteUserStartAction) {
+  try {
+    yield put(updateLoading(true));
+    const { status } = yield inviteNewUserRequest(payload);
+    yield put(inviteUserSuccess(status));
+    yield put(setFlashMessage(status));
+    yield put(updateLoading(false));
+  } catch (error) {
+    yield checkForUnauthorized(error.response.data);
+    yield put(updateLoading(false));
+    yield put(inviteUserError(error.response.data));
+  }
+}
+
 export function* onGetUserDetailsStart() {
   yield takeLatest(GET_USER_DETAILS_START, getUserDetails);
 }
@@ -79,11 +98,16 @@ export function* onBlockUserStart() {
   yield takeLatest(BLOCK_USER_START, blockUser);
 }
 
+export function* onInviteNewUserStart() {
+  yield takeLatest(INVITE_USER_START, inviteNewUser);
+}
+
 export function* userSagas() {
   yield all([
     call(onGetUserDetailsStart),
     call(onUpdateUserStart),
     call(onBlockUserStart),
+    call(onInviteNewUserStart),
   ]);
 }
 
