@@ -75,9 +75,10 @@ export function* blockUser({ payload }: BlockUserStartAction) {
 export function* inviteNewUser({ payload }: InviteUserStartAction) {
   try {
     yield put(updateLoading(true));
-    const { status } = yield inviteNewUserRequest(payload);
-    yield put(inviteUserSuccess(status));
-    yield put(setFlashMessage(status));
+    const { status, message, user } = yield inviteNewUserRequest(payload);
+    yield put(inviteUserSuccess({ status, message }));
+    yield put(setFlashMessage({ status, message }));
+    yield put(updateUserSuccess(user));
     yield put(updateLoading(false));
   } catch (error) {
     yield checkForUnauthorized(error.response.data);

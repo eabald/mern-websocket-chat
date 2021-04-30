@@ -11,6 +11,7 @@ import userModel from './../models/user.model';
 import RegistrationEmailException from '../exceptions/RegistrationEmailException';
 import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
 import InvitationAlreadySentException from '../exceptions/InvitationAlreadySentException';
+import NoInvitationsAvailableException from '../exceptions/NoInvitationsAvailableException';
 
 class InvitationController implements Controller {
   public path = '/invitation';
@@ -33,55 +34,63 @@ class InvitationController implements Controller {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const email = request.body.email;
-    if (!email) {
-      next(new MissingInvitationEmailException());
+    const invitedBy = await this.user.findById(request.user._id);
+    if (invitedBy.fomo.invitations < 1) {
+      next(new NoInvitationsAvailableException());
     } else {
-      const user = await this.user.findOne({ email: { $eq: email } });
-      if (user) {
-        next(new UserWithThatEmailAlreadyExistsException(email));
+      const email = request.body.email;
+      if (!email) {
+        next(new MissingInvitationEmailException());
       } else {
-        const invitedUser = await this.invitation.findOne({
-          email: { $eq: email },
-        });
-        if (invitedUser) {
-          next(new InvitationAlreadySentException());
+        const user = await this.user.findOne({ email: { $eq: email } });
+        if (user) {
+          next(new UserWithThatEmailAlreadyExistsException(email));
         } else {
-          const { token } = this.createInvitationToken(email);
-          const invitation = await this.invitation.create({
-            email,
-            token,
-            invitedBy: request.user,
-            timestamp: new Date(),
+          const invitedUser = await this.invitation.findOne({
+            email: { $eq: email },
           });
-          try {
-            await this.emailService.sendEmail(
+          if (invitedUser) {
+            next(new InvitationAlreadySentException());
+          } else {
+            const { token } = this.createInvitationToken(email);
+            const invitation = await this.invitation.create({
               email,
-              request.t('Invitation to app'),
-              process.env.EMAIL_TEMPLATE_INVITATION,
-              {
-                appName: process.env.APP_NAME,
-                domain: process.env.DOMAIN,
-                header: request.t('Invite email header'),
-                mainText: request.t('Invite email content'),
-                ClickHereToRegister: request.t('Click here to register'),
-                urlInfo: request.t('Copy url info'),
-                registerUrl: `${process.env.DOMAIN}/register?token=${encodeURI(
-                  token
-                )}`,
-                footerText: `© ${
-                  process.env.APP_NAME
-                } ${new Date().getFullYear()}`,
-              }
-            );
-            response.status(200).json({
-              status: 'success',
-              message: request.t('Invitation sent'),
+              token,
+              invitedBy: request.user,
+              timestamp: new Date(),
             });
-          } catch (error) {
-            await invitation.deleteOne();
-            console.log(error);
-            next(new RegistrationEmailException());
+            try {
+              await this.emailService.sendEmail(
+                email,
+                request.t('Invitation to app'),
+                process.env.EMAIL_TEMPLATE_INVITATION,
+                {
+                  appName: process.env.APP_NAME,
+                  domain: process.env.DOMAIN,
+                  header: request.t('Invite email header'),
+                  mainText: request.t('Invite email content'),
+                  ClickHereToRegister: request.t('Click here to register'),
+                  urlInfo: request.t('Copy url info'),
+                  registerUrl: `${process.env.DOMAIN}/register?token=${encodeURI(
+                    token
+                  )}`,
+                  footerText: `© ${
+                    process.env.APP_NAME
+                  } ${new Date().getFullYear()}`,
+                }
+              );
+              invitedBy.fomo.invitations = invitedBy.fomo.invitations - 1;
+              await invitedBy.save();
+              response.status(200).json({
+                status: 'success',
+                message: request.t('Invitation sent'),
+                user: invitedBy,
+              });
+            } catch (error) {
+              await invitation.deleteOne();
+              console.log(error);
+              next(new RegistrationEmailException());
+            }
           }
         }
       }
