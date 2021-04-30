@@ -18,6 +18,12 @@ interface User {
   emailVerified: boolean;
   resetToken: string;
   subscription?: Subscription;
+  fomo: {
+    invitations: number,
+    invitationsFulfilled: number,
+    refreshDate: Date,
+    roomsLimit: number,
+  }
 }
 
 export default User;
