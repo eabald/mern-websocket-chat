@@ -6,9 +6,10 @@ import RequestWithUser from '../interfaces/requestWithUser.interface';
 import Stripe from 'stripe';
 import PaymentNotFulfilledException from '../exceptions/PaymentNotFulfilledException';
 import PriceData from '../interfaces/priceData.interface';
+import PaymentFailedException from '../exceptions/PaymentFailedException';
 
 class PaymentController implements Controller {
-  public path = '/invitation';
+  public path = '/payment';
   public router = express.Router();
   private user = userModel;
   private stripe: Stripe;
@@ -21,14 +22,14 @@ class PaymentController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.post('/buy-invitations', authMiddleware, this.buyInvitations);
+    this.router.post(`${this.path}/buy-invitations`, authMiddleware, this.buyInvitations);
     this.router.post(
-      '/buy-invitations-success',
+      `${this.path}/buy-invitations-status`,
       authMiddleware,
-      this.buyInvitationsSuccess
+      this.buyInvitationsStatus
     );
-    this.router.post('/buy-rooms', authMiddleware, this.buyRooms);
-    this.router.post('/buy-rooms-success', authMiddleware, this.buyRoomsSuccess);
+    this.router.post(`${this.path}/buy-rooms`, authMiddleware, this.buyRooms);
+    this.router.post(`${this.path}/buy-rooms-status`, authMiddleware, this.buyRoomsStatus);
   }
 
   private createCheckoutSession(
@@ -45,8 +46,8 @@ class PaymentController implements Controller {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.DOMAIN}/modal/${request.t(path)}?payed=true`,
-      cancel_url: `${process.env.DOMAIN}/modal/${request.t(path)}?error=true`,
+      success_url: `${process.env.DOMAIN}/${request.t(path)}?payed=true`,
+      cancel_url: `${process.env.DOMAIN}/${request.t(path)}?error=true`,
     });
   }
 
@@ -54,18 +55,24 @@ class PaymentController implements Controller {
     id: string,
     userId: string,
     field: string,
+    request: RequestWithUser,
     response: express.Response,
     next: express.NextFunction
   ) => {
-    const session = await this.stripe.checkout.sessions.retrieve(id);
-    const isPayed = session.payment_status === 'paid';
-    if (isPayed) {
-      const user = await this.user.findById(userId);
-      user.fomo[field] = user.fomo[field] + 3;
-      await user.save();
-      response.status(200).json({ user });
+    if (!id) {
+      next(new PaymentFailedException());
     } else {
-      next(new PaymentNotFulfilledException());
+      const session = await this.stripe.checkout.sessions.retrieve(id);
+      const isPayed = session.payment_status === 'paid';
+      if (isPayed) {
+        const user = await this.user.findById(userId);
+        user.fomo[field] = user.fomo[field] + 3;
+        await user.save();
+        const message = request.t('Payment successful');
+        response.status(200).json({ status: 'success', message, user });
+      } else {
+        next(new PaymentNotFulfilledException());
+      }
     }
   };
 
@@ -88,7 +95,7 @@ class PaymentController implements Controller {
     response.status(200).json({ id: session.id });
   };
 
-  private buyInvitationsSuccess = async (
+  private buyInvitationsStatus = async (
     request: RequestWithUser,
     response: express.Response,
     next: express.NextFunction
@@ -98,6 +105,7 @@ class PaymentController implements Controller {
       sessionId,
       request.user._id,
       'invitations',
+      request,
       response,
       next
     );
@@ -122,7 +130,7 @@ class PaymentController implements Controller {
     response.status(200).json({ id: session.id });
   };
 
-  private buyRoomsSuccess = async (
+  private buyRoomsStatus = async (
     request: RequestWithUser,
     response: express.Response,
     next: express.NextFunction
@@ -132,6 +140,7 @@ class PaymentController implements Controller {
       sessionId,
       request.user._id,
       'roomsLimit',
+      request,
       response,
       next
     );

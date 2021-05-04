@@ -9,7 +9,7 @@ export const ModalWrapper = styled.div`
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 500;
+  z-index: ${props => props.theme.zIndexes.flash};
   color: ${props => props.theme.mainTextColor};
   font-family: ${props => props.theme.font};
   display: flex;
@@ -27,7 +27,7 @@ export const ModalWrapperWindow = styled.div`
   box-shadow: 0 0 2px 1px rgb(150 150 150 / 50%);
   min-width: 33%;
   max-width: 95%;
-  z-index: 1;
+  z-index: ${props => props.theme.zIndexes.main};
   @media only screen and (max-width: 768px) {
     width: 80%;
   }

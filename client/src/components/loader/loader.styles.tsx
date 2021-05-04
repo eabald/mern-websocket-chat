@@ -14,6 +14,7 @@ export const LoaderWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background: ${props => props.theme.loaderBackground};
+  z-index: 102;
 `;
 
 export const LoaderDotsWrapper = styled.div`
