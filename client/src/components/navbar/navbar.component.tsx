@@ -62,10 +62,7 @@ const Navbar: React.FC<NavbarProps> = () => {
           {currentRoom ? `# ${currentRoom}` : ''}
         </NavbarCurrentRoom>
         <NavbarLink
-          to={{
-            pathname: `/modal/${t('invite-user')}`,
-            state: { background: location },
-          }}
+          to={`/${t('invite-user')}`}
           data-tip={t('Here you can invite new user!')}
         >
           <FontAwesomeIcon icon={faUserPlus} />

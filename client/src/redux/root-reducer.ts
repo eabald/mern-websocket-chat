@@ -9,6 +9,7 @@ import roomReducer from './room/room.reducer'
 import utilsReducer from './utils/utils.reducer'
 // Types
 import { RootAction } from './root-types';
+import paymentReducer from './payment/payment.reducer';
 
 const persistConfig = {
   key: 'root',
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   room: roomReducer,
   utils: utilsReducer,
+  payment: paymentReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

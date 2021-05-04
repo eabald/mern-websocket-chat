@@ -36,7 +36,7 @@ export const HomeSideArea = styled.div`
     bottom: 0;
     left: -100%;
     transition: left 0.5s ease-in;
-    z-index: 1;
+    z-index: ${props => props.theme.zIndexes.main};
     background: ${props => props.theme.mainBackground};
     &.is-open {
       left: 0;

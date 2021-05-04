@@ -10,6 +10,7 @@ import { clearUserError } from '../../redux/user/user.actions';
 import { FlashOutletWrapper } from './flashOutlet.styles';
 // Components
 import FlashMessage from '../flashMessage/flashMessage.component';
+import { clearPaymentError } from '../../redux/payment/payment.actions';
 
 type FlashOutletProps = {};
 
@@ -17,6 +18,7 @@ const FlashOutlet: React.FC<FlashOutletProps> = () => {
   const dispatch = useDispatch();
   const authError = useSelector((state: RootState) => state.auth.error);
   const userError = useSelector((state: RootState) => state.user.error);
+  const paymentError = useSelector((state: RootState) => state.payment.error);
   const flashMessages = useSelector((state: RootState) => state.utils.messages);
   return (
     <FlashOutletWrapper>
@@ -31,6 +33,13 @@ const FlashOutlet: React.FC<FlashOutletProps> = () => {
         <FlashMessage
           message={userError.message ?? ''}
           onClickHandler={() => dispatch(clearUserError())}
+          type='error'
+        />
+      ) : null}
+      {paymentError ? (
+        <FlashMessage
+          message={paymentError.message ?? ''}
+          onClickHandler={() => dispatch(clearPaymentError())}
           type='error'
         />
       ) : null}

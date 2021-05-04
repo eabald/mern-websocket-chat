@@ -36,4 +36,11 @@ export const MainTheme = {
     50% { margin-bottom: 10px }
     100% { margin-bottom: 0 }
   `,
+
+  zIndexes: {
+    main: 1,
+    modal: 99,
+    modalPopup: 100,
+    flash: 101,
+  }
 };

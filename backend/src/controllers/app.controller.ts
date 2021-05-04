@@ -22,6 +22,7 @@ import UserController from './user.controller';
 import LocaleController from './locale.controller';
 import NotificationsController from './notifications.controller';
 import InvitationController from './invitation.controller';
+import PaymentController from './payment.controller';
 
 class AppController {
   public app: express.Application;
@@ -108,6 +109,7 @@ class AppController {
       new LocaleController(),
       new NotificationsController(),
       new InvitationController(),
+      new PaymentController(),
     ];
     controllers.forEach((controller) => {
       this.app.use('/api', controller.router);
