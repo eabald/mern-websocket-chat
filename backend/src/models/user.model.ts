@@ -58,6 +58,12 @@ const userSchema = new mongoose.Schema(
     ],
     subscription: subscriptionSchema,
     fomo: fomoSchema,
+    payments: [
+      {
+        ref: 'Payment',
+        type: mongoose.Schema.Types.ObjectId,
+      }
+    ],
   },
   {
     toJSON: {
