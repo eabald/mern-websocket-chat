@@ -12,10 +12,11 @@ import {
   setCurrentRoomSuccess,
   setUnreadMessages,
 } from '../redux/room/room.actions';
-import { updateUnread } from '../redux/user/user.actions';
+import { getUserStart, updateUnread } from '../redux/user/user.actions';
 import { FlashMessage } from '../redux/utils/utils.types';
 import { setFlashMessage } from '../redux/utils/utils.actions';
 import { useTranslation } from 'react-i18next';
+import { resumePaymentStart } from '../redux/payment/payment.actions';
 
 const SOCKET_SERVER_URL = '/';
 
@@ -64,9 +65,20 @@ const useWebsocket = () => {
     socketRef.current.on('messageBlocked', (statusData: FlashMessage) => {
       dispatch(setFlashMessage(statusData));
     });
+    socketRef.current.on('paymentFulfilled', (paymentData: FlashMessage) => {
+      dispatch(setFlashMessage(paymentData));
+      dispatch(getUserStart(currenUser?.id ?? ''));
+    });
+    socketRef.current.on('paymentToContinue', (paymentData: FlashMessage) => {
+      const callback = (id: string): void => {
+        dispatch(resumePaymentStart(id));
+      }
+      paymentData.callback = callback;
+      dispatch(setFlashMessage(paymentData));
+    });
     return () => {
-      socketRef.current?.disconnect();
-    };
+      socketRef.current?.close();
+    }
   });
 
   const newMessageNotification = useCallback(

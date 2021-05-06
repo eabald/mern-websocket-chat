@@ -24,7 +24,6 @@ class LocaleController implements Controller {
       join(__dirname, `../locales/${lng}/${ns}.json`),
     );
     locale = JSON.parse(locale.toString());
-    console.log(locale);
     response.json({ ...locale });
   };
 }

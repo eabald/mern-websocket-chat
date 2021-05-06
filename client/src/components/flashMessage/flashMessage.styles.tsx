@@ -13,6 +13,7 @@ export const FlashMessageContainer = styled.div<ContainerProps>`
   font-family: ${props => props.theme.font};
   color: ${props => props.theme.white};
   position: relative;
+  cursor: pointer;
   @media only screen and (max-width: 768px) {
     display: flex;
     align-items: center;
@@ -25,6 +26,7 @@ export const FlashMessageClose = styled.div`
   top: 5px;
   right: 10px;
   cursor: pointer;
+  z-index: 2;
   &:hover {
     color: ${props => props.theme.white};
   }

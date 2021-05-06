@@ -69,6 +69,8 @@ export type UtilsAction =
 export interface FlashMessage {
   status: string;
   message: string;
+  additionalData?: string;
+  callback?: (x: string) => void;
 }
 
 export interface UtilsState {

@@ -1,7 +1,7 @@
 // External
 import { Reducer } from 'redux';
 // Types
-import { BUY_INVITATION_CHECK_STATUS_ERROR, BUY_INVITATION_CHECK_STATUS_SUCCESS, BUY_INVITATION_CREATE_SESSION_ERROR, BUY_INVITATION_CREATE_SESSION_SUCCESS, CLEAR_PAYMENT_ERROR, PaymentAction, PaymentState } from './payment.types';
+import { BUY_INVITATION_CHECK_STATUS_ERROR, BUY_INVITATION_CHECK_STATUS_SUCCESS, BUY_INVITATION_CREATE_SESSION_ERROR, BUY_INVITATION_CREATE_SESSION_SUCCESS, CLEAR_PAYMENT_ERROR, PaymentAction, PaymentState, RESUME_PAYMENT_ERROR, RESUME_PAYMENT_SUCCESS } from './payment.types';
 import { RESET } from '../utils/utils.types';
 
 const INITIAL_STATE: PaymentState = {
@@ -31,6 +31,15 @@ const paymentReducer: Reducer<PaymentState, PaymentAction> = (
         id: null,
       }
     case BUY_INVITATION_CHECK_STATUS_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      }
+    case RESUME_PAYMENT_SUCCESS:
+      return {
+        ...state,
+      }
+    case RESUME_PAYMENT_ERROR:
       return {
         ...state,
         error: action.payload,

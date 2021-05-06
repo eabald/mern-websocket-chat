@@ -57,6 +57,13 @@ class AppController {
     this.initializeErrorMiddleware();
   }
 
+  private connectToTheDatabase(): void {
+    mongoose.connect(this.mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  }
+
   private initializeMiddlewares(): void {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
@@ -84,46 +91,6 @@ class AppController {
     );
   }
 
-  private initializeErrorMiddleware(): void {
-    this.app.use(ErrorLogger);
-    this.app.use(errorMiddleware);
-  }
-
-  private initializeLimiter(): void {
-    // const limiter = rateLimit({
-    //   store: new RedisStore({
-    //     client: this.redisClient
-    //   }),
-    //   windowMs: 1000,
-    //   max: 500,
-    // });
-    // this.app.use(limiter);
-  }
-
-  private initializeControllers(): void {
-    const controllers = [
-      new AuthenticationController(),
-      new RoomController(),
-      new MessageController(this.server, this.redisClient),
-      new UserController(),
-      new LocaleController(),
-      new NotificationsController(),
-      new InvitationController(),
-      new PaymentController(),
-    ];
-    controllers.forEach((controller) => {
-      this.app.use('/api', controller.router);
-    });
-  }
-
-  private initializeStatic(): void {
-    this.app.use(express.static(this.static));
-    this.app.get('*', (request: express.Request, response: express.Response) => {
-      if (isValidPath(request.path)) {
-        response.sendFile('index.html', { root: this.static });
-      }
-    });
-  }
   private initializePassportSession(): void {
     this.app.use(passport.initialize());
     this.app.use(passport.session());
@@ -149,11 +116,45 @@ class AppController {
     this.app.use(i18nHandle(i18next));
   }
 
-  private connectToTheDatabase(): void {
-    mongoose.connect(this.mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+  private initializeLimiter(): void {
+    // const limiter = rateLimit({
+    //   store: new RedisStore({
+    //     client: this.redisClient
+    //   }),
+    //   windowMs: 1000,
+    //   max: 500,
+    // });
+    // this.app.use(limiter);
+  }
+
+  private initializeControllers(): void {
+    const controllers = [
+      new AuthenticationController(),
+      new RoomController(),
+      new MessageController(this.server, this.redisClient, i18next),
+      new UserController(),
+      new LocaleController(),
+      new NotificationsController(),
+      new InvitationController(),
+      new PaymentController(this.redisClient),
+    ];
+    controllers.forEach((controller) => {
+      this.app.use('/api', controller.router);
     });
+  }
+
+  private initializeStatic(): void {
+    this.app.use(express.static(this.static));
+    this.app.get('*', (request: express.Request, response: express.Response) => {
+      if (isValidPath(request.path)) {
+        response.sendFile('index.html', { root: this.static });
+      }
+    });
+  }
+
+  private initializeErrorMiddleware(): void {
+    this.app.use(ErrorLogger);
+    this.app.use(errorMiddleware);
   }
 
   public listen(): void {

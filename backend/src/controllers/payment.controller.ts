@@ -8,18 +8,21 @@ import PaymentNotFulfilledException from '../exceptions/PaymentNotFulfilledExcep
 import PriceData from '../interfaces/priceData.interface';
 import PaymentFailedException from '../exceptions/PaymentFailedException';
 import paymentModel from '../models/payment.model';
+import { RedisClient } from 'redis';
 
 class PaymentController implements Controller {
   public path = '/payment';
   public router = express.Router();
   private user = userModel;
   private payment = paymentModel;
+  private pubClient: RedisClient;
   private stripe: Stripe;
 
-  constructor() {
+  constructor(redisClient: RedisClient) {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
       apiVersion: '2020-08-27',
     });
+    this.pubClient = redisClient;
     this.initializeRoutes();
   }
 
@@ -56,6 +59,9 @@ class PaymentController implements Controller {
         },
       ],
       mode: 'payment',
+      metadata: {
+        createdAt: Date.now(),
+      },
       success_url: `${process.env.DOMAIN}/${request.t(path)}?payed=true`,
       cancel_url: `${process.env.DOMAIN}/${request.t(path)}?error=true`,
     });
@@ -87,11 +93,55 @@ class PaymentController implements Controller {
           const message = request.t('Payment successful');
           response.status(200).json({ status: 'success', message, user });
         } else {
+          this.watchPaymentStatus(id, request.user.id, field);
           next(new PaymentNotFulfilledException());
         }
       }
     }
   };
+
+  private watchPaymentStatus = async (
+    sessionId: string,
+    userId: string,
+    field: string
+  ): Promise<void> => {
+    setTimeout(async () => {
+      const payment = await this.payment.findOne({ sessionId: { $eq: sessionId } });
+      const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+      payment.status = session.payment_status;
+      payment.save();
+      const isPayed = session.payment_status === 'paid';
+      if (isPayed) {
+        const user = await this.user.findById(userId);
+        user.fomo[field] = user.fomo[field] + 3;
+        await user.save();
+        const successMessage = {
+          type: 'success',
+          userId,
+          payment: payment.id,
+        }
+        this.pubClient.publish('payments', JSON.stringify(successMessage));
+      } else {
+        const abandoned = Number(session.metadata.createdAt) + 36000000 < Date.now();
+        if (abandoned) {
+          await this.stripe.paymentIntents.cancel(session.payment_intent.toString());
+          await payment.deleteOne();
+        } else {
+          const status = await (await this.stripe.paymentIntents.retrieve(session.payment_intent.toString())).status;
+          if (status !== 'processing') {
+            const continuePaymentMessage = {
+              type: 'processing',
+              userId,
+              payment: sessionId,
+            };
+            this.pubClient.publish('payments', JSON.stringify(continuePaymentMessage));
+          } else {
+            this.watchPaymentStatus(sessionId, userId, field);
+          }
+        }
+      }
+    }, 60000);
+  }
 
   private buyInvitations = async (
     request: RequestWithUser,

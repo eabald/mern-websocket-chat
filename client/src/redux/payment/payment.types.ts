@@ -16,6 +16,10 @@ export const BUY_INVITATION_CHECK_STATUS_SUCCESS =
   'BUY_INVITATION_CHECK_STATUS_SUCCESS';
 export const BUY_INVITATION_CHECK_STATUS_ERROR = 'BUY_INVITATION_CREATE_ERROR';
 
+export const RESUME_PAYMENT_START = 'RESUME_PAYMENT_START';
+export const RESUME_PAYMENT_SUCCESS = 'RESUME_PAYMENT_SUCCESS';
+export const RESUME_PAYMENT_ERROR = 'RESUME_PAYMENT_ERROR';
+
 export const CLEAR_PAYMENT_ERROR = 'CLEAR_PAYMENT_ERROR';
 
 export interface BuyInvitationCreateSessionStartAction extends Action {
@@ -51,6 +55,20 @@ export interface ClearPaymentErrorAction extends Action {
   type: typeof CLEAR_PAYMENT_ERROR;
 }
 
+export interface ResumePaymentStartAction extends Action {
+  type: typeof RESUME_PAYMENT_START;
+  payload: string;
+}
+
+export interface ResumePaymentSuccessAction extends Action {
+  type: typeof RESUME_PAYMENT_SUCCESS;
+}
+
+export interface ResumePaymentErrorAction extends Action {
+  type: typeof RESUME_PAYMENT_ERROR;
+  payload: PaymentError;
+}
+
 export type PaymentAction =
   | BuyInvitationCreateSessionStartAction
   | BuyInvitationCreateSessionSuccessAction
@@ -58,6 +76,9 @@ export type PaymentAction =
   | BuyInvitationCheckStatusStartAction
   | BuyInvitationCheckStatusSuccessAction
   | BuyInvitationCheckStatusErrorAction
+  | ResumePaymentStartAction
+  | ResumePaymentSuccessAction
+  | ResumePaymentErrorAction
   | ClearPaymentErrorAction
   | ResetAction;
 

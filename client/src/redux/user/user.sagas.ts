@@ -13,6 +13,8 @@ import {
   blockUserSuccess,
   getUserDetailsError,
   getUserDetailsSuccess,
+  getUserError,
+  getUserSuccess,
   inviteUserError,
   inviteUserSuccess,
   updateUserError,
@@ -22,7 +24,9 @@ import {
   BlockUserStartAction,
   BLOCK_USER_START,
   GetUserDetailsStartAction,
+  GetUserStartAction,
   GET_USER_DETAILS_START,
+  GET_USER_START,
   InviteUserStartAction,
   INVITE_USER_START,
   UpdateUserStartAction,
@@ -87,6 +91,16 @@ export function* inviteNewUser({ payload }: InviteUserStartAction) {
   }
 }
 
+export function* getUser ({ payload }: GetUserStartAction) {
+  try {
+    const { user } = yield getUserRequest(payload);
+    yield put(getUserSuccess(user));
+  } catch (error) {
+    yield checkForUnauthorized(error.response.data);
+    yield put(getUserError(error.response.data));
+  }
+}
+
 export function* onGetUserDetailsStart() {
   yield takeLatest(GET_USER_DETAILS_START, getUserDetails);
 }
@@ -103,12 +117,17 @@ export function* onInviteNewUserStart() {
   yield takeLatest(INVITE_USER_START, inviteNewUser);
 }
 
+export function* onGetUserStart() {
+  yield takeLatest(GET_USER_START, getUser);
+}
+
 export function* userSagas() {
   yield all([
     call(onGetUserDetailsStart),
     call(onUpdateUserStart),
     call(onBlockUserStart),
     call(onInviteNewUserStart),
+    call(onGetUserStart),
   ]);
 }
 
