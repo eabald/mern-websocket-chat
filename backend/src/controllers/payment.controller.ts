@@ -7,11 +7,13 @@ import Stripe from 'stripe';
 import PaymentNotFulfilledException from '../exceptions/PaymentNotFulfilledException';
 import PriceData from '../interfaces/priceData.interface';
 import PaymentFailedException from '../exceptions/PaymentFailedException';
+import paymentModel from '../models/payment.model';
 
 class PaymentController implements Controller {
   public path = '/payment';
   public router = express.Router();
   private user = userModel;
+  private payment = paymentModel;
   private stripe: Stripe;
 
   constructor() {
@@ -22,14 +24,22 @@ class PaymentController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}/buy-invitations`, authMiddleware, this.buyInvitations);
+    this.router.post(
+      `${this.path}/buy-invitations`,
+      authMiddleware,
+      this.buyInvitations
+    );
     this.router.post(
       `${this.path}/buy-invitations-status`,
       authMiddleware,
       this.buyInvitationsStatus
     );
     this.router.post(`${this.path}/buy-rooms`, authMiddleware, this.buyRooms);
-    this.router.post(`${this.path}/buy-rooms-status`, authMiddleware, this.buyRoomsStatus);
+    this.router.post(
+      `${this.path}/buy-rooms-status`,
+      authMiddleware,
+      this.buyRoomsStatus
+    );
   }
 
   private createCheckoutSession(
@@ -62,16 +72,23 @@ class PaymentController implements Controller {
     if (!id) {
       next(new PaymentFailedException());
     } else {
-      const session = await this.stripe.checkout.sessions.retrieve(id);
-      const isPayed = session.payment_status === 'paid';
-      if (isPayed) {
-        const user = await this.user.findById(userId);
-        user.fomo[field] = user.fomo[field] + 3;
-        await user.save();
-        const message = request.t('Payment successful');
-        response.status(200).json({ status: 'success', message, user });
+      const payment = await this.payment.findOne({ sessionId: { $eq: id } });
+      if (!payment) {
+        next(new PaymentFailedException());
       } else {
-        next(new PaymentNotFulfilledException());
+        const session = await this.stripe.checkout.sessions.retrieve(id);
+        payment.status = session.payment_status;
+        payment.save();
+        const isPayed = session.payment_status === 'paid';
+        if (isPayed) {
+          const user = await this.user.findById(userId);
+          user.fomo[field] = user.fomo[field] + 3;
+          await user.save();
+          const message = request.t('Payment successful');
+          response.status(200).json({ status: 'success', message, user });
+        } else {
+          next(new PaymentNotFulfilledException());
+        }
       }
     }
   };
@@ -92,6 +109,16 @@ class PaymentController implements Controller {
       },
       'invite-user'
     );
+    const currentUser = await this.user.findById(request.user._id);
+    const payment = await this.payment.create({
+      sessionId: session.id,
+      value: 4.99,
+      status: 'unpaid',
+      type: 'invitations',
+      user: request.user,
+    });
+    currentUser.payments = [...currentUser.payments, payment];
+    await currentUser.save();
     response.status(200).json({ id: session.id });
   };
 
@@ -127,6 +154,16 @@ class PaymentController implements Controller {
       },
       'create-new-room'
     );
+    const currentUser = await this.user.findById(request.user._id);
+    const payment = await this.payment.create({
+      sessionId: session.id,
+      value: 4.99,
+      status: 'unpaid',
+      type: 'rooms',
+      user: request.user,
+    });
+    currentUser.payments = [...currentUser.payments, payment];
+    await currentUser.save();
     response.status(200).json({ id: session.id });
   };
 
