@@ -29,6 +29,7 @@ export const FlashMessageClose = styled.div`
   z-index: 2;
   &:hover {
     color: ${props => props.theme.white};
+    transform: scale(1.2);
   }
 `;
 
