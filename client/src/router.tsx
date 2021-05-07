@@ -53,7 +53,8 @@ const Router: React.FC<RouterProps> = () => {
   const { t } = useTranslation();
   const isLoggedIn = useSelector((state: RootState) => state.auth.token);
   const location = useLocation<StateType>();
-  const background = location.state ? location.state.background : '';
+  const fallbackBackground = useSelector((state: RootState) => state.utils.fallbackBackground);
+  const background = location.state && location.state.background ? location.state.background : fallbackBackground;
   return (
     <>
       <Switch location={background || location}>
@@ -83,9 +84,6 @@ const Router: React.FC<RouterProps> = () => {
         <Route path={`/${t('missing-invitation')}`}>
           {isLoggedIn ? <Redirect to={`/`} /> : <MissingInvitation />}
         </Route>
-        <Route path={`/${t('invite-user')}`}>
-          {isLoggedIn ? <InviteNewUser /> : <Redirect to={`/${t('login')}`} />}
-        </Route>
         <Route>
           <Redirect to='/' />
         </Route>
@@ -95,6 +93,14 @@ const Router: React.FC<RouterProps> = () => {
           path={`/${t('profile')}`}
           children={
             isLoggedIn ? <Profile /> : <Redirect to={`/${t('login')}`} />
+          }
+        />
+      )}
+      {background && (
+        <Route
+          path={`/modal/${t('invite-user')}`}
+          children={
+            isLoggedIn ? <InviteNewUser /> : <Redirect to={`/${t('login')}`} />
           }
         />
       )}

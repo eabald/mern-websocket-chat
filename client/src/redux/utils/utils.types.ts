@@ -13,6 +13,8 @@ export const SET_NOTIFICATIONS_ASKING_BLOCKED = 'SET_NOTIFICATIONS_ASKING_BLOCKE
 
 export const SET_NOTIFICATIONS_WAITING = 'SET_NOTIFICATIONS_WAITING';
 
+export const SET_FALLBACK_BACKGROUND = 'SET_FALLBACK_BACKGROUND';
+
 export const SET_LAST_ASKED_TS = 'SET_LAST_ASKED_TS';
 
 export const RESET = 'RESET';
@@ -51,6 +53,11 @@ export interface SetNotificationsWaitingAction extends Action {
   payload: boolean;
 }
 
+export interface SetFallbackBackgroundAction extends Action {
+  type: typeof SET_FALLBACK_BACKGROUND;
+  payload: any;
+}
+
 export interface SetLastAskedTsAction extends Action {
   type: typeof SET_LAST_ASKED_TS;
   payload: number;
@@ -64,6 +71,7 @@ export type UtilsAction =
   | SetNotificationsAskingBlockedAction
   | SetNotificationsWaitingAction
   | SetLastAskedTsAction
+  | SetFallbackBackgroundAction
   | ResetAction;
 
 export interface FlashMessage {
@@ -80,4 +88,5 @@ export interface UtilsState {
   notificationsAskingBlocked: boolean;
   notificationsWaiting: boolean;
   lastAskedTs?: number;
+  fallbackBackground: any;
 }

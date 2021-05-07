@@ -12,6 +12,7 @@ import {
   SET_NOTIFICATIONS_ASKING_BLOCKED,
   SET_NOTIFICATIONS_WAITING,
   SET_LAST_ASKED_TS,
+  SET_FALLBACK_BACKGROUND,
 } from './utils.types';
 
 const INITIAL_STATE: UtilsState = {
@@ -20,6 +21,7 @@ const INITIAL_STATE: UtilsState = {
   mobileMenuOpen: false,
   notificationsAskingBlocked: false,
   notificationsWaiting: false,
+  fallbackBackground: null,
 };
 
 const utilsReducer: Reducer<UtilsState, UtilsAction> = (
@@ -65,6 +67,11 @@ const utilsReducer: Reducer<UtilsState, UtilsAction> = (
       return {
         ...state,
         lastAskedTs: action.payload,
+      }
+    case SET_FALLBACK_BACKGROUND:
+      return {
+        ...state,
+        fallbackBackground: action.payload,
       }
     case RESET:
       return INITIAL_STATE;

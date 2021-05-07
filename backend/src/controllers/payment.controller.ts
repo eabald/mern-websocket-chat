@@ -62,8 +62,8 @@ class PaymentController implements Controller {
       metadata: {
         createdAt: Date.now(),
       },
-      success_url: `${process.env.DOMAIN}/${request.t(path)}?payed=true`,
-      cancel_url: `${process.env.DOMAIN}/${request.t(path)}?error=true`,
+      success_url: `${process.env.DOMAIN}/${path}?payed=true`,
+      cancel_url: `${process.env.DOMAIN}/${path}?error=true`,
     });
   }
 
@@ -178,7 +178,7 @@ class PaymentController implements Controller {
         },
         unit_amount: 499,
       },
-      'invite-user'
+      `modal/${request.t('invite-user')}`
     );
     const currentUser = await this.user.findById(request.user._id);
     const payment = await this.payment.create({
@@ -223,7 +223,7 @@ class PaymentController implements Controller {
         },
         unit_amount: 499,
       },
-      'create-new-room'
+      `modal/${request.t('create-new-room')}`
     );
     const currentUser = await this.user.findById(request.user._id);
     const payment = await this.payment.create({
