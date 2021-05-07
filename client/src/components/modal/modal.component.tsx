@@ -16,7 +16,7 @@ const Modal: React.FC<ModalProps> = ({ title, children }) => {
   const history = useHistory();
   const closeModal = (e: MouseEvent) => {
     e.stopPropagation();
-    history.goBack();
+    history.push('/');
   };
 
   return (

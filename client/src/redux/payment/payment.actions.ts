@@ -6,6 +6,12 @@ import {
   BUY_INVITATION_CREATE_SESSION_START,
   BUY_INVITATION_CREATE_SESSION_SUCCESS,
   BUY_INVITATION_CHECK_STATUS_ERROR,
+  BUY_ROOMS_CREATE_SESSION_START,
+  BUY_ROOMS_CREATE_SESSION_SUCCESS,
+  BUY_ROOMS_CREATE_SESSION_ERROR,
+  BUY_ROOMS_CHECK_STATUS_START,
+  BUY_ROOMS_CHECK_STATUS_SUCCESS,
+  BUY_ROOMS_CHECK_STATUS_ERROR,
   PaymentAction,
   PaymentError,
   CLEAR_PAYMENT_ERROR,
@@ -49,6 +55,43 @@ export const buyInvitationsCheckStatusError = (
   error: PaymentError
 ): PaymentAction => ({
   type: BUY_INVITATION_CHECK_STATUS_ERROR,
+  payload: error,
+});
+
+export const buyRoomsCreateSessionStart = (): PaymentAction => ({
+  type: BUY_ROOMS_CREATE_SESSION_START,
+});
+
+export const buyRoomsCreateSessionSuccess = (
+  id: string
+): PaymentAction => ({
+  type: BUY_ROOMS_CREATE_SESSION_SUCCESS,
+  payload: id,
+});
+
+export const buyRoomsCreateSessionError = (
+  error: PaymentError
+): PaymentAction => ({
+  type: BUY_ROOMS_CREATE_SESSION_ERROR,
+  payload: error,
+});
+
+export const buyRoomsCheckStatusStart = (id: string): PaymentAction => ({
+  type: BUY_ROOMS_CHECK_STATUS_START,
+  payload: id,
+});
+
+export const buyRoomsCheckStatusSuccess = (
+  status: PaymentStatus
+): PaymentAction => ({
+  type: BUY_ROOMS_CHECK_STATUS_SUCCESS,
+  payload: status,
+});
+
+export const buyRoomsCheckStatusError = (
+  error: PaymentError
+): PaymentAction => ({
+  type: BUY_ROOMS_CHECK_STATUS_ERROR,
   payload: error,
 });
 

@@ -62,7 +62,7 @@ const AddNewDm: React.FC<AddNewDmProps> = () => {
           ) => {
             submitHandler(values)
               .then(() => actions.setSubmitting(false))
-              .finally(() => history.goBack());
+              .finally(() => history.push('/'));
           }}
         >
           {(props) => (

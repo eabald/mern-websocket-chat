@@ -32,7 +32,7 @@ import {
 // Utils
 import { checkForUnauthorized } from '../auth/auth.sagas';
 import { RootState } from '../root-reducer';
-import { updateRead } from '../user/user.actions';
+import { getUserSuccess, updateRead } from '../user/user.actions';
 import { updateUnreadRequest } from '../../api/user.api';
 import { updateLoading } from '../utils/utils.actions';
 
@@ -42,7 +42,8 @@ export const selectRooms = (state: RootState): Room[] => state.room.rooms;
 export function* createRoom({ payload }: CreateRoomStart) {
   try {
     yield put(updateLoading(true));
-    const { room } = yield createRoomRequest(payload);
+    const { room, user } = yield createRoomRequest(payload);
+    yield put(getUserSuccess(user));
     const rooms: Room[] = yield select(selectRooms);
     const roomInRooms = rooms.find(item => item._id === room._id);
     if (!roomInRooms) {

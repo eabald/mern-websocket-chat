@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-export const BuyInvitationWrapper = styled.div`
+export const BuyPopupWrapper = styled.div`
   position: fixed;
   top: 0;
   right: 0;
@@ -12,7 +12,7 @@ export const BuyInvitationWrapper = styled.div`
   align-items: center;
 `;
 
-export const BuyInvitationBox = styled.div`
+export const BuyPopupBox = styled.div`
   z-index: ${props => props.theme.zIndexes.modalPopup};
   background: ${props => props.theme.modalBackground};
   width: 60%;
@@ -22,7 +22,7 @@ export const BuyInvitationBox = styled.div`
   position: relative;
 `;
 
-export const BuyInvitationCloseWrapper = styled(Link)`
+export const BuyPopupCloseWrapper = styled(Link)`
   position: absolute;
   top: 10px;
   right: 10px;
@@ -33,7 +33,7 @@ export const BuyInvitationCloseWrapper = styled(Link)`
   }
 `;
 
-export const BuyInvitationButton = styled.button`
+export const BuyPopupButton = styled.button`
   display: block;
   appearance: none;
   width: 100%;

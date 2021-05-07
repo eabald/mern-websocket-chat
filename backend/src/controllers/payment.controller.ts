@@ -223,7 +223,7 @@ class PaymentController implements Controller {
         },
         unit_amount: 499,
       },
-      `modal/${request.t('create-new-room')}`
+      `modal/${request.t('add-new-room')}`
     );
     const currentUser = await this.user.findById(request.user._id);
     const payment = await this.payment.create({

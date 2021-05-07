@@ -151,6 +151,7 @@ export interface Credentials {
 export interface SignUpCredentials extends Credentials {
   firstName: string;
   lastName: string;
+  token: string;
 }
 
 export interface ResetPasswordData {

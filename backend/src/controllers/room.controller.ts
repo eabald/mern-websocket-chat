@@ -7,6 +7,7 @@ import userModel from '../models/user.model'
 import RoomNotFoundException from '../exceptions/RoomNotFoundException';
 import User from '../interfaces/user.interface';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
+import NoRoomsAvailableException from '../exceptions/NoRoomsAvailableException';
 
 class RoomController implements Controller {
   public path = '/room';
@@ -58,28 +59,39 @@ class RoomController implements Controller {
   };
 
   private createRoom = async (
-    request: express.Request,
+    request: RequestWithUser,
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const roomData: RoomDto = request.body;
-    let currentRoom;
-    if (roomData.type === 'room') {
-      currentRoom = await this.room.findOne({ name: { $eq: roomData.name }, type: { $eq: roomData.type }, users: { $all: roomData.users }});
+    const roomsLimit = request.user?.fomo.roomsLimit;
+    if (roomsLimit < 1) {
+      next(new NoRoomsAvailableException());
     } else {
-      currentRoom = await this.room.findOne({ type: { $eq: roomData.type }, users: { $all: roomData.users }});
+      const roomData: RoomDto = request.body;
+      let currentRoom;
+      let editedUser
+      if (roomData.type === 'room') {
+        currentRoom = await this.room.findOne({ name: { $eq: roomData.name }, type: { $eq: roomData.type }, users: { $all: roomData.users }});
+      } else {
+        currentRoom = await this.room.findOne({ type: { $eq: roomData.type }, users: { $all: roomData.users }});
+      }
+      if (!currentRoom) {
+        currentRoom = await this.room.create(roomData);
+        const users = currentRoom.users
+        users.forEach( async (user: User) => {
+          const currentUser = await this.user.findById(user._id);
+          currentUser.rooms = [...new Set([...currentUser.rooms, currentRoom])];
+          await currentUser.save();
+        })
+        if (roomData.type === 'room') {
+          editedUser = await this.user.findById(request.user.id);
+          editedUser.fomo.roomsLimit = editedUser.fomo.roomsLimit - 1;
+          editedUser.save();
+        }
+      }
+      currentRoom = await currentRoom.populate('users').execPopulate()
+      response.json({ room: currentRoom, user: editedUser });
     }
-    if (!currentRoom) {
-      currentRoom = await this.room.create(roomData);
-      const users = currentRoom.users
-      users.forEach( async (user: User) => {
-        const currentUser = await this.user.findById(user._id);
-        currentUser.rooms = [...new Set([...currentUser.rooms, currentRoom])];
-        await currentUser.save();
-      })
-    }
-    currentRoom = await currentRoom.populate('users').execPopulate()
-    response.json({ room: currentRoom });
   };
 
   private getUserRooms = async (

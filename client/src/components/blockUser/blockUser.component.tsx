@@ -32,7 +32,7 @@ const BlockUser: React.FC<BlockUserProps> = ({ id, username }) => {
   const onClickHandler = () => {
     dispatch(blockUserStart(id));
     setTimeout(() => {
-      history.goBack();
+      history.push('/');
     }, 300);
   };
   return (

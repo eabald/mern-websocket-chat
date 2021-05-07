@@ -76,7 +76,7 @@ const Router: React.FC<RouterProps> = () => {
         <Route path={`/${t('change-password')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <ChangePassword />}
         </Route>
-        <Route path={`/${t('logout')}`} component={Logout} />
+        <Route path={`/${t('logout')}`}><Logout /></Route>
         <Route
           path={`/${t('terms-and-conditions')}`}
           component={TermsAndConditions}

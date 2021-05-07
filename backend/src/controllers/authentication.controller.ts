@@ -23,12 +23,14 @@ import { v4 as uuidv4 } from 'uuid';
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 import InvitationTokenMissingException from '../exceptions/InvitationTokenMissingException';
+import invitationModel from '../models/invitation.model';
 
 class AuthenticationController implements Controller {
   public path = '/auth';
   public router = express.Router();
   private user = userModel;
   private room = roomModel;
+  private invitation = invitationModel;
   private emailService: EmailService;
 
   constructor() {
@@ -107,7 +109,7 @@ class AuthenticationController implements Controller {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const invitationToken = request.params.token;
+    const invitationToken = request.body.token;
     if (!invitationToken) {
       next(new InvitationTokenMissingException());
     } else {
@@ -136,6 +138,7 @@ class AuthenticationController implements Controller {
             password: hashedPassword,
             rooms: defaultRooms,
             verificationToken: token,
+            email,
           });
           defaultRooms.forEach(async (room) => {
             room.users.push(user._id);
@@ -210,6 +213,10 @@ class AuthenticationController implements Controller {
             user.verificationToken = '';
             user.emailVerified = true;
             await user.save();
+            const invitation = await this.invitation.findOne({ email: { $eq: email } });
+            const invitedBy = await this.user.findById(invitation.invitedBy.id);
+            invitedBy.fomo.invitationsFulfilled = invitedBy.fomo.invitationsFulfilled +1;
+            await invitedBy.save();
             response.json({
               status: 'success',
               message: request.t('Email verified, you can sign in now.'),

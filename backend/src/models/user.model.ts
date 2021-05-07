@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import User from '../interfaces/user.interface';
 
 const subscriptionSchema = new mongoose.Schema({
-  endpoint: { type: String, unique: true, required: true },
+  endpoint: { type: String, unique: true, sparse: true },
   expirationTime: { type: Number, required: false },
   keys: {
     auth: String,
@@ -11,14 +11,24 @@ const subscriptionSchema = new mongoose.Schema({
 });
 
 const fomoSchema = new mongoose.Schema({
-  invitations: Number,
-  invitationsFulfilled: Number,
+  invitations: {
+    type: Number,
+    default: 3
+  },
+  invitationsFulfilled: {
+    type: Number,
+    default: 3
+  },
   refreshDate: {
     type: Date,
     required: true,
+    default: Date.now(),
   },
-  roomsLimit: Number,
-})
+  roomsLimit: {
+    type: Number,
+    default: 3
+  },
+});
 
 const userSchema = new mongoose.Schema(
   {
@@ -62,7 +72,7 @@ const userSchema = new mongoose.Schema(
       {
         ref: 'Payment',
         type: mongoose.Schema.Types.ObjectId,
-      }
+      },
     ],
   },
   {
