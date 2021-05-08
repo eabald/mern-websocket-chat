@@ -88,7 +88,6 @@ class InvitationController implements Controller {
               });
             } catch (error) {
               await invitation.deleteOne();
-              console.log(error);
               next(new RegistrationEmailException());
             }
           }

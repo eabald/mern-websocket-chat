@@ -27,6 +27,7 @@ import ButInvitations from '../../components/buyInvitations/buyInvitations.compo
 import MainLayout from '../../layout/main/main.layout';
 import SmallHeader from '../../components/smallHeader/smallHeader.component';
 import BackButton from '../../components/backButton/backButton.component';
+import useWebsocket from '../../hooks/useWebsocket';
 
 type InviteNewUserProps = {};
 interface FormValues {
@@ -36,10 +37,12 @@ interface FormValues {
 // redirect do checkout jeżeli jest id, zapisać na user,
 
 const InviteNewUser: React.FC<InviteNewUserProps> = () => {
+  useWebsocket();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
   const payed = useSearchParams().get('payed');
+  const paymentError = useSearchParams().get('error');
   const noOfInvitations = useSelector(
     (state: RootState) => state.user.user?.fomo.invitations
   );
@@ -50,7 +53,12 @@ const InviteNewUser: React.FC<InviteNewUserProps> = () => {
     await dispatch(inviteUserStart(email));
   };
   useEffect(() => {
-    if ((payed && sessionId)) {
+    if (payed && sessionId) {
+      dispatch(buyInvitationsCheckStatusStart(sessionId));
+    } else if (paymentError && sessionId) {
+      history.replace({
+        search: '',
+      })
       dispatch(buyInvitationsCheckStatusStart(sessionId));
     }
   });

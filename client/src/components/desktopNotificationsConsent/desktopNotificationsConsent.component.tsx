@@ -22,22 +22,24 @@ const DesktopNotificationsConsent: React.FC<DesktopNotificationsConsentProps> = 
   const lastTS = useSelector((state: RootState) => state.utils.lastAskedTs);
   const dispatch = useDispatch();
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
     if ('Notification' in window) {
       if (Notification.permission === 'denied' || Notification.permission === 'granted') {
         dispatch(setNotificationsAskingBlock(true));
       }
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         setVisible(Notification.permission === 'default' && !blocked);
       }, 30000);
     }
     return () => {
-      clearTimeout();
+      clearTimeout(timeout);
     }
   }, [blocked, dispatch]);
 
   useEffect(() => {
+    let interval: NodeJS.Timeout;
     if ('Notification' in window && !blocked && waiting) {
-      setInterval(() => {
+      interval = setInterval(() => {
         if ((lastTS ?? 0) + 900000 < Date.now()) {
           dispatch(setNotificationsWaiting(false));
           setVisible(true);
@@ -45,7 +47,7 @@ const DesktopNotificationsConsent: React.FC<DesktopNotificationsConsentProps> = 
       }, 1000)
     }
     return () => {
-      clearInterval();
+      clearInterval(interval);
     }
   }, [waiting, lastTS, dispatch, blocked])
 

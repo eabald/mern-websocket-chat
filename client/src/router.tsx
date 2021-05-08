@@ -83,12 +83,9 @@ const Router: React.FC<RouterProps> = () => {
         <Route path={`/${t('missing-invitation')}`}>
           {isLoggedIn ? <Redirect to={`/`} /> : <MissingInvitation />}
         </Route>
-        <Route
-          path={`/${t('invite-user')}`}
-          children={
-            isLoggedIn ? <InviteNewUser /> : <Redirect to={`/${t('login')}`} />
-          }
-        />
+        <Route path={`/${t('invite-user')}`}>
+          {isLoggedIn ? <InviteNewUser /> : <Redirect to={`/${t('login')}`} />}
+        </Route>
         <Route>
           <Redirect to='/' />
         </Route>

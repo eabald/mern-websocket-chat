@@ -12,7 +12,7 @@ import roomModel from '../models/room.model';
 import passportSocketIo from 'passport.socketio';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
-import i18next from 'i18next';
+import { i18n } from 'i18next';
 
 class MessageController implements Controller {
   public path = '/message';
@@ -22,21 +22,23 @@ class MessageController implements Controller {
   private user = userModel;
   private room = roomModel;
   private redisClient: RedisClient;
-  private server: Server
+  private server: Server;
+  private i18n: i18n
 
-  constructor(server: Server, redisClient: RedisClient) {
+  constructor(server: Server, redisClient: RedisClient, i18next: i18n) {
     this.server = server;
     this.redisClient = redisClient;
+    this.i18n = i18next;
     this.initializeWebsocket();
   }
 
   private initializeWebsocket(): void {
-    this.websocket = new socketio.Server(this.server, { cors: { origin: '*' } });
+    this.websocket = new socketio.Server(this.server, {
+      cors: { origin: '*' },
+    });
     const pubClient = this.redisClient;
     const subClient = pubClient.duplicate();
-    this.websocket.adapter(
-      createAdapter({ pubClient, subClient })
-    );
+    this.websocket.adapter(createAdapter({ pubClient, subClient }));
     const RedisStore = connectRedis(session);
     this.websocket.use(
       passportSocketIo.authorize({
@@ -48,6 +50,8 @@ class MessageController implements Controller {
       })
     );
 
+    subClient.on('message', this.notifyPaymentFulfilled);
+    subClient.subscribe('payments');
     this.websocket.use(this.setSocketId);
     this.websocket.on('connection', (socket: SocketWithUser) =>
       this.bindSocketEvents(socket, this.websocket)
@@ -96,7 +100,7 @@ class MessageController implements Controller {
     if (room.type === 'dm' && isBlocked) {
       socket.emit('messageBlocked', {
         status: 'blocked',
-        message: i18next.t('Sending message to this user has been blocked.'),
+        message: this.i18n.t('Sending message to this user has been blocked.'),
       });
       return;
     }
@@ -126,6 +130,26 @@ class MessageController implements Controller {
       socket.emit('messageReceived', newMessage);
     }, 100);
   }
+
+  private notifyPaymentFulfilled = async (chanel: string, message: string) => {
+    const paymentData = JSON.parse(message);
+    const user = await this.user.findById(paymentData.userId);
+    const userSocketId = user.socketId;
+    const userSocket = this.websocket.sockets.sockets.get(userSocketId);
+    const statusMessage = {
+      status: 'success',
+      message: this.i18n.t(
+        paymentData.payment
+          ? `You didn't finished your last payment, click this message to continue.`
+          : 'Your last payment already fulfilled.'
+      ),
+      additionalData: paymentData.payment,
+    };
+    userSocket.emit(
+      paymentData.payment ? 'paymentToContinue' : 'paymentFulfilled',
+      statusMessage
+    );
+  };
 }
 
 export default MessageController;

@@ -47,7 +47,16 @@ const FlashOutlet: React.FC<FlashOutletProps> = () => {
         <FlashMessage
           key={i}
           message={flash.message}
-          onClickHandler={() => dispatch(unsetFlashMessage(flash))}
+          onClickHandler={() => {
+            if (flash.callback && typeof flash.callback === 'function' && flash.additionalData) {
+              flash.callback(flash.additionalData);
+            }
+            dispatch(unsetFlashMessage(flash));
+          }}
+          onCloseHandler={e => {
+            e.stopPropagation();
+            dispatch(unsetFlashMessage(flash))
+          }}
           type={flash.status}
         />
       ))}

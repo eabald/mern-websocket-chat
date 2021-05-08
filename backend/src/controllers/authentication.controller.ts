@@ -170,7 +170,6 @@ class AuthenticationController implements Controller {
             });
           } catch (error) {
             await user.deleteOne();
-            console.log(error);
             next(new RegistrationEmailException());
           }
         }
