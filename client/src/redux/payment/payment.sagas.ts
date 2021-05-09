@@ -13,6 +13,10 @@ import {
   BuyRoomsCreateSessionStartAction,
   BUY_ROOMS_CREATE_SESSION_START,
   BUY_ROOMS_CHECK_STATUS_START,
+  BuyRegistrationCreateSessionStartAction,
+  BUY_REGISTRATION_CREATE_SESSION_START,
+  BuyRegistrationCheckStatusStartAction,
+  BUY_REGISTRATION_CHECK_STATUS_START,
 } from './payment.types';
 // Actions
 import { setFlashMessage, updateLoading } from '../utils/utils.actions';
@@ -21,6 +25,10 @@ import {
   buyInvitationCreateSessionSuccess,
   buyInvitationsCheckStatusError,
   buyInvitationsCheckStatusSuccess,
+  buyRegistrationCheckStatusError,
+  buyRegistrationCheckStatusSuccess,
+  buyRegistrationCreateSessionError,
+  buyRegistrationCreateSessionSuccess,
   buyRoomsCheckStatusError,
   buyRoomsCheckStatusSuccess,
   buyRoomsCreateSessionError,
@@ -31,6 +39,8 @@ import {
 import {
   buyInvitationsRequest,
   buyInvitationsStatusRequest,
+  buyRegistrationRequest,
+  buyRegistrationStatusRequest,
   buyRoomsRequest,
   buyRoomsStatusRequest,
 } from '../../api/payment.api';
@@ -147,6 +157,43 @@ export function* resumePayment({ payload }: ResumePaymentStartAction) {
   }
 }
 
+export function* buyRegistration({ payload }: BuyRegistrationCreateSessionStartAction) {
+  try {
+    yield put(updateLoading(true));
+    const stripe: Stripe = yield stripePromise;
+    const { id } = yield buyRegistrationRequest(payload);
+    yield put(buyRegistrationCreateSessionSuccess(id));
+    yield stripe.redirectToCheckout({ sessionId: id });
+  } catch (error) {
+    yield put(updateLoading(false));
+    let errorMsg;
+    if (error.message) {
+      errorMsg = {
+        status: 'error',
+        message: error.message,
+      };
+    } else {
+      errorMsg = error.response.data;
+    }
+    yield put(buyRegistrationCreateSessionError(errorMsg));
+  }
+}
+
+export function* buyRegistrationCheckStatus({ payload }: BuyRegistrationCheckStatusStartAction) {
+  try {
+    yield put(updateLoading(true));
+    const { status, message } = yield buyRegistrationStatusRequest(
+      payload
+    );
+    yield put(buyRegistrationCheckStatusSuccess({ status, message }));
+    yield put(setFlashMessage({ status, message }));
+    yield put(updateLoading(false));
+  } catch (error) {
+    yield put(updateLoading(false));
+    yield put(buyRegistrationCheckStatusError(error.response.data));
+  }
+}
+
 export function* onBuyInvitationsStart() {
   yield takeLatest<BuyInvitationCreateSessionStartAction>(
     BUY_INVITATION_CREATE_SESSION_START,
@@ -182,6 +229,20 @@ export function* onResumePaymentStart() {
   );
 }
 
+export function* onBuyRegistrationStart() {
+  yield takeLatest<BuyRegistrationCreateSessionStartAction>(
+    BUY_REGISTRATION_CREATE_SESSION_START,
+    buyRegistration
+  )
+}
+
+export function* onBuyRegistrationCheckStatusStart() {
+  yield takeLatest<BuyRegistrationCheckStatusStartAction>(
+    BUY_REGISTRATION_CHECK_STATUS_START,
+    buyRegistrationCheckStatus
+  )
+}
+
 export function* paymentSagas() {
   yield all([
     call(onBuyInvitationsStart),
@@ -189,6 +250,8 @@ export function* paymentSagas() {
     call(onBuyRoomsStart),
     call(onBuyRoomsCheckStatusStart),
     call(onResumePaymentStart),
+    call(onBuyRegistrationStart),
+    call(onBuyRegistrationCheckStatusStart),
   ]);
 }
 

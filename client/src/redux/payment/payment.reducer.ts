@@ -15,6 +15,10 @@ import {
   BUY_ROOMS_CREATE_SESSION_ERROR,
   BUY_ROOMS_CHECK_STATUS_SUCCESS,
   BUY_ROOMS_CHECK_STATUS_ERROR,
+  BUY_REGISTRATION_CREATE_SESSION_SUCCESS,
+  BUY_REGISTRATION_CREATE_SESSION_ERROR,
+  BUY_REGISTRATION_CHECK_STATUS_SUCCESS,
+  BUY_REGISTRATION_CHECK_STATUS_ERROR,
 } from './payment.types';
 import { RESET } from '../utils/utils.types';
 
@@ -84,6 +88,25 @@ const paymentReducer: Reducer<PaymentState, PaymentAction> = (
         ...state,
         error: null,
       };
+    case BUY_REGISTRATION_CREATE_SESSION_SUCCESS:
+      return {
+        ...state,
+        id: action.payload,
+      }
+    case BUY_REGISTRATION_CREATE_SESSION_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      }
+    case BUY_REGISTRATION_CHECK_STATUS_SUCCESS:
+      return {
+        ...state,
+      }
+    case BUY_REGISTRATION_CHECK_STATUS_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      }
     case RESET:
       return INITIAL_STATE;
     default:

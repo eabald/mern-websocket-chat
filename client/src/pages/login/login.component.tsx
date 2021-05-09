@@ -94,6 +94,10 @@ const Login: React.FC<LoginProps> = () => {
             </Form>
           )}
         </Formik>
+        <TextBlock>
+          {t('If you don\'t have an account, You can register')}{' '}
+          <InlineLink to='/register'>{t('here')}</InlineLink>
+        </TextBlock>
       </LoginWrapper>
     </MainLayout>
   );

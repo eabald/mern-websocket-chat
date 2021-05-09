@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as socketio from 'socket.io';
 import { Server } from 'http';
 import { createAdapter } from 'socket.io-redis';
-import { RedisClient, createClient } from 'redis';
+import { RedisClient } from 'redis';
 import Controller from '../interfaces/controller.interface';
 import Message from '../interfaces/message.interface';
 import messageModel from '../models/message.model';
@@ -23,7 +23,7 @@ class MessageController implements Controller {
   private room = roomModel;
   private redisClient: RedisClient;
   private server: Server;
-  private i18n: i18n
+  private i18n: i18n;
 
   constructor(server: Server, redisClient: RedisClient, i18next: i18n) {
     this.server = server;

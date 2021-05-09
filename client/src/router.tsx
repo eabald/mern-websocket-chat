@@ -42,6 +42,9 @@ const MissingInvitation = lazy(
 const InviteNewUser = lazy(
   () => import('./pages/inviteNewUser/inviteNewUser.component')
 );
+const BuyRegistration = lazy(
+  () => import('./pages/buyRegistration/buyRegistration.component')
+);
 
 type RouterProps = {};
 
@@ -53,14 +56,24 @@ const Router: React.FC<RouterProps> = () => {
   const { t } = useTranslation();
   const isLoggedIn = useSelector((state: RootState) => state.auth.token);
   const location = useLocation<StateType>();
-  const fallbackBackground = useSelector((state: RootState) => state.utils.fallbackBackground);
-  const background = location.state && location.state.background ? location.state.background : fallbackBackground;
+  const shouldHaveBackground =
+    location.pathname === `/${t('profile')}` ||
+    location.pathname === `/modal/${t('invite-user')}` ||
+    location.pathname === `/modal/${t('add-new-room')}` ||
+    location.pathname === `/modal/${t('add-new-dm')}`;
+  const fallbackBackgroundInState = useSelector(
+    (state: RootState) => state.utils.fallbackBackground
+  );
+  const fallbackBackground = shouldHaveBackground
+    ? fallbackBackgroundInState
+    : null;
+  const background =
+    location.state && location.state.background
+      ? location.state.background
+      : fallbackBackground;
   return (
     <>
       <Switch location={background || location}>
-        <Route path='/' exact>
-          {isLoggedIn ? <Home /> : <Redirect to={`/${t('login')}`} />}
-        </Route>
         <Route path={`/${t('login')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <Login />}
         </Route>
@@ -76,13 +89,19 @@ const Router: React.FC<RouterProps> = () => {
         <Route path={`/${t('change-password')}`}>
           {isLoggedIn ? <Redirect to='/' /> : <ChangePassword />}
         </Route>
-        <Route path={`/${t('logout')}`}><Logout /></Route>
+        <Route path={`/${t('logout')}`} component={Logout}/>
         <Route
           path={`/${t('terms-and-conditions')}`}
           component={TermsAndConditions}
         />
         <Route path={`/${t('missing-invitation')}`}>
           {isLoggedIn ? <Redirect to={`/`} /> : <MissingInvitation />}
+        </Route>
+        <Route path={`/${t('buy-registration')}`}>
+          {isLoggedIn ? <Redirect to={`/`} /> : <BuyRegistration />}
+        </Route>
+        <Route path='/' exact>
+          {isLoggedIn ? <Home /> : <Redirect to={`/${t('login')}`} />}
         </Route>
         <Route>
           <Redirect to='/' />

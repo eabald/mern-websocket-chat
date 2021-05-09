@@ -5,7 +5,7 @@ import { ReactComponent as HelloSvg } from '../../images/hello.svg';
 export const MissingInvitationWrapper = styled.div`
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: 50% 50%;
+  grid-template-rows: 20% 80%;
   grid-template-areas:
     'img info'
     'img link';
@@ -43,8 +43,10 @@ export const MissingInvitationTextWrapper = styled.div`
 
 export const MissingInvitationLinkWrapper = styled.div`
   grid-area: link;
+  width: 100%;
   padding: 10px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  flex-direction: column;
 `;

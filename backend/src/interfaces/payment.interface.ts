@@ -7,7 +7,10 @@ interface Payment {
   value: number;
   status: 'paid' | 'unpaid' | 'no_payment_required';
   type: 'invitations' | 'rooms';
-  user: User;
+  user?: User;
+  additionalData: {
+    [x: string]: any;
+  };
 }
 
 export default Payment;

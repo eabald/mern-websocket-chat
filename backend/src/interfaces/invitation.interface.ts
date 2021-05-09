@@ -2,7 +2,7 @@ import User from './user.interface'
 
 interface Invitation {
   email: string;
-  invitedBy: User;
+  invitedBy?: User;
   timestamp: Date;
   token: string;
 }

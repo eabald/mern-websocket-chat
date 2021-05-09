@@ -17,6 +17,9 @@ import FreepikInfo from '../../components/freepikInfo/freepikInfo.component';
 import SmallHeader from '../../components/smallHeader/smallHeader.component';
 import TextBlock from '../../components/textBlock/textBlock.component';
 import BackButton from '../../components/backButton/backButton.component';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import LinkButton from '../../components/linkButton/linkButton.component';
 
 type MissingInvitationProps = {};
 
@@ -34,6 +37,11 @@ const MissingInvitation: React.FC<MissingInvitationProps> = () => {
         </MissingInvitationTextWrapper>
         <MissingInvitationLinkWrapper>
           <TextBlock>{t('Looks like you are missing your invitation. Unfortunately you need one to register.')}</TextBlock>
+          <TextBlock>{t('Buy invitation info')}</TextBlock>
+          <LinkButton to={`/${t('buy-registration')}`} type='block'>
+            <FontAwesomeIcon icon={faDollarSign} />{' '}
+            {t('Buy for label', { price: '4.99' })}
+          </LinkButton>
         </MissingInvitationLinkWrapper>
       </MissingInvitationWrapper>
       <FreepikInfo />
