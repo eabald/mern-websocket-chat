@@ -93,7 +93,17 @@ class PaymentController implements Controller {
           const message = request.t('Payment successful');
           response.status(200).json({ status: 'success', message, user });
         } else {
-          this.watchPaymentStatus(id, request.user.id, field);
+          if (
+            !request.session.watchingPayments ||
+            !request.session.watchingPayments.includes(id)
+          ) {
+            if (!request.session.watchingPayments) {
+              request.session.watchingPayments = [id];
+            } else {
+              request.session.watchingPayments.push(id);
+            }
+            this.watchPaymentStatus(id, request.user.id, field);
+          }
           next(new PaymentNotFulfilledException());
         }
       }
@@ -106,7 +116,9 @@ class PaymentController implements Controller {
     field: string
   ): Promise<void> => {
     setTimeout(async () => {
-      const payment = await this.payment.findOne({ sessionId: { $eq: sessionId } });
+      const payment = await this.payment.findOne({
+        sessionId: { $eq: sessionId },
+      });
       const session = await this.stripe.checkout.sessions.retrieve(sessionId);
       payment.status = session.payment_status;
       payment.save();
@@ -119,29 +131,38 @@ class PaymentController implements Controller {
           type: 'success',
           userId,
           payment: payment.id,
-        }
+        };
         this.pubClient.publish('payments', JSON.stringify(successMessage));
       } else {
-        const abandoned = Number(session.metadata.createdAt) + 36000000 < Date.now();
+        const abandoned =
+          Number(session.metadata.createdAt) + 36000000 < Date.now();
         if (abandoned) {
-          await this.stripe.paymentIntents.cancel(session.payment_intent.toString());
+          await this.stripe.paymentIntents.cancel(
+            session.payment_intent.toString()
+          );
           await payment.deleteOne();
         } else {
-          const status = await (await this.stripe.paymentIntents.retrieve(session.payment_intent.toString())).status;
+          const status = await (
+            await this.stripe.paymentIntents.retrieve(
+              session.payment_intent.toString()
+            )
+          ).status;
           if (status !== 'processing') {
             const continuePaymentMessage = {
               type: 'processing',
               userId,
               payment: sessionId,
             };
-            this.pubClient.publish('payments', JSON.stringify(continuePaymentMessage));
-          } else {
-            this.watchPaymentStatus(sessionId, userId, field);
+            this.pubClient.publish(
+              'payments',
+              JSON.stringify(continuePaymentMessage)
+            );
           }
+          this.watchPaymentStatus(sessionId, userId, field);
         }
       }
     }, 60000);
-  }
+  };
 
   private buyInvitations = async (
     request: RequestWithUser,
