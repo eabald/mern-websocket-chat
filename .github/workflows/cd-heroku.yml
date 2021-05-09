@@ -23,3 +23,5 @@ jobs:
           heroku_app_name: "mern-ws-chat"
           heroku_email: "maciejro.krawczyk@gmail.com"
           usedocker: true
+        env:
+          REACT_APP_PUBLIC_VAPID_KEY: ${{ secrets.REACT_APP_PUBLIC_VAPID_KEY }}
