@@ -9,6 +9,7 @@ import {
   SET_NOTIFICATIONS_ASKING_BLOCKED,
   SET_NOTIFICATIONS_WAITING,
   SET_LAST_ASKED_TS,
+  SET_FALLBACK_BACKGROUND,
 } from './utils.types';
 
 export const updateLoading = (isLoading: boolean): UtilsAction => ({
@@ -39,6 +40,11 @@ export const setNotificationsAskingBlock = (isBlocked: boolean): UtilsAction => 
 export const setNotificationsWaiting = (shouldWait: boolean): UtilsAction => ({
   type: SET_NOTIFICATIONS_WAITING,
   payload: shouldWait,
+})
+
+export const setFallbackBackground = (background: any): UtilsAction => ({
+  type: SET_FALLBACK_BACKGROUND,
+  payload: background,
 })
 
 export const setLastAskedTs = (timestamp: number): UtilsAction => ({
