@@ -36,6 +36,7 @@ interface RegisterValues {
   firstName: string;
   lastName: string;
   terms: boolean;
+  token: string;
 }
 
 const Register: React.FC<RegisterProps> = () => {
@@ -46,7 +47,7 @@ const Register: React.FC<RegisterProps> = () => {
   const location = useLocation();
   useEffect(() => {
     if (!token) {
-      history.push(t('/missing-invitation'))
+      history.push(`/${t('missing-invitation')}`)
     }
   }, [token, history, t, location])
   const submitHandler = async (values: RegisterValues): Promise<void> => {
@@ -66,6 +67,7 @@ const Register: React.FC<RegisterProps> = () => {
             firstName: '',
             lastName: '',
             terms: false,
+            token: token ?? '',
           }}
           validationSchema={RegisterFormValidationSchema}
           onSubmit={(

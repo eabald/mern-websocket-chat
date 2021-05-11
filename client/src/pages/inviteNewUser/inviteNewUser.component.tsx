@@ -5,7 +5,7 @@ import { useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
 import { inviteUserStart } from '../../redux/user/user.actions';
-import { buyInvitationsCheckStatusStart } from '../../redux/payment/payment.actions';
+import { buyInvitationsCheckStatusStart, buyInvitationCreateSessionStart } from '../../redux/payment/payment.actions';
 // External
 import { Formik, FormikHelpers, Form, ErrorMessage } from 'formik';
 // I18N
@@ -21,8 +21,7 @@ import ValidationError from '../../components/form/validationError/validationErr
 import Label from '../../components/form/label/label.component';
 import FormField from '../../components/form/formField/formField.component';
 import TextBlock from '../../components/textBlock/textBlock.component';
-import ButInvitations from '../../components/buyInvitations/buyInvitations.component';
-// import useWebsocket from '../../hooks/useWebsocket';
+import ButPopup from '../../components/buyPopup/buyPopup.component';
 import Modal from '../../components/modal/modal.component';
 
 type InviteNewUserProps = {};
@@ -31,7 +30,6 @@ interface FormValues {
 }
 
 const InviteNewUser: React.FC<InviteNewUserProps> = () => {
-  // useWebsocket();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -55,10 +53,10 @@ const InviteNewUser: React.FC<InviteNewUserProps> = () => {
       })
       dispatch(buyInvitationsCheckStatusStart(sessionId));
     }
-  });
+  }, [dispatch, history, payed, paymentError, sessionId]);
   useEffect(() => {
-    setHasInvitations(!!(noOfInvitations && noOfInvitations > 48));
-  }, [noOfInvitations, loading])
+    setHasInvitations(!!(noOfInvitations && noOfInvitations > 0));
+  }, [noOfInvitations, loading]);
   return (
     <Modal title={t('Invite new user')}>
       <TextBlock>
@@ -75,7 +73,7 @@ const InviteNewUser: React.FC<InviteNewUserProps> = () => {
         ) => {
           submitHandler(values)
             .then(() => actions.setSubmitting(false))
-            .finally(() => history.goBack());
+            .finally(() => history.push('/'));
         }}
       >
         {(props) => (
@@ -105,7 +103,7 @@ const InviteNewUser: React.FC<InviteNewUserProps> = () => {
           </Form>
         )}
       </Formik>
-      {hasInvitations ? '' : <ButInvitations />}
+      {hasInvitations ? '' : <ButPopup price='4.99' action={buyInvitationCreateSessionStart} textKey='buy text invitations' />}
     </Modal>
   );
 };

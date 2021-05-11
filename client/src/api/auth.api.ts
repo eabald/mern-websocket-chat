@@ -24,11 +24,9 @@ interface RegisterResponse {
 export async function signInRequest(
   credentials: Credentials
 ): Promise<TokenResponse> {
-  const response: TokenResponse = await api.post(
-    '/auth/login',
-    credentials,
-    { withCredentials: true }
-  );
+  const response: TokenResponse = await api.post('/auth/login', credentials, {
+    withCredentials: true,
+  });
   return response.data;
 }
 
@@ -37,12 +35,14 @@ export async function signOutRequest(): Promise<void> {
 }
 
 export async function signUpRequest(
-  signUpCredentials: SignUpCredentials
+  signUpCredentials: SignUpCredentials,
 ): Promise<RegisterResponse> {
   const response: AxiosResponse = await api.post(
     '/auth/register',
     signUpCredentials,
-    { withCredentials: true }
+    {
+      withCredentials: true,
+    }
   );
   return response.data;
 }
