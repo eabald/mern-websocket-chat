@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-
-import { ReactComponent as HelloSvg } from '../../images/hello.svg';
+import { ReactComponent as CrySvg } from '../../images/crying.svg';
 
 export const MissingInvitationWrapper = styled.div`
   display: grid;
@@ -27,7 +26,7 @@ export const MissingInvitationImageWrapper = styled.div`
   padding: 30px;
 `;
 
-export const MissingInvitationImage = styled(HelloSvg)`
+export const MissingInvitationImage = styled(CrySvg)`
   height: 100%;
   width: auto;
   max-height: 250px;
@@ -44,6 +43,7 @@ export const MissingInvitationTextWrapper = styled.div`
 export const MissingInvitationLinkWrapper = styled.div`
   grid-area: link;
   width: 100%;
+  max-width: 350px;
   padding: 10px;
   display: flex;
   justify-content: center;

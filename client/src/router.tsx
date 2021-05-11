@@ -9,6 +9,7 @@ import { Location } from 'history';
 // I18N
 import { useTranslation } from 'react-i18next';
 // Components
+import NotFound from './pages/notFound/notFound.component';
 const Profile = lazy(() => import('./pages/profile/profile.component'));
 const Home = lazy(() => import('./pages/home/home.component'));
 const Login = lazy(() => import('./pages/login/login.component'));
@@ -103,9 +104,7 @@ const Router: React.FC<RouterProps> = () => {
         <Route path='/' exact>
           {isLoggedIn ? <Home /> : <Redirect to={`/${t('login')}`} />}
         </Route>
-        <Route>
-          <Redirect to='/' />
-        </Route>
+        <Route component={NotFound} />
       </Switch>
       {background && (
         <Route
