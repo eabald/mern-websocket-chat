@@ -53,9 +53,17 @@ class MessageController implements Controller {
     subClient.on('message', this.notifyPaymentFulfilled);
     subClient.subscribe('payments');
     this.websocket.use(this.setSocketId);
-    this.websocket.on('connection', (socket: SocketWithUser) =>
-      this.bindSocketEvents(socket, this.websocket)
-    );
+    this.websocket.on('connection', (socket: SocketWithUser) => {
+      this.bindSocketEvents(socket, this.websocket);
+      socket.on('disconnecting', () => {
+        socket.request.user.rooms.forEach((room) => {
+          socket.broadcast.to(room._id).emit('userLeft', {
+            roomID: room._id,
+            userId: socket.request.user._id,
+          });
+        });
+      });
+    });
   }
 
   private setSocketId = async (
@@ -76,15 +84,37 @@ class MessageController implements Controller {
     socket: SocketWithUser,
     websocket: socketio.Server
   ): void {
-    this.rejoinUserRooms(socket);
+    this.rejoinUserRooms(socket, websocket);
     socket.on('messageSent', (message) =>
       this.messageReceived(message, socket, websocket)
     );
   }
 
-  private rejoinUserRooms(socket: SocketWithUser): void {
+  private rejoinUserRooms = async (
+    socket: SocketWithUser,
+    websocket: socketio.Server
+  ): Promise<void> => {
+    const activeUsers = [];
     socket.request.user.rooms.forEach((room) => socket.join(room._id));
-  }
+    socket.request.user.rooms
+      .filter((room) => room.type === 'dm')
+      .forEach((room) => {
+        socket.broadcast.to(room._id).emit('userActive', {
+          roomID: room._id,
+          userId: socket.request.user._id,
+        });
+        const users = room.users.map((user) => ({
+          userId: user.id,
+          socketId: user.socketId,
+        }));
+        users.forEach(({ socketId, userId }) => {
+          if (websocket.sockets.sockets.has(socketId)) {
+            activeUsers.push({ roomId: room._id, userId });
+          }
+        });
+      });
+    socket.emit('activeUsers', activeUsers);
+  };
 
   private async messageReceived(
     message: Message,

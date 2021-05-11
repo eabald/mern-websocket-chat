@@ -120,5 +120,6 @@ export interface Room {
   users: User[];
   messages: any[];
   type?: 'room' | 'dm';
-  hasUnreadMessages?: boolean,
+  hasUnreadMessages?: boolean;
+  active?: boolean;
 }
