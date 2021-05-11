@@ -2,6 +2,7 @@
 import React from 'react';
 // Redux
 import { useDispatch } from 'react-redux';
+import { PaymentAction } from '../../redux/payment/payment.types';
 // External
 import { useTranslation } from 'react-i18next';
 // Styled
@@ -16,7 +17,6 @@ import SmallHeader from '../smallHeader/smallHeader.component';
 import TextBlock from '../textBlock/textBlock.component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faDollarSign } from '@fortawesome/free-solid-svg-icons';
-import { PaymentAction } from '../../redux/payment/payment.types';
 
 type BuyPopupProps = {
   price: string;

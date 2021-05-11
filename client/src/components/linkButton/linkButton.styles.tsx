@@ -10,8 +10,8 @@ export const LinkButtonWrapper = styled(Link)`
   color: ${props => props.theme.mainTextColor};
   text-decoration: none;
   text-align: center;
-  padding: 10px;
-  margin: 5px;
+  padding: 10px 0;
+  margin: 5px 0;
   border-radius: 5px;
   &:hover {
     background: ${props => props.theme.secondaryTextColor};

@@ -9,6 +9,7 @@ import PriceData from '../interfaces/priceData.interface';
 import PaymentFailedException from '../exceptions/PaymentFailedException';
 import paymentModel from '../models/payment.model';
 import { RedisClient } from 'redis';
+import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
 
 class PaymentController implements Controller {
   public path = '/payment';
@@ -43,6 +44,8 @@ class PaymentController implements Controller {
       authMiddleware,
       this.buyRoomsStatus
     );
+    this.router.post(`${this.path}/buy-registration`, this.buyRegistration);
+    this.router.post(`${this.path}/buy-registration-status`, this.buyRegistrationStatus)
   }
 
   private createCheckoutSession(
@@ -73,7 +76,8 @@ class PaymentController implements Controller {
     field: string,
     request: RequestWithUser,
     response: express.Response,
-    next: express.NextFunction
+    next: express.NextFunction,
+    customCallback?: (id: string) => void
   ) => {
     if (!id) {
       next(new PaymentFailedException());
@@ -87,11 +91,17 @@ class PaymentController implements Controller {
         payment.save();
         const isPayed = session.payment_status === 'paid';
         if (isPayed) {
-          const user = await this.user.findById(userId);
-          user.fomo[field] = user.fomo[field] + 3;
-          await user.save();
-          const message = request.t('Payment successful');
-          response.status(200).json({ status: 'success', message, user });
+          if (userId) {
+            const user = await this.user.findById(userId);
+            user.fomo[field] = user.fomo[field] + 3;
+            await user.save();
+            const message = request.t('Payment successful, check your email.');
+            response.status(200).json({ status: 'success', message, user });
+          } else if (customCallback) {
+            customCallback(id);
+            const message = request.t('Payment successful, check your email.');
+            response.status(200).json({ status: 'success', message });
+          }
         } else {
           if (
             !request.session.watchingPayments ||
@@ -102,7 +112,7 @@ class PaymentController implements Controller {
             } else {
               request.session.watchingPayments.push(id);
             }
-            this.watchPaymentStatus(id, request.user.id, field);
+            this.watchPaymentStatus(id, userId, field, customCallback);
           }
           next(new PaymentNotFulfilledException());
         }
@@ -113,7 +123,8 @@ class PaymentController implements Controller {
   private watchPaymentStatus = async (
     sessionId: string,
     userId: string,
-    field: string
+    field: string,
+    customCallback?: (id: string) => void
   ): Promise<void> => {
     setTimeout(async () => {
       const payment = await this.payment.findOne({
@@ -124,15 +135,19 @@ class PaymentController implements Controller {
       payment.save();
       const isPayed = session.payment_status === 'paid';
       if (isPayed) {
-        const user = await this.user.findById(userId);
-        user.fomo[field] = user.fomo[field] + 3;
-        await user.save();
-        const successMessage = {
-          type: 'success',
-          userId,
-          payment: payment.id,
-        };
-        this.pubClient.publish('payments', JSON.stringify(successMessage));
+        if (userId) {
+          const user = await this.user.findById(userId);
+          user.fomo[field] = user.fomo[field] + 3;
+          await user.save();
+          const successMessage = {
+            type: 'success',
+            userId,
+            payment: payment.id,
+          };
+          this.pubClient.publish('payments', JSON.stringify(successMessage));
+        } else if (customCallback) {
+          customCallback(sessionId);
+        }
       } else {
         const abandoned =
           Number(session.metadata.createdAt) + 36000000 < Date.now();
@@ -142,23 +157,25 @@ class PaymentController implements Controller {
           );
           await payment.deleteOne();
         } else {
-          const status = await (
-            await this.stripe.paymentIntents.retrieve(
-              session.payment_intent.toString()
-            )
-          ).status;
-          if (status !== 'processing') {
-            const continuePaymentMessage = {
-              type: 'processing',
-              userId,
-              payment: sessionId,
-            };
-            this.pubClient.publish(
-              'payments',
-              JSON.stringify(continuePaymentMessage)
-            );
+          if (!customCallback) {
+            const status = await (
+              await this.stripe.paymentIntents.retrieve(
+                session.payment_intent.toString()
+              )
+            ).status;
+            if (status !== 'processing') {
+              const continuePaymentMessage = {
+                type: 'processing',
+                userId,
+                payment: sessionId,
+              };
+              this.pubClient.publish(
+                'payments',
+                JSON.stringify(continuePaymentMessage)
+              );
+            }
           }
-          this.watchPaymentStatus(sessionId, userId, field);
+          this.watchPaymentStatus(sessionId, userId, field, customCallback);
         }
       }
     }, 60000);
@@ -253,5 +270,57 @@ class PaymentController implements Controller {
       next
     );
   };
+
+  private buyRegistration = async (
+    request: RequestWithUser,
+    response: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const credentials = request.body;
+    const user = await this.user.findOne({ email: { $eq: credentials.email } });
+    if (user) {
+      next(new UserWithThatEmailAlreadyExistsException(credentials.email));
+    } else {
+      const session = await this.createCheckoutSession(
+        request,
+        {
+          currency: 'usd',
+          product_data: {
+            name: 'Registration',
+          },
+          unit_amount: 499,
+        },
+        `${request.t('buy-registration')}`
+      );
+      await this.payment.create({
+        sessionId: session.id,
+        value: 4.99,
+        status: 'unpaid',
+        type: 'registration',
+        additionalData: credentials,
+      });
+      response.status(200).json({ id: session.id });
+    }
+  }
+
+  private buyRegistrationStatus = async (
+    request: RequestWithUser,
+    response: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const sessionId = request.body.id;
+    await this.verifyPaymentAndProcess(
+      sessionId,
+      '',
+      'registration',
+      request,
+      response,
+      next,
+      (id: string) => {
+        console.log({ id, lang: request.i18n.language });
+        this.pubClient.publish('invitations', JSON.stringify({ id, lang: request.i18n.language }));
+      }
+    );
+  }
 }
 export default PaymentController;

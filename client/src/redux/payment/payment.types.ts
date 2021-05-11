@@ -29,6 +29,14 @@ export const RESUME_PAYMENT_START = 'RESUME_PAYMENT_START';
 export const RESUME_PAYMENT_SUCCESS = 'RESUME_PAYMENT_SUCCESS';
 export const RESUME_PAYMENT_ERROR = 'RESUME_PAYMENT_ERROR';
 
+export const BUY_REGISTRATION_CREATE_SESSION_START = 'BUY_REGISTRATION_CREATE_SESSION_START';
+export const BUY_REGISTRATION_CREATE_SESSION_SUCCESS = 'BUY_REGISTRATION_CREATE_SESSION_SUCCESS';
+export const BUY_REGISTRATION_CREATE_SESSION_ERROR = 'BUY_REGISTRATION_CREATE_SESSION_ERROR';
+
+export const BUY_REGISTRATION_CHECK_STATUS_START = 'BUY_REGISTRATION_CHECK_STATUS_START';
+export const BUY_REGISTRATION_CHECK_STATUS_SUCCESS = 'BUY_REGISTRATION_CHECK_STATUS_SUCCESS';
+export const BUY_REGISTRATION_CHECK_STATUS_ERROR = 'BUY_REGISTRATION_CHECK_STATUS_ERROR';
+
 export const CLEAR_PAYMENT_ERROR = 'CLEAR_PAYMENT_ERROR';
 
 export interface BuyInvitationCreateSessionStartAction extends Action {
@@ -106,6 +114,36 @@ export interface ResumePaymentErrorAction extends Action {
   payload: PaymentError;
 }
 
+export interface BuyRegistrationCreateSessionStartAction extends Action {
+  type: typeof BUY_REGISTRATION_CREATE_SESSION_START;
+  payload: BuyRegistrationCredentials;
+}
+
+export interface BuyRegistrationCreateSessionSuccessAction extends Action {
+  type: typeof BUY_REGISTRATION_CREATE_SESSION_SUCCESS;
+  payload: string;
+}
+
+export interface BuyRegistrationCreateSessionErrorAction extends Action {
+  type: typeof BUY_REGISTRATION_CREATE_SESSION_ERROR;
+  payload: PaymentError;
+}
+
+export interface BuyRegistrationCheckStatusStartAction extends Action {
+  type: typeof BUY_REGISTRATION_CHECK_STATUS_START;
+  payload: string;
+}
+
+export interface BuyRegistrationCheckStatusSuccessAction extends Action {
+  type: typeof BUY_REGISTRATION_CHECK_STATUS_SUCCESS;
+  payload: PaymentStatus;
+}
+
+export interface BuyRegistrationCheckStatusErrorAction extends Action {
+  type: typeof BUY_REGISTRATION_CHECK_STATUS_ERROR;
+  payload: PaymentError;
+}
+
 export type PaymentAction =
   | BuyInvitationCreateSessionStartAction
   | BuyInvitationCreateSessionSuccessAction
@@ -122,6 +160,12 @@ export type PaymentAction =
   | ResumePaymentStartAction
   | ResumePaymentSuccessAction
   | ResumePaymentErrorAction
+  | BuyRegistrationCreateSessionStartAction
+  | BuyRegistrationCreateSessionSuccessAction
+  | BuyRegistrationCreateSessionErrorAction
+  | BuyRegistrationCheckStatusStartAction
+  | BuyRegistrationCheckStatusSuccessAction
+  | BuyRegistrationCheckStatusErrorAction
   | ClearPaymentErrorAction
   | ResetAction;
 
@@ -138,4 +182,9 @@ export interface PaymentError {
 export interface PaymentStatus {
   status: string;
   message: string;
+}
+
+export interface BuyRegistrationCredentials {
+  email: string;
+  terms: boolean;
 }

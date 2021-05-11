@@ -66,7 +66,6 @@ const Navbar: React.FC<NavbarProps> = () => {
             pathname: `/modal/${t('invite-user')}`,
             state: { background: location },
           }}
-
           data-tip={t('Here you can invite new user!')}
         >
           <FontAwesomeIcon icon={faUserPlus} />
@@ -80,7 +79,10 @@ const Navbar: React.FC<NavbarProps> = () => {
         >
           <FontAwesomeIcon icon={faUser} />
         </NavbarLink>
-        <NavbarLink to={`/${t('logout')}`} data-tip={t('Logout')}>
+        <NavbarLink
+          to={`/${t('logout')}`}
+          data-tip={t('Logout')}
+        >
           <FontAwesomeIcon icon={faPowerOff} />
         </NavbarLink>
       </NavbarLinksWrapper>

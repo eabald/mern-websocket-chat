@@ -12,21 +12,36 @@ import RegistrationEmailException from '../exceptions/RegistrationEmailException
 import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
 import InvitationAlreadySentException from '../exceptions/InvitationAlreadySentException';
 import NoInvitationsAvailableException from '../exceptions/NoInvitationsAvailableException';
+import { RedisClient } from 'redis';
+import { i18n } from 'i18next';
+import paymentModel from '../models/payment.model';
 
 class InvitationController implements Controller {
   public path = '/invitation';
   public router = express.Router();
   private invitation = invitationModel;
   private user = userModel;
+  private payment = paymentModel;
+  private redisClient: RedisClient;
   private emailService: EmailService;
+  private i18n: i18n;
 
-  constructor() {
+  constructor(redisClient: RedisClient, i18next: i18n) {
     this.emailService = new EmailService();
+    this.i18n = i18next;
+    this.redisClient = redisClient;
     this.initializeRoutes();
+    this.initializeSub();
   }
 
   private initializeRoutes() {
     this.router.post(`${this.path}/send`, authMiddleware, this.sendInvitation);
+  }
+
+  private initializeSub() {
+    const subClient = this.redisClient.duplicate();
+    subClient.on('message', this.sendPayedInvitation);
+    subClient.subscribe('invitations');
   }
 
   private sendInvitation = async (
@@ -71,9 +86,9 @@ class InvitationController implements Controller {
                   mainText: request.t('Invite email content'),
                   ClickHereToRegister: request.t('Click here to register'),
                   urlInfo: request.t('Copy url info'),
-                  registerUrl: `${process.env.DOMAIN}/register?token=${encodeURI(
-                    token
-                  )}`,
+                  registerUrl: `${
+                    process.env.DOMAIN
+                  }/register?token=${encodeURI(token)}`,
                   footerText: `© ${
                     process.env.APP_NAME
                   } ${new Date().getFullYear()}`,
@@ -105,6 +120,47 @@ class InvitationController implements Controller {
       token,
     };
   }
+
+  private sendPayedInvitation = async (chanel: string, message: string) => {
+    const { id, lang } = JSON.parse(message);
+    const payment = await this.payment.findOne({ sessionId: { $eq: id } });
+    let invitation = await this.invitation.findOne({
+      email: { $eq: payment.additionalData.email },
+    });
+    if (invitation) {
+      await invitation.deleteOne();
+    }
+    const { token } = this.createInvitationToken(payment.additionalData.email);
+    invitation = await this.invitation.create({
+      email: payment.additionalData.email,
+      token,
+      timestamp: new Date(),
+    });
+    try {
+      await this.i18n.reloadResources(lang, 'translation');
+      await this.emailService.sendEmail(
+        payment.additionalData.email,
+        this.i18n.t('Invitation to app'),
+        process.env.EMAIL_TEMPLATE_INVITATION,
+        {
+          appName: process.env.APP_NAME,
+          domain: process.env.DOMAIN,
+          header: this.i18n.t('Invite email header'),
+          mainText: this.i18n.t('Invite email content'),
+          ClickHereToRegister: this.i18n.t('Click here to register'),
+          urlInfo: this.i18n.t('Copy url info'),
+          registerUrl: `${
+            process.env.DOMAIN
+          }/register?token=${encodeURI(token)}`,
+          footerText: `© ${
+            process.env.APP_NAME
+          } ${new Date().getFullYear()}`,
+        }
+      );
+    } catch (error) {
+      await invitation.deleteOne();
+    }
+  };
 }
 
 export default InvitationController;

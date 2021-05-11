@@ -19,6 +19,13 @@ import {
   RESUME_PAYMENT_START,
   RESUME_PAYMENT_SUCCESS,
   RESUME_PAYMENT_ERROR,
+  BuyRegistrationCredentials,
+  BUY_REGISTRATION_CREATE_SESSION_START,
+  BUY_REGISTRATION_CREATE_SESSION_SUCCESS,
+  BUY_REGISTRATION_CREATE_SESSION_ERROR,
+  BUY_REGISTRATION_CHECK_STATUS_START,
+  BUY_REGISTRATION_CHECK_STATUS_SUCCESS,
+  BUY_REGISTRATION_CHECK_STATUS_ERROR,
 } from './payment.types';
 
 export const buyInvitationCreateSessionStart = (): PaymentAction => ({
@@ -62,9 +69,7 @@ export const buyRoomsCreateSessionStart = (): PaymentAction => ({
   type: BUY_ROOMS_CREATE_SESSION_START,
 });
 
-export const buyRoomsCreateSessionSuccess = (
-  id: string
-): PaymentAction => ({
+export const buyRoomsCreateSessionSuccess = (id: string): PaymentAction => ({
   type: BUY_ROOMS_CREATE_SESSION_SUCCESS,
   payload: id,
 });
@@ -106,6 +111,48 @@ export const resumePaymentSuccess = (): PaymentAction => ({
 
 export const resumePaymentError = (error: PaymentError): PaymentAction => ({
   type: RESUME_PAYMENT_ERROR,
+  payload: error,
+});
+
+export const buyRegistrationCreateSessionStart = (
+  credentials: BuyRegistrationCredentials
+): PaymentAction => ({
+  type: BUY_REGISTRATION_CREATE_SESSION_START,
+  payload: credentials,
+});
+
+export const buyRegistrationCreateSessionSuccess = (
+  id: string
+): PaymentAction => ({
+  type: BUY_REGISTRATION_CREATE_SESSION_SUCCESS,
+  payload: id,
+});
+
+export const buyRegistrationCreateSessionError = (
+  error: PaymentError
+): PaymentAction => ({
+  type: BUY_REGISTRATION_CREATE_SESSION_ERROR,
+  payload: error,
+})
+
+export const buyRegistrationCheckStatusStart = (
+  id: string
+): PaymentAction => ({
+  type: BUY_REGISTRATION_CHECK_STATUS_START,
+  payload: id,
+});
+
+export const buyRegistrationCheckStatusSuccess = (
+  status: PaymentStatus
+): PaymentAction => ({
+  type: BUY_REGISTRATION_CHECK_STATUS_SUCCESS,
+  payload: status,
+});
+
+export const buyRegistrationCheckStatusError = (
+  error: PaymentError
+): PaymentAction => ({
+  type: BUY_REGISTRATION_CHECK_STATUS_ERROR,
   payload: error,
 })
 

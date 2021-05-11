@@ -6,6 +6,7 @@ const paymentSchema = new mongoose.Schema({
   value: Number,
   status: String,
   type: String,
+  additionalData: mongoose.Schema.Types.Mixed,
   user: {
     ref: 'User',
     type: mongoose.Schema.Types.ObjectId,
