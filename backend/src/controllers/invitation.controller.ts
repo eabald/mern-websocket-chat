@@ -13,7 +13,6 @@ import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatE
 import InvitationAlreadySentException from '../exceptions/InvitationAlreadySentException';
 import NoInvitationsAvailableException from '../exceptions/NoInvitationsAvailableException';
 import { RedisClient } from 'redis';
-import { i18n } from 'i18next';
 import paymentModel from '../models/payment.model';
 
 class InvitationController implements Controller {
@@ -24,11 +23,9 @@ class InvitationController implements Controller {
   private payment = paymentModel;
   private redisClient: RedisClient;
   private emailService: EmailService;
-  private i18n: i18n;
 
-  constructor(redisClient: RedisClient, i18next: i18n) {
+  constructor(redisClient: RedisClient) {
     this.emailService = new EmailService();
-    this.i18n = i18next;
     this.redisClient = redisClient;
     this.initializeRoutes();
     this.initializeSub();
@@ -122,7 +119,7 @@ class InvitationController implements Controller {
   }
 
   private sendPayedInvitation = async (chanel: string, message: string) => {
-    const { id, lang } = JSON.parse(message);
+    const { id, emailContent } = JSON.parse(message);
     const payment = await this.payment.findOne({ sessionId: { $eq: id } });
     let invitation = await this.invitation.findOne({
       email: { $eq: payment.additionalData.email },
@@ -136,26 +133,15 @@ class InvitationController implements Controller {
       token,
       timestamp: new Date(),
     });
+    emailContent.registerUrl = `${process.env.DOMAIN}/register?token=${encodeURI(
+      token
+    )}`;
     try {
-      await this.i18n.reloadResources(lang, 'translation');
       await this.emailService.sendEmail(
         payment.additionalData.email,
-        this.i18n.t('Invitation to app'),
+        emailContent.subject,
         process.env.EMAIL_TEMPLATE_INVITATION,
-        {
-          appName: process.env.APP_NAME,
-          domain: process.env.DOMAIN,
-          header: this.i18n.t('Invite email header'),
-          mainText: this.i18n.t('Invite email content'),
-          ClickHereToRegister: this.i18n.t('Click here to register'),
-          urlInfo: this.i18n.t('Copy url info'),
-          registerUrl: `${
-            process.env.DOMAIN
-          }/register?token=${encodeURI(token)}`,
-          footerText: `© ${
-            process.env.APP_NAME
-          } ${new Date().getFullYear()}`,
-        }
+        emailContent
       );
     } catch (error) {
       await invitation.deleteOne();

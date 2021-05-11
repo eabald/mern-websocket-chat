@@ -10,6 +10,8 @@ import PaymentFailedException from '../exceptions/PaymentFailedException';
 import paymentModel from '../models/payment.model';
 import { RedisClient } from 'redis';
 import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
+import EmailService from '../services/email.service';
+import User from '../interfaces/user.interface';
 
 class PaymentController implements Controller {
   public path = '/payment';
@@ -18,12 +20,14 @@ class PaymentController implements Controller {
   private payment = paymentModel;
   private pubClient: RedisClient;
   private stripe: Stripe;
+  private emailService: EmailService;
 
   constructor(redisClient: RedisClient) {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
       apiVersion: '2020-08-27',
     });
     this.pubClient = redisClient;
+    this.emailService = new EmailService();
     this.initializeRoutes();
   }
 
@@ -45,7 +49,10 @@ class PaymentController implements Controller {
       this.buyRoomsStatus
     );
     this.router.post(`${this.path}/buy-registration`, this.buyRegistration);
-    this.router.post(`${this.path}/buy-registration-status`, this.buyRegistrationStatus)
+    this.router.post(
+      `${this.path}/buy-registration-status`,
+      this.buyRegistrationStatus
+    );
   }
 
   private createCheckoutSession(
@@ -77,6 +84,7 @@ class PaymentController implements Controller {
     request: RequestWithUser,
     response: express.Response,
     next: express.NextFunction,
+    emailContent: { [x: string]: string },
     customCallback?: (id: string) => void
   ) => {
     if (!id) {
@@ -91,17 +99,18 @@ class PaymentController implements Controller {
         payment.save();
         const isPayed = session.payment_status === 'paid';
         if (isPayed) {
+          let user: User;
+          const message = request.t('Payment successful, check your email.');
           if (userId) {
-            const user = await this.user.findById(userId);
+            user = await this.user.findById(userId);
             user.fomo[field] = user.fomo[field] + 3;
             await user.save();
-            const message = request.t('Payment successful, check your email.');
             response.status(200).json({ status: 'success', message, user });
           } else if (customCallback) {
             customCallback(id);
-            const message = request.t('Payment successful, check your email.');
             response.status(200).json({ status: 'success', message });
           }
+          this.paymentConfirmationEmail(userId ? user.email : payment.additionalData.email, emailContent);
         } else {
           if (
             !request.session.watchingPayments ||
@@ -112,7 +121,13 @@ class PaymentController implements Controller {
             } else {
               request.session.watchingPayments.push(id);
             }
-            this.watchPaymentStatus(id, userId, field, customCallback);
+            this.watchPaymentStatus(
+              id,
+              userId,
+              field,
+              emailContent ?? {},
+              customCallback
+            );
           }
           next(new PaymentNotFulfilledException());
         }
@@ -124,6 +139,7 @@ class PaymentController implements Controller {
     sessionId: string,
     userId: string,
     field: string,
+    emailContent: { [x: string]: string },
     customCallback?: (id: string) => void
   ): Promise<void> => {
     setTimeout(async () => {
@@ -135,8 +151,9 @@ class PaymentController implements Controller {
       payment.save();
       const isPayed = session.payment_status === 'paid';
       if (isPayed) {
+        let user: User;
         if (userId) {
-          const user = await this.user.findById(userId);
+          user = await this.user.findById(userId);
           user.fomo[field] = user.fomo[field] + 3;
           await user.save();
           const successMessage = {
@@ -148,6 +165,7 @@ class PaymentController implements Controller {
         } else if (customCallback) {
           customCallback(sessionId);
         }
+        this.paymentConfirmationEmail(userId ? user.email : payment.additionalData.email, emailContent);
       } else {
         const abandoned =
           Number(session.metadata.createdAt) + 36000000 < Date.now();
@@ -175,11 +193,44 @@ class PaymentController implements Controller {
               );
             }
           }
-          this.watchPaymentStatus(sessionId, userId, field, customCallback);
+          this.watchPaymentStatus(
+            sessionId,
+            userId,
+            field,
+            emailContent,
+            customCallback
+          );
         }
       }
     }, 60000);
   };
+
+  private paymentConfirmationEmail = async (
+    email,
+    emailContent: { [x: string]: string }
+  ) => {
+    try {
+      await this.emailService.sendEmail(
+        email,
+        emailContent.subject,
+        process.env.EMAIL_PAYMENT_CONFIRMATION,
+        emailContent
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  private generateEmailContent = (request: express.Request, type: string): {[x: string]: string} => {
+    return {
+      appName: process.env.APP_NAME,
+      domain: process.env.DOMAIN,
+      header: request.t('Payment email header'),
+      mainText: request.t(type),
+      BackToApp: request.t('back to app'),
+      footerText: `© ${process.env.APP_NAME} ${new Date().getFullYear()}`,
+    };
+  }
 
   private buyInvitations = async (
     request: RequestWithUser,
@@ -222,7 +273,8 @@ class PaymentController implements Controller {
       'invitations',
       request,
       response,
-      next
+      next,
+      this.generateEmailContent(request, 'invitation payment success info')
     );
   };
 
@@ -267,7 +319,8 @@ class PaymentController implements Controller {
       'roomsLimit',
       request,
       response,
-      next
+      next,
+      this.generateEmailContent(request, 'rooms payment success info')
     );
   };
 
@@ -301,7 +354,7 @@ class PaymentController implements Controller {
       });
       response.status(200).json({ id: session.id });
     }
-  }
+  };
 
   private buyRegistrationStatus = async (
     request: RequestWithUser,
@@ -316,11 +369,25 @@ class PaymentController implements Controller {
       request,
       response,
       next,
+      this.generateEmailContent(request, 'registration payment success info'),
       (id: string) => {
-        console.log({ id, lang: request.i18n.language });
-        this.pubClient.publish('invitations', JSON.stringify({ id, lang: request.i18n.language }));
+        const emailContent = {
+          subject: request.t('Invitation to app'),
+          appName: process.env.APP_NAME,
+          domain: process.env.DOMAIN,
+          header: request.t('Invite email header'),
+          mainText: request.t('Invite email content'),
+          ClickHereToRegister: request.t('Click here to register'),
+          urlInfo: request.t('Copy url info'),
+          footerText: `© ${process.env.APP_NAME} ${new Date().getFullYear()}`,
+        };
+        console.log('here');
+        this.pubClient.publish(
+          'invitations',
+          JSON.stringify({ id, emailContent })
+        );
       }
     );
-  }
+  };
 }
 export default PaymentController;

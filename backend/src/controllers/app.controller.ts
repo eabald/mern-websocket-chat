@@ -135,7 +135,7 @@ class AppController {
       new UserController(),
       new LocaleController(),
       new NotificationsController(),
-      new InvitationController(this.redisClient, i18next),
+      new InvitationController(this.redisClient),
       new PaymentController(this.redisClient),
     ];
     controllers.forEach((controller) => {
