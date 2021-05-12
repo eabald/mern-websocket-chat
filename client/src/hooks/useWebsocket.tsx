@@ -6,11 +6,14 @@ import { io, Socket } from 'socket.io-client';
 import { RootState } from '../redux/root-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { User } from '../redux/user/user.types';
-import { Room } from '../redux/room/room.types';
+import { ActiveUserMsg, Room } from '../redux/room/room.types';
 import {
   getRoomStart,
+  setActiveUser,
+  setActiveUsers,
   setCurrentRoomSuccess,
   setUnreadMessages,
+  unsetActiveUser,
 } from '../redux/room/room.actions';
 import { getUserStart, updateUnread } from '../redux/user/user.actions';
 import { FlashMessage } from '../redux/utils/utils.types';
@@ -76,6 +79,15 @@ const useWebsocket = () => {
       paymentData.callback = callback;
       dispatch(setFlashMessage(paymentData));
     });
+    socketRef.current.on('userActive', (msg: ActiveUserMsg) => {
+      dispatch(setActiveUser(msg));
+    })
+    socketRef.current.on('activeUsers', (msgs: ActiveUserMsg[]) => {
+      dispatch(setActiveUsers(msgs));
+    })
+    socketRef.current.on('userLeft', (msg: ActiveUserMsg) => {
+      dispatch(unsetActiveUser(msg));
+    })
     return () => {
       socketRef.current?.close();
     }

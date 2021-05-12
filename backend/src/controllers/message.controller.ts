@@ -96,23 +96,28 @@ class MessageController implements Controller {
   ): Promise<void> => {
     const activeUsers = [];
     socket.request.user.rooms.forEach((room) => socket.join(room._id));
-    socket.request.user.rooms
-      .filter((room) => room.type === 'dm')
-      .forEach((room) => {
-        socket.broadcast.to(room._id).emit('userActive', {
-          roomID: room._id,
-          userId: socket.request.user._id,
-        });
-        const users = room.users.map((user) => ({
+    const rooms = await this.room.find({
+      _id: { $in: socket.request.user.rooms },
+    });
+    const dmRooms = rooms.filter((room) => room.type === 'dm');
+    for (const room of dmRooms) {
+      socket.broadcast.to(room._id).emit('userActive', {
+        roomID: room._id,
+        userId: socket.request.user._id,
+      });
+      const users = await this.user.find({ _id: { $in: room.users } });
+      const usersInDB = users
+        .filter((user) => user._id !== socket.request.user._id)
+        .map((user) => ({
           userId: user.id,
           socketId: user.socketId,
         }));
-        users.forEach(({ socketId, userId }) => {
-          if (websocket.sockets.sockets.has(socketId)) {
-            activeUsers.push({ roomId: room._id, userId });
-          }
-        });
+      usersInDB.forEach(({ socketId, userId }) => {
+        if (websocket.sockets.sockets.has(socketId)) {
+          activeUsers.push({ roomId: room._id, userId });
+        }
       });
+    }
     socket.emit('activeUsers', activeUsers);
   };
 
