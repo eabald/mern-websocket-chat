@@ -84,41 +84,42 @@ class MessageController implements Controller {
     socket: SocketWithUser,
     websocket: socketio.Server
   ): void {
-    this.rejoinUserRooms(socket, websocket);
+    this.rejoinUserRooms(socket);
+    this.showLoggedInfo(socket, websocket);
     socket.on('messageSent', (message) =>
       this.messageReceived(message, socket, websocket)
     );
   }
 
-  private rejoinUserRooms = async (
+  private rejoinUserRooms = (socket: SocketWithUser): void => {
+    socket.request.user.rooms.forEach((room) => socket.join(room._id));
+  };
+
+  private showLoggedInfo = async (
     socket: SocketWithUser,
     websocket: socketio.Server
   ): Promise<void> => {
     const activeUsers = [];
-    socket.request.user.rooms.forEach((room) => socket.join(room._id));
     const rooms = await this.room.find({
       _id: { $in: socket.request.user.rooms },
-    });
-    const dmRooms = rooms.filter((room) => room.type === 'dm');
-    for (const room of dmRooms) {
+      type: { $eq: 'dm' },
+    }).populate('users');
+    rooms.forEach(room => {
       socket.broadcast.to(room._id).emit('userActive', {
         roomID: room._id,
         userId: socket.request.user._id,
       });
-      const users = await this.user.find({ _id: { $in: room.users } });
-      const usersInDB = users
-        .filter((user) => user._id !== socket.request.user._id)
-        .map((user) => ({
-          userId: user.id,
-          socketId: user.socketId,
-        }));
+      const usersInDB = room.users.map((user) => ({
+        userId: user.id,
+        socketId: user.socketId,
+      }));
       usersInDB.forEach(({ socketId, userId }) => {
         if (websocket.sockets.sockets.has(socketId)) {
           activeUsers.push({ roomId: room._id, userId });
         }
       });
-    }
-    socket.emit('activeUsers', activeUsers);
+    })
+    // socket.emit('activeUsers', activeUsers);
   };
 
   private async messageReceived(
