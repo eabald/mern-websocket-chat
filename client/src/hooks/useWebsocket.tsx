@@ -49,6 +49,14 @@ const useWebsocket = () => {
 
   useEffect(() => {
     socketRef.current = io(SOCKET_SERVER_URL);
+    socketRef.current.on('connect_error', (err: any) => {
+      console.log(`connect_error due to ${err.message}`);
+      console.log(err);
+    });
+    socketRef.current.on('disconnect', (reason: any) => {
+      socketRef.current?.connect();
+      console.log(reason);
+    });
     socketRef.current.on('messageReceived', (message: MsgReceived) => {
       if (currentRoom && currentRoom._id === message.room) {
         dispatch(
@@ -75,22 +83,22 @@ const useWebsocket = () => {
     socketRef.current.on('paymentToContinue', (paymentData: FlashMessage) => {
       const callback = (id: string): void => {
         dispatch(resumePaymentStart(id));
-      }
+      };
       paymentData.callback = callback;
       dispatch(setFlashMessage(paymentData));
     });
     socketRef.current.on('userActive', (msg: ActiveUserMsg) => {
       dispatch(setActiveUser(msg));
-    })
+    });
     socketRef.current.on('activeUsers', (msgs: ActiveUserMsg[]) => {
       dispatch(setActiveUsers(msgs));
-    })
+    });
     socketRef.current.on('userLeft', (msg: ActiveUserMsg) => {
       dispatch(unsetActiveUser(msg));
-    })
+    });
     return () => {
       socketRef.current?.close();
-    }
+    };
   });
 
   const newMessageNotification = useCallback(
@@ -122,8 +130,9 @@ const useWebsocket = () => {
       dispatch(setUnreadMessages(taggedRooms));
       if ('Notification' in window && Notification.permission === 'granted') {
         const lastUnreadId = unread[unread.length - 1];
-        let messages = rooms.find((room) => room._id === lastUnreadId)
-          ?.messages;
+        let messages = rooms.find(
+          (room) => room._id === lastUnreadId
+        )?.messages;
         messages = messages?.filter(
           (message) => message.user._id !== currenUser?._id
         );
