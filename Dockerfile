@@ -1,5 +1,6 @@
 FROM node:14-alpine AS CLIENT
 
+ENV REACT_APP_PUBLIC_VAPID_KEY=${REACT_APP_PUBLIC_VAPID_KEY}
 WORKDIR /usr/app
 RUN chown node:node /usr/app
 USER node
