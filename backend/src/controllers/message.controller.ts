@@ -50,8 +50,7 @@ class MessageController implements Controller {
     const pubClient = this.redisClient;
     const subClient = pubClient.duplicate();
     this.websocket.adapter(createAdapter({ pubClient, subClient }));
-    const wrap = (middleware) => (socket, next) =>
-      middleware(socket.request, {}, next);
+    const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
     this.websocket.use(wrap(this.sessionMiddleware));
     this.websocket.use(wrap(passport.initialize()));
     this.websocket.use(wrap(passport.session()));
@@ -72,8 +71,8 @@ class MessageController implements Controller {
     this.websocket.use(this.setSocketId);
     this.websocket.on('connection', (socket: SocketWithUser) => {
       this.bindSocketEvents(socket, this.websocket);
-      socket.on('disconnect', (reason) => {
-        console.log(reason);
+      socket.on('disconnect', reason => {
+        console.log(reason)
       });
       socket.on('disconnecting', () => {
         socket.request.user.rooms.forEach((room) => {

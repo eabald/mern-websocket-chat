@@ -4,7 +4,7 @@ WORKDIR /usr/app
 RUN chown node:node /usr/app
 USER node
 COPY --chown=node:node ./client .
-# COPY .env.example.prod .env
+COPY .env .env
 RUN npm i
 RUN npm run build
 
@@ -26,7 +26,7 @@ COPY --chown=node:node backend/package.json backend/package-lock.json /usr/app/
 RUN npm i --only=prod
 COPY --from=BUILDER /usr/app/build /usr/app
 COPY --from=CLIENT /usr/app/build /usr/app/public
-# COPY .env.example.prod .env
+COPY .env .env
 
 EXPOSE 8000
 

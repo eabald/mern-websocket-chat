@@ -48,7 +48,11 @@ const useWebsocket = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    socketRef.current = io(SOCKET_SERVER_URL);
+    socketRef.current = io(SOCKET_SERVER_URL, {
+      path: '/socket.io',
+      transports: ['websocket'],
+      secure: true,
+    });
     socketRef.current.on('connect_error', (err: any) => {
       console.log(`connect_error due to ${err.message}`);
       console.log(err);
