@@ -117,14 +117,14 @@ class AppController {
   }
 
   private initializeLimiter(): void {
-    // const limiter = rateLimit({
-    //   store: new RedisStore({
-    //     client: this.redisClient
-    //   }),
-    //   windowMs: 1000,
-    //   max: 500,
-    // });
-    // this.app.use(limiter);
+    const limiter = rateLimit({
+      store: new RedisStore({
+        client: this.redisClient
+      }),
+      windowMs: 1000,
+      max: 75,
+    });
+    this.app.use(limiter);
   }
 
   private initializeControllers(): void {

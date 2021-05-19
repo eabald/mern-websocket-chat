@@ -7,7 +7,6 @@ import { RootState } from '../../redux/root-reducer';
 import { useTranslation } from 'react-i18next';
 // Styled
 import { LangPickerWrapper, LangPickerFlag } from './langPicker.styles';
-import 'flag-icon-css/css/flag-icon.css';
 
 type LangPickerProps = {};
 
@@ -20,10 +19,10 @@ const LangPicker: React.FC<LangPickerProps> = () => {
         <LangPickerFlag
           key={lang}
           onClick={() => i18n.changeLanguage(lang)}
-          className={`flag-icon flag-icon-${lang === 'en' ? 'gb' : lang} ${
+          className={`flag-icon-${lang === 'en' ? 'gb' : lang} ${
             lang === i18n.language ? 'active' : ''
           }`}
-        ></LangPickerFlag>
+        />
       ))}
     </LangPickerWrapper>
   );

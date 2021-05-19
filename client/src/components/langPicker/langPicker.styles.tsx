@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import gb from '../../images/flags/gb.svg'
+import pl from '../../images/flags/pl.svg'
 
 export const LangPickerWrapper = styled.div`
   position: fixed;
@@ -19,13 +21,30 @@ export const LangPickerWrapper = styled.div`
   }
 `;
 
-export const LangPickerFlag = styled.span`
+export const LangPickerFlag = styled.div`
   padding: 0 5px;
   cursor: pointer;
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  position: relative;
+  display: inline-block;
+  width: 22px;
+  height: 12px;
+  line-height: 1em;
   &:hover {
     transform: scale(1.25);
   }
+  &:before {
+    content: '';
+  }
   &.active {
     filter: drop-shadow(0px 0px 5px ${props => props.theme.mainTextColor});
+  }
+  &.flag-icon-gb {
+    background-image: url(${gb});
+  }
+  &.flag-icon-pl {
+    background-image: url(${pl});
   }
 `;
