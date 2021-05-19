@@ -32,6 +32,7 @@ class AppController {
   public mongoUri: string;
   private static: string;
   public redisClient: RedisClient;
+  public session: RequestHandler;
 
   constructor(
     port: number,
@@ -78,17 +79,16 @@ class AppController {
       auth_pass: process.env.REDIS_PASSWORD,
       no_ready_check: true,
     });
-    this.app.use(
-      session({
-        secret: process.env.SESSION_SECRET,
-        store: new RedisSessionStore({
-          client: this.redisClient,
-          disableTouch: true,
-        }),
-        resave: false,
-        saveUninitialized: false,
-      })
-    );
+    this.session = session({
+      secret: process.env.SESSION_SECRET,
+      store: new RedisSessionStore({
+        client: this.redisClient,
+        disableTouch: true,
+      }),
+      resave: false,
+      saveUninitialized: false,
+    });
+    this.app.use(this.session);
   }
 
   private initializePassportSession(): void {
@@ -131,7 +131,7 @@ class AppController {
     const controllers = [
       new AuthenticationController(),
       new RoomController(),
-      new MessageController(this.server, this.redisClient, i18next),
+      new MessageController(this.server, this.redisClient, i18next, this.session),
       new UserController(),
       new LocaleController(),
       new NotificationsController(),

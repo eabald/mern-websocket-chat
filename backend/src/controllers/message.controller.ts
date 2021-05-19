@@ -9,10 +9,8 @@ import messageModel from '../models/message.model';
 import SocketWithUser from '../interfaces/socketWithUser.interface';
 import userModel from './../models/user.model';
 import roomModel from '../models/room.model';
-import passportSocketIo from 'passport.socketio';
-import session from 'express-session';
-import connectRedis from 'connect-redis';
 import { i18n } from 'i18next';
+import passport from 'passport';
 
 class MessageController implements Controller {
   public path = '/message';
@@ -24,30 +22,49 @@ class MessageController implements Controller {
   private redisClient: RedisClient;
   private server: Server;
   private i18n: i18n;
+  private sessionMiddleware: express.RequestHandler;
 
-  constructor(server: Server, redisClient: RedisClient, i18next: i18n) {
+  constructor(
+    server: Server,
+    redisClient: RedisClient,
+    i18next: i18n,
+    session: express.RequestHandler
+  ) {
     this.server = server;
     this.redisClient = redisClient;
     this.i18n = i18next;
+    this.sessionMiddleware = session;
     this.initializeWebsocket();
   }
 
   private initializeWebsocket(): void {
     this.websocket = new socketio.Server(this.server, {
-      cors: { origin: '*' },
+      pingTimeout: 180000,
+      pingInterval: 25000,
+      cors: {
+        origin: true,
+        methods: ['GET', 'POST'],
+        credentials: true,
+      },
     });
     const pubClient = this.redisClient;
     const subClient = pubClient.duplicate();
     this.websocket.adapter(createAdapter({ pubClient, subClient }));
-    const RedisStore = connectRedis(session);
-    this.websocket.use(
-      passportSocketIo.authorize({
-        secret: process.env.SESSION_SECRET,
-        store: new RedisStore({
-          client: this.redisClient,
-          disableTouch: true,
-        }),
-      })
+    const wrap = (middleware) => (socket, next) =>
+      middleware(socket.request, {}, next);
+    this.websocket.use(wrap(this.sessionMiddleware));
+    this.websocket.use(wrap(passport.initialize()));
+    this.websocket.use(wrap(passport.session()));
+    this.websocket.use((socket: SocketWithUser, next: any) => {
+      if (socket.request.user) {
+        next();
+      } else {
+        next(new Error('unauthorized'));
+      }
+    });
+
+    this.websocket.engine.on('connection_error', (err: any) =>
+      console.log('err', err)
     );
 
     subClient.on('message', this.notifyPaymentFulfilled);
@@ -55,6 +72,9 @@ class MessageController implements Controller {
     this.websocket.use(this.setSocketId);
     this.websocket.on('connection', (socket: SocketWithUser) => {
       this.bindSocketEvents(socket, this.websocket);
+      socket.on('disconnect', (reason) => {
+        console.log(reason);
+      });
       socket.on('disconnecting', () => {
         socket.request.user.rooms.forEach((room) => {
           socket.broadcast.to(room._id).emit('userLeft', {
@@ -100,11 +120,13 @@ class MessageController implements Controller {
     websocket: socketio.Server
   ): Promise<void> => {
     const activeUsers = [];
-    const rooms = await this.room.find({
-      _id: { $in: socket.request.user.rooms },
-      type: { $eq: 'dm' },
-    }).populate('users');
-    rooms.forEach(room => {
+    const rooms = await this.room
+      .find({
+        _id: { $in: socket.request.user.rooms },
+        type: { $eq: 'dm' },
+      })
+      .populate('users');
+    rooms.forEach((room) => {
       socket.broadcast.to(room._id).emit('userActive', {
         roomID: room._id,
         userId: socket.request.user._id,
@@ -118,8 +140,8 @@ class MessageController implements Controller {
           activeUsers.push({ roomId: room._id, userId });
         }
       });
-    })
-    // socket.emit('activeUsers', activeUsers);
+    });
+    socket.emit('activeUsers', activeUsers);
   };
 
   private async messageReceived(
