@@ -1,6 +1,6 @@
 # MERN-WEBSOCKET-CHAT
 
-![Build status](https://github.com/eabald/mern-websocket-chat/actions/workflows/ci-build.yml/badge.svg)  [![Deploy on Heroku](https://github.com/eabald/mern-websocket-chat/actions/workflows/cd-heroku.yml/badge.svg)](https://github.com/eabald/mern-websocket-chat/actions/workflows/cd-heroku.yml)
+![Build status](https://github.com/eabald/mern-websocket-chat/actions/workflows/ci-build.yml/badge.svg)  ![Deploy on Heroku](https://github.com/eabald/mern-websocket-chat/actions/workflows/cd-heroku.yml/badge.svg)
 
 ## Development
 
