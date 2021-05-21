@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as socketio from 'socket.io';
 import { Server } from 'http';
-import { createAdapter } from 'socket.io-redis';
+import { createAdapter } from '@socket.io/redis-adapter'
 import { RedisClient } from 'redis';
 import Controller from '../interfaces/controller.interface';
 import Message from '../interfaces/message.interface';
@@ -39,18 +39,18 @@ class MessageController implements Controller {
 
   private initializeWebsocket(): void {
     this.websocket = new socketio.Server(this.server, {
-      pingTimeout: 180000,
-      pingInterval: 25000,
       cors: {
         origin: true,
-        methods: ['GET', 'POST'],
-        credentials: true,
       },
     });
-    const pubClient = this.redisClient;
-    const subClient = pubClient.duplicate();
-    this.websocket.adapter(createAdapter({ pubClient, subClient }));
-    const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
+    const pubAdapterClient = this.redisClient;
+    const subAdapterClient = pubAdapterClient.duplicate();
+    const subClient = this.redisClient.duplicate();
+    this.websocket.adapter(
+      createAdapter(pubAdapterClient, subAdapterClient)
+    );
+    const wrap = (middleware) => (socket, next) =>
+      middleware(socket.request, {}, next);
     this.websocket.use(wrap(this.sessionMiddleware));
     this.websocket.use(wrap(passport.initialize()));
     this.websocket.use(wrap(passport.session()));
@@ -71,8 +71,8 @@ class MessageController implements Controller {
     this.websocket.use(this.setSocketId);
     this.websocket.on('connection', (socket: SocketWithUser) => {
       this.bindSocketEvents(socket, this.websocket);
-      socket.on('disconnect', reason => {
-        console.log(reason)
+      socket.on('disconnect', (reason) => {
+        console.log(reason);
       });
       socket.on('disconnecting', () => {
         socket.request.user.rooms.forEach((room) => {
@@ -110,8 +110,11 @@ class MessageController implements Controller {
     );
   }
 
-  private rejoinUserRooms = (socket: SocketWithUser): void => {
-    socket.request.user.rooms.forEach((room) => socket.join(room._id));
+  private rejoinUserRooms = async (socket: SocketWithUser): Promise<void> => {
+    const user = await this.user.findById(socket.request.user.id).populate('rooms');
+    user.rooms.forEach((room) => {
+      socket.join(room._id);
+    });
   };
 
   private showLoggedInfo = async (
