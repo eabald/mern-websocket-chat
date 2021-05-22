@@ -1,8 +1,12 @@
 // React
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 // Redux
 import { useDispatch } from 'react-redux';
 import { signOutStart } from '../../redux/auth/auth.actions';
+// Context
+import { SocketContext } from '../../context/socket';
+// Hooks
+import useWebsocket from '../../hooks/useWebsocket';
 // I18N
 import { useTranslation } from 'react-i18next';
 // Layout
@@ -25,9 +29,12 @@ type LogoutProps = {};
 const Logout: React.FC<LogoutProps> = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const socket = useContext(SocketContext);
+  const { disconnect } = useWebsocket(socket);
   useEffect(() => {
     dispatch(signOutStart());
-  }, [dispatch]);
+    disconnect();
+  }, [dispatch, disconnect]);
 
   return (
     <MainLayout>

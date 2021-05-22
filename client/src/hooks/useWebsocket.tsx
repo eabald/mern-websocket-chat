@@ -1,24 +1,25 @@
 // React
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 // Socket.io
-import { io, Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 // Redux
 import { RootState } from '../redux/root-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { User } from '../redux/user/user.types';
-import { Room } from '../redux/room/room.types';
+import { ActiveUserMsg, Room } from '../redux/room/room.types';
 import {
   getRoomStart,
+  setActiveUser,
+  setActiveUsers,
   setCurrentRoomSuccess,
   setUnreadMessages,
+  unsetActiveUser,
 } from '../redux/room/room.actions';
 import { getUserStart, updateUnread } from '../redux/user/user.actions';
 import { FlashMessage } from '../redux/utils/utils.types';
 import { setFlashMessage } from '../redux/utils/utils.actions';
 import { useTranslation } from 'react-i18next';
 import { resumePaymentStart } from '../redux/payment/payment.actions';
-
-const SOCKET_SERVER_URL = '/';
 
 interface Msg {
   _id?: string;
@@ -35,8 +36,7 @@ interface MsgReceived extends Msg {
   room: string;
 }
 
-const useWebsocket = () => {
-  const socketRef = useRef<Socket>();
+const useWebsocket = (socket: Socket) => {
   const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
   const currenUser = useSelector((state: RootState) => state.user.user);
   const rooms = useSelector((state: RootState) => state.room.rooms);
@@ -45,8 +45,15 @@ const useWebsocket = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    socketRef.current = io(SOCKET_SERVER_URL);
-    socketRef.current.on('messageReceived', (message: MsgReceived) => {
+    socket.on('connect_error', (err: any) => {
+      console.log(`connect_error due to ${err.message}`);
+      console.log(err);
+    });
+    socket.on('disconnect', (reason: any) => {
+      socket?.connect();
+      console.log(reason);
+    });
+    socket.on('messageReceived', (message: MsgReceived) => {
       if (currentRoom && currentRoom._id === message.room) {
         dispatch(
           setCurrentRoomSuccess({
@@ -62,23 +69,29 @@ const useWebsocket = () => {
         }
       }
     });
-    socketRef.current.on('messageBlocked', (statusData: FlashMessage) => {
+    socket.on('messageBlocked', (statusData: FlashMessage) => {
       dispatch(setFlashMessage(statusData));
     });
-    socketRef.current.on('paymentFulfilled', (paymentData: FlashMessage) => {
+    socket.on('paymentFulfilled', (paymentData: FlashMessage) => {
       dispatch(setFlashMessage(paymentData));
       dispatch(getUserStart(currenUser?.id ?? ''));
     });
-    socketRef.current.on('paymentToContinue', (paymentData: FlashMessage) => {
+    socket.on('paymentToContinue', (paymentData: FlashMessage) => {
       const callback = (id: string): void => {
         dispatch(resumePaymentStart(id));
-      }
+      };
       paymentData.callback = callback;
       dispatch(setFlashMessage(paymentData));
     });
-    return () => {
-      socketRef.current?.close();
-    }
+    socket.on('userActive', (msg: ActiveUserMsg) => {
+      dispatch(setActiveUser(msg));
+    });
+    socket.on('activeUsers', (msgs: ActiveUserMsg[]) => {
+      dispatch(setActiveUsers(msgs));
+    });
+    socket.on('userLeft', (msg: ActiveUserMsg) => {
+      dispatch(unsetActiveUser(msg));
+    });
   });
 
   const newMessageNotification = useCallback(
@@ -110,8 +123,9 @@ const useWebsocket = () => {
       dispatch(setUnreadMessages(taggedRooms));
       if ('Notification' in window && Notification.permission === 'granted') {
         const lastUnreadId = unread[unread.length - 1];
-        let messages = rooms.find((room) => room._id === lastUnreadId)
-          ?.messages;
+        let messages = rooms.find(
+          (room) => room._id === lastUnreadId
+        )?.messages;
         messages = messages?.filter(
           (message) => message.user._id !== currenUser?._id
         );
@@ -126,10 +140,16 @@ const useWebsocket = () => {
   }, [unread, rooms, dispatch, newMessageNotification, currenUser]);
 
   const sendMessage = (msg: MsgToSend) => {
-    socketRef.current?.emit('messageSent', msg);
+    socket.emit('messageSent', msg);
   };
 
-  return { sendMessage };
+  const disconnect = () => {
+    if (socket) {
+      socket.disconnect();
+    }
+  }
+
+  return { sendMessage, disconnect };
 };
 
 export default useWebsocket;

@@ -22,6 +22,10 @@ export const SET_CURRENT_ROOM_ERROR = 'SET_CURRENT_ROOM_ERROR';
 
 export const SET_UNREAD_MESSAGES = 'SET_UNREAD_MESSAGES';
 
+export const SET_ACTIVE_USER = 'SET_ACTIVE_USER';
+export const UNSET_ACTIVE_USER = 'UNSET_ACTIVE_USER';
+export const SET_ACTIVE_USERS = 'SET_ACTIVE_USERS';
+
 export interface CreateRoomStart extends Action {
   type: typeof CREATE_ROOM_START;
   payload: Room;
@@ -68,23 +72,38 @@ export interface GetRoomError extends Action {
 }
 
 export interface SetCurrentRoomStart extends Action {
-  type: typeof SET_CURRENT_ROOM_START,
-  payload: Room,
+  type: typeof SET_CURRENT_ROOM_START;
+  payload: Room;
 }
 
 export interface SetCurrentRoomSuccess extends Action {
-  type: typeof SET_CURRENT_ROOM_SUCCESS,
-  payload: Room,
+  type: typeof SET_CURRENT_ROOM_SUCCESS;
+  payload: Room;
 }
 
 export interface SetCurrentRoomError extends Action {
-  type: typeof SET_CURRENT_ROOM_ERROR,
-  payload: RoomError,
+  type: typeof SET_CURRENT_ROOM_ERROR;
+  payload: RoomError;
 }
 
 export interface SetUnreadMessages extends Action {
-  type: typeof SET_UNREAD_MESSAGES,
-  payload: Room[],
+  type: typeof SET_UNREAD_MESSAGES;
+  payload: Room[];
+}
+
+export interface SetActiveUserAction extends Action {
+  type: typeof SET_ACTIVE_USER;
+  payload: ActiveUserMsg;
+}
+
+export interface UnSetActiveUserAction extends Action {
+  type: typeof UNSET_ACTIVE_USER;
+  payload: ActiveUserMsg;
+}
+
+export interface SetActiveUsersAction extends Action {
+  type: typeof SET_ACTIVE_USERS;
+  payload: ActiveUserMsg[];
 }
 
 export type RoomAction =
@@ -101,6 +120,9 @@ export type RoomAction =
   | SetCurrentRoomSuccess
   | SetCurrentRoomError
   | SetUnreadMessages
+  | SetActiveUserAction
+  | UnSetActiveUserAction
+  | SetActiveUsersAction
   | ResetAction;
 
 export interface RoomState {
@@ -120,5 +142,11 @@ export interface Room {
   users: User[];
   messages: any[];
   type?: 'room' | 'dm';
-  hasUnreadMessages?: boolean,
+  hasUnreadMessages?: boolean;
+  active?: boolean;
+}
+
+export interface ActiveUserMsg {
+  roomId: string;
+  userId: string;
 }

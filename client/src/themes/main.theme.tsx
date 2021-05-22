@@ -20,6 +20,8 @@ export const MainTheme = {
   messageSubmitButtonBackGround: '#7487da',
   messageSubmitButtonBackGroundDisabled: '#999898',
   loaderBackground: 'rgba(90, 90, 90, 0.75)',
+  activeIcon: '#4ec736',
+  activeShadow: '#292929',
 
   flashBg: {
     error: '#ca47c0',

@@ -1,5 +1,5 @@
 // React
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 // External
 import { Formik, FormikHelpers, Form } from 'formik';
 // Utils
@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
 // Hooks
 import useWebsocket from '../../hooks/useWebsocket';
+// Context
+import { SocketContext } from '../../context/socket';
 // Validators
 import MessageFormValidationSchema from '../../validators/messageForm.validator';
 // Styled
@@ -32,7 +34,8 @@ interface FormValues {
 }
 
 const MessageForm: React.FC<MessageFormProps> = () => {
-  const { sendMessage } = useWebsocket();
+  const socket = useContext(SocketContext);
+  const { sendMessage } = useWebsocket(socket);
   const [pickerOpen, setPickerOpen] = useState(false);
   const formRef = useRef<HTMLTextAreaElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);

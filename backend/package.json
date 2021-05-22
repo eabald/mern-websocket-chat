@@ -4,13 +4,14 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "CHOKIDAR_USEPOLLING=1 NODE_ENV=development nodemon src/server.ts",
+    "start": "DEBUG=socket* CHOKIDAR_USEPOLLING=1 NODE_ENV=development nodemon src/server.ts",
     "build": "tsc --project ./ && cp -r src/locales build/locales"
   },
   "author": "Maciej Krawczyk",
   "license": "MIT",
   "dependencies": {
     "@sendgrid/mail": "^7.4.2",
+    "@socket.io/redis-adapter": "^7.0.0",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.2",
     "class-validator": "^0.13.1",
@@ -32,12 +33,10 @@
     "mongoose": "^5.11.16",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "passport.socketio": "^3.7.0",
     "pm2": "^4.5.6",
     "rate-limit-redis": "^2.1.0",
     "redis": "^3.1.1",
-    "socket.io": "^3.1.1",
-    "socket.io-redis": "^6.0.1",
+    "socket.io": "^4.1.2",
     "stripe": "^8.145.0",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"

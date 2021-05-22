@@ -32,6 +32,7 @@ class AppController {
   public mongoUri: string;
   private static: string;
   public redisClient: RedisClient;
+  public session: RequestHandler;
 
   constructor(
     port: number,
@@ -78,17 +79,16 @@ class AppController {
       auth_pass: process.env.REDIS_PASSWORD,
       no_ready_check: true,
     });
-    this.app.use(
-      session({
-        secret: process.env.SESSION_SECRET,
-        store: new RedisSessionStore({
-          client: this.redisClient,
-          disableTouch: true,
-        }),
-        resave: false,
-        saveUninitialized: false,
-      })
-    );
+    this.session = session({
+      secret: process.env.SESSION_SECRET,
+      store: new RedisSessionStore({
+        client: this.redisClient,
+        disableTouch: true,
+      }),
+      resave: false,
+      saveUninitialized: false,
+    });
+    this.app.use(this.session);
   }
 
   private initializePassportSession(): void {
@@ -119,7 +119,7 @@ class AppController {
   private initializeLimiter(): void {
     const limiter = rateLimit({
       store: new RedisStore({
-        client: this.redisClient
+        client: this.redisClient.duplicate(),
       }),
       windowMs: 1000,
       max: 75,
@@ -131,12 +131,12 @@ class AppController {
     const controllers = [
       new AuthenticationController(),
       new RoomController(),
-      new MessageController(this.server, this.redisClient, i18next),
+      new MessageController(this.server, this.redisClient.duplicate(), i18next, this.session),
       new UserController(),
       new LocaleController(),
       new NotificationsController(),
-      new InvitationController(this.redisClient),
-      new PaymentController(this.redisClient),
+      new InvitationController(this.redisClient.duplicate()),
+      new PaymentController(this.redisClient.duplicate()),
     ];
     controllers.forEach((controller) => {
       this.app.use('/api', controller.router);

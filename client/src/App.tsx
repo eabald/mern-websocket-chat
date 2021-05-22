@@ -18,13 +18,13 @@ const App: React.FC = () => (
   <PersistGate loading={<Loader />} persistor={persistor}>
     <ThemeProvider theme={MainTheme}>
       <FlashOutlet />
-        <Suspense fallback={<Loader />}>
-            <DomRouter history={history}>
-              <ErrorBoundary>
-                <Router />
-              </ErrorBoundary>
-            </DomRouter>
-        </Suspense>
+      <Suspense fallback={<Loader />}>
+        <DomRouter history={history}>
+          <ErrorBoundary>
+            <Router />
+          </ErrorBoundary>
+        </DomRouter>
+      </Suspense>
       <Loader />
     </ThemeProvider>
   </PersistGate>

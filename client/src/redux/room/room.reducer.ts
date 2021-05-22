@@ -14,7 +14,11 @@ import {
   SET_CURRENT_ROOM_SUCCESS,
   SET_CURRENT_ROOM_ERROR,
   SET_UNREAD_MESSAGES,
+  SET_ACTIVE_USER,
+  SET_ACTIVE_USERS,
+  UNSET_ACTIVE_USER,
 } from './room.types';
+import { setActiveDMUser, setActiveDMUsers, unsetActiveDMUser } from './room.utils';
 
 const INITIAL_STATE: RoomState = {
   rooms: [],
@@ -71,6 +75,21 @@ const roomReducer: Reducer<RoomState, RoomAction> = (
       return {
         ...state,
         rooms: action.payload,
+      }
+    case SET_ACTIVE_USER:
+      return {
+        ...state,
+        rooms: setActiveDMUser(state.rooms, action.payload),
+      }
+    case UNSET_ACTIVE_USER:
+      return {
+        ...state,
+        rooms: unsetActiveDMUser(state.rooms, action.payload),
+      }
+    case SET_ACTIVE_USERS:
+      return {
+        ...state,
+        rooms: setActiveDMUsers(state.rooms, action.payload),
       }
     case RESET:
       return INITIAL_STATE;

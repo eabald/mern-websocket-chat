@@ -14,6 +14,7 @@ import { DmsListWrapper, DmsListItem, DmsListItemAdd } from './dmsList.styles';
 import SectionHeader from '../sectionHeader/sectionHeader.component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
+import ActiveIcon from '../activeIcon/activeIcon.component'
 
 type DmsListProps = {};
 
@@ -31,6 +32,7 @@ const DmsList: React.FC<DmsListProps> = () => {
       <DmsListWrapper>
         {dms.map((dm: Room) => (
           <DmsListItem key={dm._id} onClick={() => setDm(dm)} active={currentRoom && currentRoom._id === dm._id}>
+            {dm.active ? <ActiveIcon /> : ''}
             {dm.users.filter(user => user._id !== currentUserId).map(user => user.username).join(', ')}
             {dm.hasUnreadMessages && currentRoom && currentRoom._id !== dm._id ? (
               <FontAwesomeIcon icon={faExclamation} style={{ paddingLeft: '10px' }} />

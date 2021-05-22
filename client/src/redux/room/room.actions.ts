@@ -16,6 +16,10 @@ import {
   SET_CURRENT_ROOM_SUCCESS,
   SET_CURRENT_ROOM_ERROR,
   SET_UNREAD_MESSAGES,
+  ActiveUserMsg,
+  SET_ACTIVE_USER,
+  UNSET_ACTIVE_USER,
+  SET_ACTIVE_USERS,
 } from './room.types';
 
 export const createRoomStart = (room: Room): RoomAction => ({
@@ -81,4 +85,19 @@ export const setCurrentRoomError = (error: RoomError): RoomAction => ({
 export const setUnreadMessages = (rooms: Room[]): RoomAction => ({
   type: SET_UNREAD_MESSAGES,
   payload: rooms,
+});
+
+export const setActiveUser = (activeUserMsg: ActiveUserMsg): RoomAction => ({
+  type: SET_ACTIVE_USER,
+  payload: activeUserMsg,
+});
+
+export const unsetActiveUser = (activeUserMsg: ActiveUserMsg): RoomAction => ({
+  type: UNSET_ACTIVE_USER,
+  payload: activeUserMsg,
+});
+
+export const setActiveUsers = (activeUserMsg: ActiveUserMsg[]): RoomAction => ({
+  type: SET_ACTIVE_USERS,
+  payload: activeUserMsg,
 });

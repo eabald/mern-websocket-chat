@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // Redux
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/root-reducer';
@@ -14,6 +14,18 @@ const MessagesOutlet: React.FC<MessagesOutletProps> = () => {
   const messages = useSelector(
     (state: RootState) => state.room.currentRoom?.messages
   );
+  const rooms = useSelector(
+    (state: RootState) => state.room.rooms
+  );
+  const currentRoomId = useSelector(
+    (state: RootState) => state.room.currentRoom?._id
+  );
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const currentRoomActive = rooms.find(room => room._id === currentRoomId)?.active;
+    setActive(!!currentRoomActive);
+  }, [rooms, currentRoomId])
 
   return (
     <MessagesOutletWrapper>
@@ -24,6 +36,7 @@ const MessagesOutlet: React.FC<MessagesOutletProps> = () => {
               content={message.content}
               user={message.user}
               timestamp={message.timestamp}
+              active={active}
             />
           ))
         : ''}

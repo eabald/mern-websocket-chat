@@ -16,17 +16,21 @@ import {
   MessageItemContent,
   MessageItemUsername,
 } from './messageItem.styles';
+// Components
+import ActiveIcon from '../activeIcon/activeIcon.component'
 
 type MessageItemProps = {
   content: string;
   user: User;
   timestamp: Date;
+  active?: boolean;
 };
 
 const MessageItem: React.FC<MessageItemProps> = ({
   content,
   user,
   timestamp,
+  active
 }) => {
   const { t } = useTranslation();
   const message = useRef<HTMLDivElement>(null);
@@ -44,6 +48,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
             pathname: currentUserId === user._id ? `/${t('profile')}` : `/modal/${t('user-details')}/${user._id}`,
             state: { background: location }
           }}>{user.username}</MessageItemUsername>
+          {active ? <ActiveIcon /> : ''}
         <MessageItemTimestamp>
           {(new Date(timestamp)).toLocaleString('en-US')}
         </MessageItemTimestamp>
