@@ -1,7 +1,7 @@
 // React
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 // Socket.io
-import { io, Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 // Redux
 import { RootState } from '../redux/root-reducer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,8 +21,6 @@ import { setFlashMessage } from '../redux/utils/utils.actions';
 import { useTranslation } from 'react-i18next';
 import { resumePaymentStart } from '../redux/payment/payment.actions';
 
-const SOCKET_SERVER_URL = '';
-
 interface Msg {
   _id?: string;
   content: string;
@@ -38,8 +36,7 @@ interface MsgReceived extends Msg {
   room: string;
 }
 
-const useWebsocket = () => {
-  const socketRef = useRef<Socket>();
+const useWebsocket = (socket: Socket) => {
   const currentRoom = useSelector((state: RootState) => state.room.currentRoom);
   const currenUser = useSelector((state: RootState) => state.user.user);
   const rooms = useSelector((state: RootState) => state.room.rooms);
@@ -48,16 +45,15 @@ const useWebsocket = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    socketRef.current = io(SOCKET_SERVER_URL);
-    socketRef.current.on('connect_error', (err: any) => {
+    socket.on('connect_error', (err: any) => {
       console.log(`connect_error due to ${err.message}`);
       console.log(err);
     });
-    socketRef.current.on('disconnect', (reason: any) => {
-      socketRef.current?.connect();
+    socket.on('disconnect', (reason: any) => {
+      socket?.connect();
       console.log(reason);
     });
-    socketRef.current.on('messageReceived', (message: MsgReceived) => {
+    socket.on('messageReceived', (message: MsgReceived) => {
       if (currentRoom && currentRoom._id === message.room) {
         dispatch(
           setCurrentRoomSuccess({
@@ -73,32 +69,29 @@ const useWebsocket = () => {
         }
       }
     });
-    socketRef.current.on('messageBlocked', (statusData: FlashMessage) => {
+    socket.on('messageBlocked', (statusData: FlashMessage) => {
       dispatch(setFlashMessage(statusData));
     });
-    socketRef.current.on('paymentFulfilled', (paymentData: FlashMessage) => {
+    socket.on('paymentFulfilled', (paymentData: FlashMessage) => {
       dispatch(setFlashMessage(paymentData));
       dispatch(getUserStart(currenUser?.id ?? ''));
     });
-    socketRef.current.on('paymentToContinue', (paymentData: FlashMessage) => {
+    socket.on('paymentToContinue', (paymentData: FlashMessage) => {
       const callback = (id: string): void => {
         dispatch(resumePaymentStart(id));
       };
       paymentData.callback = callback;
       dispatch(setFlashMessage(paymentData));
     });
-    socketRef.current.on('userActive', (msg: ActiveUserMsg) => {
+    socket.on('userActive', (msg: ActiveUserMsg) => {
       dispatch(setActiveUser(msg));
     });
-    socketRef.current.on('activeUsers', (msgs: ActiveUserMsg[]) => {
+    socket.on('activeUsers', (msgs: ActiveUserMsg[]) => {
       dispatch(setActiveUsers(msgs));
     });
-    socketRef.current.on('userLeft', (msg: ActiveUserMsg) => {
+    socket.on('userLeft', (msg: ActiveUserMsg) => {
       dispatch(unsetActiveUser(msg));
     });
-    return () => {
-      socketRef.current?.close();
-    };
   });
 
   const newMessageNotification = useCallback(
@@ -147,7 +140,7 @@ const useWebsocket = () => {
   }, [unread, rooms, dispatch, newMessageNotification, currenUser]);
 
   const sendMessage = (msg: MsgToSend) => {
-    socketRef.current?.emit('messageSent', msg);
+    socket.emit('messageSent', msg);
   };
 
   return { sendMessage };
