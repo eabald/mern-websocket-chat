@@ -143,7 +143,13 @@ const useWebsocket = (socket: Socket) => {
     socket.emit('messageSent', msg);
   };
 
-  return { sendMessage };
+  const disconnect = () => {
+    if (socket) {
+      socket.disconnect();
+    }
+  }
+
+  return { sendMessage, disconnect };
 };
 
 export default useWebsocket;
