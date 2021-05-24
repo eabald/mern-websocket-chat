@@ -33,7 +33,7 @@ const DmsList: React.FC<DmsListProps> = () => {
         {dms.map((dm: Room) => (
           <DmsListItem key={dm._id} onClick={() => setDm(dm)} active={currentRoom && currentRoom._id === dm._id}>
             {dm.active ? <ActiveIcon /> : ''}
-            {dm.users.filter(user => user._id !== currentUserId).map(user => user.username).join(', ')}
+            {dm.users.filter(user => user.id !== currentUserId).map(user => user.username).join(', ')}
             {dm.hasUnreadMessages && currentRoom && currentRoom._id !== dm._id ? (
               <FontAwesomeIcon icon={faExclamation} style={{ paddingLeft: '10px' }} />
             ) : null}

@@ -9,7 +9,6 @@ import { SocketContext, socket } from '../context/socket';
 import NotFound from '../pages/notFound/notFound.component';
 const Profile = lazy(() => import('../pages/profile/profile.component'));
 const Home = lazy(() => import('../pages/home/home.component'));
-const Login = lazy(() => import('../pages/login/login.component'));
 const Logout = lazy(() => import('../pages/logout/logout.component'));
 const TermsAndConditions = lazy(
   () => import('../pages/termsAndConditions/termsAndConditions.component')
@@ -50,7 +49,7 @@ const LoggedInRoutes: React.FC<LoggedInRoutesProps> = ({
   return (
     <SocketContext.Provider value={socket}>
       <Switch location={background || location}>
-        <Route path={`/${t('login')}`} component={Login}>
+        <Route path={`/${t('login')}`}>
           <Redirect to='/' />
         </Route>
         <Route path='/register'>
