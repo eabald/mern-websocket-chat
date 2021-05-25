@@ -381,7 +381,6 @@ class PaymentController implements Controller {
           urlInfo: request.t('Copy url info'),
           footerText: `© ${process.env.APP_NAME} ${new Date().getFullYear()}`,
         };
-        console.log('here');
         this.pubClient.publish(
           'invitations',
           JSON.stringify({ id, emailContent })

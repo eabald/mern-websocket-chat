@@ -61,19 +61,21 @@ class MessageController implements Controller {
         next(new Error('unauthorized'));
       }
     });
-
-    this.websocket.engine.on('connection_error', (err: any) =>
-      console.log('err', err)
-    );
-
+    if (process.env.NODE_ENV === 'development') {
+      this.websocket.engine.on('connection_error', (err: any) =>
+        console.log('err', err)
+      );
+    }
     subClient.on('message', this.notifyPaymentFulfilled);
     subClient.subscribe('payments');
     this.websocket.use(this.setSocketId);
     this.websocket.on('connection', (socket: SocketWithUser) => {
       this.bindSocketEvents(socket, this.websocket);
-      socket.on('disconnect', (reason) => {
-        console.log(reason);
-      });
+      if (process.env.NODE_ENV === 'development') {
+        socket.on('disconnect', (reason) => {
+          console.log(reason);
+        });
+      }
       socket.on('disconnecting', () => {
         socket.request.user.rooms.forEach((room) => {
           socket.broadcast.to(room._id).emit('userLeft', {

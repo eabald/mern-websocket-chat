@@ -46,12 +46,15 @@ const useWebsocket = (socket: Socket) => {
 
   useEffect(() => {
     socket.on('connect_error', (err: any) => {
-      console.log(`connect_error due to ${err.message}`);
-      console.log(err);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`connect_error due to ${err.message}`);
+      }
     });
     socket.on('disconnect', (reason: any) => {
       socket?.connect();
-      console.log(reason);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(reason);
+      }
     });
     socket.on('messageReceived', (message: MsgReceived) => {
       if (currentRoom && currentRoom._id === message.room) {
